@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cs236369.hw5.dal.Course;
+
 /**
  * Servlet implementation class Test
  */
@@ -24,7 +26,12 @@ public class Test extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().write("Test");
+	  Course course = new Course();
+	  course.setField("name", "wogw");
+	  course.setField("capacity", 44);
+	  // Saves the course to the DB.
+	  course.save();
+		response.getWriter().write("Test:" + course.getIntField("capacity") + " - " + course.getStringField("name"));
 	}
 
 	/**
