@@ -7,15 +7,35 @@ import java.util.Map.Entry;
 
 public abstract class Base {
   protected HashMap<String, String> fieldsTypes;
-  HashMap<String, Object> fieldsValues;
-  String tableName;
+  static HashMap<String, Object> fieldsValues;
+  protected static String tableName;
+  static Class<?> cName;
+  int id;
   Base() {
     init();
   }
 
   Base(int id) {
     init();
-    ResultSet rs = Utils.getTableRowById(tableName, id);
+    this.id = id;
+    ResultSet rs = Utils.getTableRowById(getTableName(), id);
+    try {
+      rs.next();
+    } catch (SQLException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    try {
+      setFieldsFromResultSet(rs);
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  public abstract String getTableName();
+  Base(ResultSet rs) {
+    init();
     try {
       setFieldsFromResultSet(rs);
     } catch (SQLException e) {
@@ -26,10 +46,12 @@ public abstract class Base {
 
   void init() {
     initFields();
-    setTableName();
   }
 
-  abstract void setTableName();
+  public String getTableNameIns() {
+    return tableName;
+  }
+
 
   final void initFields() {
     fieldsTypes = new HashMap<String, String>();
@@ -48,6 +70,10 @@ public abstract class Base {
   }
 
   abstract void setFieldTypes();
+
+  public int getId() {
+    return id;
+  }
 
   void setFieldsFromResultSet(ResultSet rs) throws SQLException {
     for(Entry<String, String> entry : fieldsTypes.entrySet()) {
@@ -73,7 +99,7 @@ public abstract class Base {
     return (Integer)fieldsValues.get(name);
   }
 
-  public String getStringField(String name) {
+  public static String getStringField(String name) {
     return (String)fieldsValues.get(name);
   }
 
