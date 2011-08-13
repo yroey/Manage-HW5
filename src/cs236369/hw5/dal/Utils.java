@@ -1,11 +1,9 @@
 package cs236369.hw5.dal;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -23,7 +21,7 @@ public class Utils {
     initialized = true;
   }
 
-  static synchronized Connection getConnection() {
+  public static synchronized Connection getConnection() {
 
     if (initialized == true) {
       return connection;
@@ -51,6 +49,18 @@ public class Utils {
       e.printStackTrace();
     }
     return rs;
+  }
+
+  static void executeUpdate(String update) {
+    connection = getConnection();
+    PreparedStatement prepStmt = null;
+    try {
+      prepStmt = connection.prepareStatement(update);
+      prepStmt.executeUpdate();
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   static ResultSet getTableRowById(String tableName, int id) {

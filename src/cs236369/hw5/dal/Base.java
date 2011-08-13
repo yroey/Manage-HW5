@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 public abstract class Base {
   protected HashMap<String, String> fieldsTypes;
-  static HashMap<String, Object> fieldsValues;
+  protected HashMap<String, Object> fieldsValues;
   protected static String tableName;
   static Class<?> cName;
   int id;
@@ -36,6 +36,12 @@ public abstract class Base {
   public abstract String getTableName();
   Base(ResultSet rs) {
     init();
+    try {
+		id = rs.getInt("id");
+	} catch (SQLException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
     try {
       setFieldsFromResultSet(rs);
     } catch (SQLException e) {
@@ -86,7 +92,6 @@ public abstract class Base {
       if (type == "int") {
         value = rs.getInt(name);
       }
-
       fieldsValues.put(name, value);
     }
   }
@@ -99,7 +104,7 @@ public abstract class Base {
     return (Integer)fieldsValues.get(name);
   }
 
-  public static String getStringField(String name) {
+  public String getStringField(String name) {
     return (String)fieldsValues.get(name);
   }
 

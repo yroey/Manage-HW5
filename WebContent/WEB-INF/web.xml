@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <resource-ref>
+    <description>[Your Description]</description>
+    <res-ref-name>jdbc/manage</res-ref-name>
+    <res-type>javax.sql.DataSource</res-type>
+    <res-auth>Container</res-auth>
+  </resource-ref>
   <display-name>Manage HW5</display-name>
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
     <description></description>
@@ -19,4 +20,43 @@
     <servlet-name>Test</servlet-name>
     <url-pattern>/Test</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Index</display-name>
+    <servlet-name>Index</servlet-name>
+    <servlet-class>cs236369.hw5.Index</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Index</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Base</display-name>
+    <servlet-name>Base</servlet-name>
+    <servlet-class>cs236369.hw5.Base</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Base</servlet-name>
+    <url-pattern>/Base</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Authentication</display-name>
+    <servlet-name>Authentication</servlet-name>
+    <servlet-class>cs236369.hw5.Authentication</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Authentication</servlet-name>
+    <url-pattern>/Authentication</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <display-name>StudentFilter</display-name>
+    <filter-name>StudentFilter</filter-name>
+    <filter-class>cs236369.hw5.StudentFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>StudentFilter</filter-name>
+    <url-pattern>/student/*</url-pattern>
+  </filter-mapping>
 </web-app>

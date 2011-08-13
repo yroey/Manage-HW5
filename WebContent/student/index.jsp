@@ -12,7 +12,8 @@
 </head>
 <body>
 Hi student!
-
+<br>
+<a href="time_table.jsp">time table</a>
 <h2>Your courses</h2>
 <% for (Course course : student.getCourses()) { %>
   <%= course.getName() %> <br />

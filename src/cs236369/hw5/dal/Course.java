@@ -12,6 +12,7 @@ public class Course extends Base {
   public String getTableName() {
     return tableName;
   }
+
   public Course(int id) {
     super(id);
   }
@@ -24,8 +25,15 @@ public class Course extends Base {
     super(rs);
   }
 
-  public static Course[] getAll() {
-    return new Course[0];
+  public static Course[] getAll() throws SQLException{
+	  ResultSet rs = Utils.executeQuery("SELECT * FROM courses");
+	  ArrayList<Course> courses = new ArrayList<Course>();
+	  while(rs.next()) {
+		  courses.add(new Course(rs));
+	  }
+	  Course[] arrayCourses = new Course[courses.size()];
+	  courses.toArray(arrayCourses);
+	  return arrayCourses;
   }
 
   @Override
@@ -52,9 +60,8 @@ public class Course extends Base {
   public Student[] getStudents() throws SQLException {
     ResultSet rs = Utils.executeQuery("SELECT * FROM courses_students WHERE course_id = " + getId());
     ArrayList<Integer> ids = new ArrayList<Integer>();
-    while(!rs.isAfterLast()) {
+    while(rs.next()) {
       ids.add(rs.getInt("course_id"));
-      rs.next();
     }
     int[] arrayIds = new int[ids.size()];
     for (int i=0; i < arrayIds.length; i++){
