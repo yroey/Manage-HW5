@@ -59,4 +59,24 @@
     <filter-name>StudentFilter</filter-name>
     <url-pattern>/student/*</url-pattern>
   </filter-mapping>
+  <servlet>
+  	<description></description>
+  	<display-name>addCourse</display-name>
+  	<servlet-name>addCourse</servlet-name>
+  	<servlet-class>cs236369.hw5.addCourse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>addCourse</servlet-name>
+  	<url-pattern>/administrator/addCourse</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Registration</display-name>
+    <servlet-name>Registration</servlet-name>
+    <servlet-class>cs236369.hw5.Registration</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Registration</servlet-name>
+    <url-pattern>/Registration</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
 <%
-int days_per_week = 5;
-int hours_per_day = 9;
+int days_per_week = 7;
+int hours_per_day = 10;
 
-String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wensday", "Thursday"};
+String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wednsday", "Thursday","Friday","Saturday"};
 
 Student student = (Student)session.getAttribute("student");
 Course[][] time_table = student.getTimeTable(days_per_week, hours_per_day);

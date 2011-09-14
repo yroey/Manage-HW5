@@ -38,8 +38,13 @@ public class Course extends Base {
 
   @Override
   void setFieldTypes() {
+	fieldsTypes.put("id", "int");
+	fieldsTypes.put("group", "int");
     fieldsTypes.put("name", "string");
     fieldsTypes.put("capacity", "int");
+    fieldsTypes.put("credit_points", "int");
+    fieldsTypes.put("course_description", "string");
+    fieldsTypes.put("creator_id", "int");
   }
 
   public String getName() {

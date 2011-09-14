@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -7,12 +7,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="Authentication" method="post">
-  <label>Username</label>:
-  <input type="text" name="username" /><br />
-  <label>Password</label>:
-  <input type="password" name="password" /><br />
-  <input type="submit" value="Login" />
-</form>
+	<form action="Authentication" method="post">
+		<label>Username</label>: <input type="text" name="username" /><br />
+		<label>Password</label>: <input type="password" name="password" /><br />
+		<input type="radio" name="type" value="administrator" /> administrator<br />
+		<input type="radio" name="type" value="student" /> student <br />
+		<input type="submit" value="Login" />
+	</form>
 </body>
 </html>
