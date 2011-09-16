@@ -75,4 +75,14 @@ public class Course extends Base {
     return Student.GetByIds(arrayIds);
   }
 
+public static Course[] search(String name, boolean available) {
+	try {
+		return getAll();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return new Course[0];
+}
+
 }

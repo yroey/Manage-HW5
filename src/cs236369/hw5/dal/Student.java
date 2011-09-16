@@ -68,8 +68,8 @@ public class Student extends Base {
 		Utils.executeUpdate(update);
 	}
 
-	public void getAvailableCoursesIds() {
-
+	public ArrayList<Integer> getAvailableCoursesIds() {
+		return null;
 	}
 
 	public Session[] getSessions() throws SQLException {

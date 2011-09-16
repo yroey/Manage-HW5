@@ -19,8 +19,27 @@ Hi student!
 	  <%= course.getName() %> <br />
 	<% } %>
 <h2>All courses</h2>
-	<% for (Course course : courses) { %>
-	  <%= course.getName() %> <br />
-	<% } %>
+	<div id="courses">
+	 <div id="course_template" style="display:none">
+    <h3 class="course_name"></h3>
+	 </div>
+	</div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script>
+	 var x;
+	  $(document).ready(function(){
+		  $.getJSON('CourseSearch', function(data){
+			  var courses = data['courses'];
+			  var template = $('#course_template');
+			  for (i in courses) {
+				  var course = courses[i];
+				  x = course;
+				  var new_course = template.clone();
+				  new_course.find('.course_name').html(course['name']).end()
+				    .removeAttr('id').appendTo('#courses').show(0);
+			  }
+		  });
+	  });
+	</script>
 </body>
 </html>
