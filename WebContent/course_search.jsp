@@ -8,7 +8,8 @@ Course[] courses = (Course[])request.getAttribute("courses");
 "courses": [
 <% for (int i = 0; i < courses.length; ++i) { %>
   {
-    "name": "<%= courses[i].getName().replace("\"", "\\\"") %>"
+    "name": "<%= courses[i].getName().replace("\"", "\\\"") %>",
+    "id": <%= courses[i].getId() %>
   }
   <% if (i+1 < courses.length) {%>
   ,

@@ -32,6 +32,10 @@ public class Student extends Base {
 		super(id);
 	}
 
+	public String getName() {
+		return getStringField("name");
+	}
+
 	public static Student authenticate(String username, String password) throws Exception {
 		Connection connection = Utils.getConnection();
 		PreparedStatement prepStmt = null;
@@ -108,6 +112,60 @@ public class Student extends Base {
 		}
 		return time_table;
 	}
+
+	public boolean isCourseAvailable(int course_id) throws SQLException {
+		Course course = new Course(course_id);
+
+		if (course.getNumStudents() >= course.getCapacity()) {
+			return false;
+		}
+		Course[] courses = getCourses();
+		for (Course registered_course : courses) {
+			if (Course.doCoursesConflict(course, registered_course)) {
+				return false;
+			}
+		}
+
+	    return true;
+	}
+	public boolean registerToCourse(int course_id) throws SQLException {
+
+		ResultSet rs = Utils.executeQuery("SELECT * FROM courses_students WHERE student_id = " + getId()); //fix question marks
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+
+		while(rs.next()) {
+			ids.add(rs.getInt("course_id"));
+		}
+
+		if (ids.contains(course_id)) {
+			return false;
+		}
+		if (!isCourseAvailable(course_id)) {
+			return false;
+		}
+
+		Utils.executeUpdate("INSERT INTO courses_students (course_id, student_id) VALUES (" + course_id + ", " + getId() + ")");
+
+		Course course = new Course(course_id);
+		if(isTimeTableValid() && course.getNumStudents() <= course.getCapacity()) {
+			return true;
+		}
+
+		Utils.executeUpdate("DELETE FROM courses_students where course_id = " + course_id + " and student_id = " + getId());
+		return false;
+	}
+
+	private boolean isTimeTableValid() throws SQLException {
+		for (Course course1 : getCourses()) {
+			for (Course course2: getCourses()) {
+				if (!course1.equals(course2) && Course.doCoursesConflict(course1, course2)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public Course[] getCourses() throws SQLException {
 		ResultSet rs = Utils.executeQuery("SELECT * FROM courses_students WHERE student_id = " + getId()); //fix question marks
 		ArrayList<Integer> ids = new ArrayList<Integer>();

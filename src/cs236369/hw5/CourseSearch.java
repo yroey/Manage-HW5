@@ -1,6 +1,7 @@
 package cs236369.hw5;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -47,7 +48,20 @@ public class CourseSearch extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		Student student = (Student)request.getSession().getAttribute("student");
+		int course_id = Integer.parseInt(request.getParameter("course_id"));
+		boolean registration_success = false;
+		try {
+			registration_success = student.registerToCourse(course_id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (registration_success) {
+			response.getWriter().print("{\"result\":1}");
+		} else {
+			response.getWriter().print("{\"result\":0}");
+		}
 	}
 
 }
