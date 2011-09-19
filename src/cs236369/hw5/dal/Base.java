@@ -182,4 +182,12 @@ public abstract class Base {
 		
 		return true;
 	}
+
+	public boolean equal(Object other) {
+		if (!(other instanceof Base)) {
+			return false;
+		}
+		Base base = (Base)other;
+		return base.getId() == getId();
+	}
 }

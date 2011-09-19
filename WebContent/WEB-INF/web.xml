@@ -60,14 +60,14 @@
     <url-pattern>/student/*</url-pattern>
   </filter-mapping>
   <servlet>
-  	<description></description>
-  	<display-name>addCourse</display-name>
-  	<servlet-name>addCourse</servlet-name>
-  	<servlet-class>cs236369.hw5.addCourse</servlet-class>
+    <description></description>
+    <display-name>addCourse</display-name>
+    <servlet-name>addCourse</servlet-name>
+    <servlet-class>cs236369.hw5.addCourse</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>addCourse</servlet-name>
-  	<url-pattern>/administrator/addCourse</url-pattern>
+    <servlet-name>addCourse</servlet-name>
+    <url-pattern>/administrator/addCourse</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
@@ -78,5 +78,14 @@
   <servlet-mapping>
     <servlet-name>Registration</servlet-name>
     <url-pattern>/Registration</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>CourseSearch</display-name>
+    <servlet-name>CourseSearch</servlet-name>
+    <servlet-class>cs236369.hw5.CourseSearch</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CourseSearch</servlet-name>
+    <url-pattern>/student/CourseSearch</url-pattern>
   </servlet-mapping>
 </web-app>

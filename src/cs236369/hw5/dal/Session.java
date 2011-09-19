@@ -76,4 +76,16 @@ public class Session extends Base {
 	public int getCourseId() {
 		return getIntField("course_id");
 	}
+
+	public static boolean doSessionsConflict(Session session1, Session session2) {
+		if ((session1.getStartHour() > session2.getStartHour() &&
+				session1.getStartHour() < session2.getEndHour()) ||
+			(session1.getEndHour() < session2.getEndHour() &&
+				session1.getEndHour() > session2.getStartHour()) ||
+			(session1.getStartHour() < session2.getStartHour() &&
+				session1.getEndHour() > session2.getEndHour())) {
+			return true;
+		}
+		return false;
+	}
 }

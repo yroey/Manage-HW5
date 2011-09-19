@@ -74,4 +74,46 @@ public class Course extends Base {
     return Student.GetByIds(arrayIds);
   }
 
+  public Session[] getSessions() throws SQLException {
+	    ResultSet rs = Utils.executeQuery("SELECT * FROM sessions WHERE course_id = " + getId());
+	    ArrayList<Session> sessions = new ArrayList<Session>();
+	    while(rs.next()) {
+	      sessions.add(new Session(rs));
+	    }
+	    Session[] arraySessions = new Session[sessions.size()];
+	    sessions.toArray(arraySessions);
+	    return arraySessions;
+  }
+
+public static Course[] search(String name, boolean available) {
+	try {
+		return getAll();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return new Course[0];
+}
+
+public static boolean doCoursesConflict(Course course1, Course course2) throws SQLException {
+	for (Session session1 : course1.getSessions()) {
+		for (Session session2 : course2.getSessions()) {
+			if (Session.doSessionsConflict(session1, session2)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+public int getNumStudents() throws SQLException {
+	ResultSet rs = Utils.executeQuery("SELECT count(*)  FROM courses_students WHERE course_id = " + getId());
+	rs.next();
+	return rs.getInt(1);
+}
+
+public int getCapacity() {
+	return getIntField("capacity");
+}
+
 }

@@ -11,7 +11,7 @@
 		<label>Username</label>: <input type="text" name="username" /><br />
 		<label>Password</label>: <input type="password" name="password" /><br />
 		<input type="radio" name="type" value="administrator" /> administrator<br />
-		<input type="radio" name="type" value="student" /> student <br />
+		<input type="radio" name="type" value="student" checked="checked" /> student <br />
 		<input type="submit" value="Login" />
 	</form>
 </body>
