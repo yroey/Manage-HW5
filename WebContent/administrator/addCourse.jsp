@@ -9,7 +9,7 @@
 	<body>
 		<form action="addCourse" method="post">
 			<label>ID</label>: <input type="text" name="id" /><br />
-			<label>group</label>: <input type="text" name="group" /><br />
+			<label>group</label>: <input type="text" name="group_id" /><br />
 			<label>Name</label>: <input type="text" name="name" /><br />
 			<label>Capacity</label>: <input type="text" name="capacity" /><br />
 			<label>Credit Points</label>: <input type="text" name="credit points" /><br />

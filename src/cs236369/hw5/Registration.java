@@ -6,6 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import cs236369.hw5.dal.Administartor;
+import cs236369.hw5.dal.Course;
+import cs236369.hw5.dal.Student;
 import cs236369.hw5.dal.Utils;
 
 /**
@@ -40,18 +44,28 @@ public class Registration extends HttpServlet {
 		  String type = request.getParameter("type");
 		  System.out.println("creating an account of type " + type);
 		  try {
-			if (type.equals("student")){
-			    Utils.addStudentAccount(username, password, name, Integer.parseInt(phoneNumber));
+			if (type.equals("administrator")){
+				Administartor admin = new Administartor();
+				admin.setField("username",  username);
+				admin.setField("password", password);
+				admin.setField("name", name);
+				admin.setField("phone_number", Integer.parseInt(phoneNumber));
+				admin.save();
 			    response.sendRedirect("login.jsp");
 			}
 			else{
 				//administrator
-				 Utils.addAdministratorAccount(username, password, name, Integer.parseInt(phoneNumber));
-				 response.sendRedirect("login.jsp");
+				Student stud = new Student();
+				stud.setField("username",  username);
+				stud.setField("password", password);
+				stud.setField("name", name);
+				stud.setField("phone_number", Integer.parseInt(phoneNumber));
+				stud.save();
+				response.sendRedirect("login.jsp");
 			}
 		  } catch (Exception e) {
-		    e.printStackTrace();
-		    response.sendRedirect("login.jsp");
+			    e.printStackTrace();
+			    response.sendRedirect("login.jsp");
 		  }
 	}
 }

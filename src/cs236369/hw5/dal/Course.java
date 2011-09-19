@@ -16,7 +16,7 @@ public class Course extends Base {
   public Course(int id) {
     super(id);
   }
-
+  
   public Course() {
     super();
   }
@@ -38,8 +38,7 @@ public class Course extends Base {
 
   @Override
   void setFieldTypes() {
-	fieldsTypes.put("id", "int");
-	fieldsTypes.put("group", "int");
+	fieldsTypes.put("group_id", "int");
     fieldsTypes.put("name", "string");
     fieldsTypes.put("capacity", "int");
     fieldsTypes.put("credit_points", "int");

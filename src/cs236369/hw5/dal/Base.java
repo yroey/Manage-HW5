@@ -1,16 +1,23 @@
 package cs236369.hw5.dal;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 
 public abstract class Base {
-	protected HashMap<String, String> fieldsTypes;
-	protected HashMap<String, Object> fieldsValues;
+	protected LinkedHashMap<String, String> fieldsTypes;
+	protected LinkedHashMap<String, Object> fieldsValues;
+	protected LinkedList<String> fields;
 	protected static String tableName;
 	static Class<?> cName;
 	int id;
+	
 	Base() {
 		init();
 	}
@@ -35,7 +42,7 @@ public abstract class Base {
 
 	public abstract String getTableName();
 
-	Base(ResultSet rs) {
+	Base(ResultSet rs) { 
 		init();
 		try {
 			id = rs.getInt("id");
@@ -61,11 +68,15 @@ public abstract class Base {
 
 
 	final void initFields() {
-		fieldsTypes = new HashMap<String, String>();
-		fieldsValues = new HashMap<String, Object>();
+		fieldsTypes = new LinkedHashMap<String, String>();
+		fieldsValues = new LinkedHashMap<String, Object>();
+		fields = new LinkedList<String>();
 		setFieldTypes();
 		for(Entry<String, String> entry : fieldsTypes.entrySet()) {
 			String name = entry.getKey();
+			if (!name.equals("id")){
+				fields.add(name);
+			}
 			String type = entry.getValue();
 			if (type.equals("string")) {
 				fieldsValues.put(name, "");
@@ -110,6 +121,65 @@ public abstract class Base {
 	}
 
 	public void save() {
-
+		Connection connection = Utils.getConnection();
+		
+		String prepStmt = "INSERT INTO " + getTableName() + " (" + fields.get(0);
+		for (int i = 1 ; i < fields.size(); i++ ){
+			prepStmt += " ," + fields.get(i);
+		}
+		prepStmt += ")";
+		prepStmt += " VALUES ( ?";
+		
+		for (int i = 0 ; i < fieldsTypes.size() - 1 ; i++){
+			prepStmt += ", ?";
+		}
+		prepStmt += ");";
+		PreparedStatement ps = null;
+		int rs = 0;
+		try
+		{
+			ps = connection.prepareStatement(prepStmt);
+			Collection<String> ct = fieldsTypes.values();
+			Iterator<String> itrT = ct.iterator();
+			Collection<Object> cv = fieldsValues.values();
+			Iterator<Object> itrV = cv.iterator();
+			int i = 1;
+			while(itrT.hasNext()){
+				if(itrT.next().equals("string")){
+					ps.setString(i,(String)itrV.next());
+				}
+				else{ //int
+					ps.setInt(i, (Integer)itrV.next());
+				}
+				i++;
+			}
+			System.out.println(ps.toString());
+			rs = ps.executeUpdate();
+			System.out.println(rs);
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public Boolean duplicate(String key, String newKey){
+		
+		Connection connection = Utils.getConnection();
+		String prepStmt = "SELECT FROM " + getTableName() + "WHERE " + key + "=" + newKey + ";";
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try
+		{
+			ps = connection.prepareStatement(prepStmt);	
+			System.out.println(ps.toString());
+			rs = ps.executeQuery();
+			if (!rs.next()){
+				return false;
+			}
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return true;
 	}
 }

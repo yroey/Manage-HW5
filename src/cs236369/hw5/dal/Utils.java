@@ -99,7 +99,7 @@ public class Utils {
 		}
 		return rs;
 	}
-
+/*
 	public static int addStudentAccount(String username, String password, String name, int phoneNumber)
 	{
 		Connection connection = Utils.getConnection();
@@ -131,9 +131,9 @@ public class Utils {
 			e.printStackTrace();
 		}	    
 		return r;	
-	}		
+	}		*/
 
-	public static int addAdministratorAccount(String username, String password, String name, int phoneNumber)
+	/*public static int addAdministratorAccount(String username, String password, String name, int phoneNumber)
 	{
 		Connection connection = Utils.getConnection();
 		String prepStmt = "SELECT * FROM administrators WHERE username=?;";
@@ -165,5 +165,5 @@ public class Utils {
 		}	    
 		return r;	
 		
-	}	
+	}	*/
 }

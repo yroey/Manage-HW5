@@ -10,11 +10,15 @@ import java.util.HashMap;
 public class Student extends Base {
 
 	static String tableName = "students";
+	static int id_counter = 1;
 
 	//TODO table initialization
 	@Override
 	void setFieldTypes() {
 		fieldsTypes.put("username", "string");
+	    fieldsTypes.put("password", "string");
+	    fieldsTypes.put("name", "string");
+	    fieldsTypes.put("phone_number", "int");
 	}
 
 	public String getTableName() {
@@ -26,6 +30,7 @@ public class Student extends Base {
 
 	public Student() {
 		super();
+		this.id = id_counter;
 	}
 
 	public Student(int id) {

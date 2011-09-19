@@ -14,14 +14,15 @@ import java.sql.SQLException;
  */
 public class Administartor extends Base
 {
-	static String tableName = "administrator";
-
+	static String tableName = "administrators";
+	static int id_counter = 1;
 	/**
 	 *
 	 */
 	public Administartor()
 	{
 		super();
+	    this.id = id_counter;
 	}
 
 	/**
@@ -57,39 +58,12 @@ public class Administartor extends Base
 	@Override
 	void setFieldTypes()
 	{
-		fieldsTypes.put("username", "string");
-		fieldsTypes.put("password", "int");
+	    fieldsTypes.put("username", "string");
+	    fieldsTypes.put("password", "string");
+	    fieldsTypes.put("name", "string");
+	    fieldsTypes.put("phone_number", "int");
 	}
 
-	public int addNewCourse(int courseID, int group, String name,
-			int capacity, int creditPoints,String description, int id){
-
-		Connection connection = Utils.getConnection();
-
-		String prepStmt = "INSERT INTO courses VALUES ( ? , ? , ? , ? , ? , ? , ? );";
-		PreparedStatement ps = null;
-		int rs = 0;
-		try
-		{
-			ps = connection.prepareStatement(prepStmt);
-			ps.setInt(1, courseID);
-			ps.setInt(2, group);
-			ps.setString(3, name);
-			ps.setInt(4, capacity);
-			ps.setInt(5, creditPoints);
-			ps.setString(6, description);
-			ps.setInt(7, id);
-			System.out.println(ps.toString());
-			rs = ps.executeUpdate();
-			System.out.println(rs);
-		}
-		catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return rs;
-	}
 	public static int removeCourse(int id){
 		Connection connection = Utils.getConnection();
 		String prepStmt = "DELETE FROM courses WHERE id=?;";
