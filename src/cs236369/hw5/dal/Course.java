@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Course extends Base {
 
   public static String tableName = "courses";
-
+  
   public String getTableName() {
     return tableName;
   }
@@ -19,6 +19,7 @@ public class Course extends Base {
   
   public Course() {
     super();
+	key = "name";
   }
 
   public Course(ResultSet rs) {

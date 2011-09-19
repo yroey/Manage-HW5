@@ -19,17 +19,20 @@
 			   	<td>capacity</td>
 			   	<td>credit points</td>
 			   	<td>description</td>
+			   	<td>remove course</td>
 			  </tr>
 			  <%for(Course c : courses){ %>
 			  <tr>
 			  	<td><%=c.getId() %></td>
 			  	<td><%=c.getName() %></td>
-			  	<td><%=c.getIntField("group") %></td>	
+			  	<td><%=c.getIntField("group_id") %></td>	
 			  	<td><%=c.getIntField("capacity") %></td>	
 			  	<td><%=c.getIntField("credit_points") %></td>
 			  	<td><%=c.getStringField("course_description") %></td>
-			  </tr>
-			  <% }%> 		  
+			  	<td> <%if (c.getIntField("creator_id") == ((Administartor)session.getAttribute("administrator")).getId()){%>
+			   			<a href="#">removeCouerse</a> <% }%> </td>
+			   			<% }%>
+			  </tr>	  
 		</table>
 	</body>
 </html>

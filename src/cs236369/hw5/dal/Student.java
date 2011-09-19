@@ -10,7 +10,6 @@ import java.util.HashMap;
 public class Student extends Base {
 
 	static String tableName = "students";
-	static int id_counter = 1;
 
 	//TODO table initialization
 	@Override
@@ -30,7 +29,7 @@ public class Student extends Base {
 
 	public Student() {
 		super();
-		this.id = id_counter;
+		key = "username";
 	}
 
 	public Student(int id) {

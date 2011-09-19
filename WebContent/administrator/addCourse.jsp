@@ -8,12 +8,11 @@
 	</head>
 	<body>
 		<form action="addCourse" method="post">
-			<label>ID</label>: <input type="text" name="id" /><br />
-			<label>group</label>: <input type="text" name="group_id" /><br />
 			<label>Name</label>: <input type="text" name="name" /><br />
+			<label>group</label>: <input type="text" name="group_id" /><br />
 			<label>Capacity</label>: <input type="text" name="capacity" /><br />
 			<label>Credit Points</label>: <input type="text" name="credit points" /><br />
-			<label>course description</label>: <input type="text" name="course description" /><br />
+			<label>course description</label>: <input type="textarea" name="course description" /><br />
 			<input type="submit" value="Submit" />
 		</form>
 	</body>

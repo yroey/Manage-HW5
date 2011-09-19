@@ -30,7 +30,6 @@ public class addCourse extends HttpServlet
 		  String capacity = request.getParameter("capacity");
 		  String creditPoints = request.getParameter("credit points");
 		  String description = request.getParameter("course description");
-		  
 		  Course course = new Course();
 		  course.setField("group_id",  Integer.parseInt(group_id));
 		  course.setField("name", name);
@@ -38,7 +37,9 @@ public class addCourse extends HttpServlet
 		  course.setField("credit_points", Integer.parseInt(creditPoints));
 		  course.setField("course_description", description);
 		  course.setField("creator_id", admin.getId());
-		  course.save();
+		  if (!course.save()){
+			  System.out.println("duplicate key " + name);
+		  }
 		  
 		  try {
 		    //request.getSession(true).setAttribute("student", student);

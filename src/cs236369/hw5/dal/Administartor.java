@@ -15,14 +15,13 @@ import java.sql.SQLException;
 public class Administartor extends Base
 {
 	static String tableName = "administrators";
-	static int id_counter = 1;
 	/**
 	 *
 	 */
 	public Administartor()
 	{
 		super();
-	    this.id = id_counter;
+	    key = "username";
 	}
 
 	/**

@@ -15,6 +15,7 @@ public abstract class Base {
 	protected LinkedHashMap<String, Object> fieldsValues;
 	protected LinkedList<String> fields;
 	protected static String tableName;
+	protected String key;
 	static Class<?> cName;
 	int id;
 	
@@ -120,9 +121,12 @@ public abstract class Base {
 		return (String)fieldsValues.get(name);
 	}
 
-	public void save() {
+	public boolean save() {
 		Connection connection = Utils.getConnection();
-		
+		if (duplicate(this.key, (String)fieldsValues.get(this.key))){
+			//TODO ERROR
+			return false;
+		}
 		String prepStmt = "INSERT INTO " + getTableName() + " (" + fields.get(0);
 		for (int i = 1 ; i < fields.size(); i++ ){
 			prepStmt += " ," + fields.get(i);
@@ -156,15 +160,17 @@ public abstract class Base {
 			System.out.println(ps.toString());
 			rs = ps.executeUpdate();
 			System.out.println(rs);
+			return true;
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
-	public Boolean duplicate(String key, String newKey){
+	public boolean duplicate(String key, String newKey){
 		
 		Connection connection = Utils.getConnection();
-		String prepStmt = "SELECT FROM " + getTableName() + "WHERE " + key + "=" + newKey + ";";
+		String prepStmt = "SELECT * FROM " + getTableName() + " WHERE " + key + "=" + newKey + ";";
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try
