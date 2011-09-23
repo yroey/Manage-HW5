@@ -28,7 +28,9 @@ public abstract class Base {
 		this.id = id;
 		ResultSet rs = Utils.getTableRowById(getTableName(), id);
 		try {
-			rs.next();
+			if (!rs.next()){
+				System.out.println("base constructor fail");
+			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -170,7 +172,7 @@ public abstract class Base {
 	public boolean duplicate(String key, String newKey){
 		
 		Connection connection = Utils.getConnection();
-		String prepStmt = "SELECT * FROM " + getTableName() + " WHERE " + key + "=" + newKey + ";";
+		String prepStmt = "SELECT * FROM " + getTableName() + " WHERE " + key + "='" + newKey + "';";
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try
@@ -195,5 +197,25 @@ public abstract class Base {
 		}
 		Base base = (Base)other;
 		return base.getId() == getId();
+	}
+	
+	public boolean delete(){
+		Connection connection = Utils.getConnection();
+		if (!duplicate("id", new Integer(id).toString())){
+			return false;
+		}
+		String prepStmt = "DELETE FROM " + getTableName() + " WHERE id=" + id + ";";
+		PreparedStatement ps = null;
+		try
+		{
+			ps = connection.prepareStatement(prepStmt);	
+			System.out.println(ps.toString());
+			ps.executeUpdate();
+			return true;
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

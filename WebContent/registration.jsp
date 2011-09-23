@@ -7,13 +7,12 @@
 		<title>registration form</title>
 	</head>
 	<body>
+		<% if (request.getSession(true).getAttribute("action") == null){request.getSession(true).setAttribute("action", "addStudent");}%>
 		<form action="Registration" method="post">
 			<label>user name</label>: <input type="text" name="username" /><br />
-			<label>password</label>: <input type="text" name="password" /><br />
+			<label>password</label>: <input type="password" name="password" /><br />
 			<label>name</label>: <input type="text" name="name" /><br />
 			<label>phone number</label>: <input type="text" name="phoneNumber" /><br />
-			<input type="radio" name="type" value="administrator" /> administrator<br />
-			<input type="radio" name="type" value="student" /> student <br />
 			<input type="submit" value="Submit" />
 		</form>
 	</body>

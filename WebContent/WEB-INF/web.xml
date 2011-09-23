@@ -61,13 +61,13 @@
   </filter-mapping>
   <servlet>
     <description></description>
-    <display-name>addCourse</display-name>
-    <servlet-name>addCourse</servlet-name>
-    <servlet-class>cs236369.hw5.addCourse</servlet-class>
+    <display-name>ManageCourse</display-name>
+    <servlet-name>ManageCourse</servlet-name>
+    <servlet-class>cs236369.hw5.ManageCourse</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>addCourse</servlet-name>
-    <url-pattern>/administrator/addCourse</url-pattern>
+    <servlet-name>ManageCourse</servlet-name>
+    <url-pattern>/administrator/ManageCourse</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
