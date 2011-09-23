@@ -32,9 +32,32 @@ public class CourseSearch extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Student student = (Student)request.getSession().getAttribute("student");
+		if (request.getParameter("id") != null) {
+			try {
+				int id = Integer.parseInt(request.getParameter("id"));
+				Course course = new Course(id);
+				request.setAttribute("course", course);
+				request.getRequestDispatcher("/student/course.jsp").forward(request, response);
+				return;
+			}  catch(Exception e) {
+				return;
+			}
+		}
 		String name = request.getParameter("name");
 		boolean available = request.getParameter("available") == "1";
-		Course[] courses = Course.search(name, available);
+		boolean registered = request.getParameter("registered") == "1";
+		Course[] courses;
+		if (registered) {
+			try {
+				courses = student.getCourses();
+			} catch (SQLException e) {
+				courses = new Course[0];
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			courses = Course.search(name, available);
+		}
 		request.setAttribute("courses", courses);
 
 		ArrayList<Integer> available_courses_ids = student.getAvailableCoursesIds();
