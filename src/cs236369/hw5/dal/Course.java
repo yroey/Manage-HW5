@@ -53,6 +53,9 @@ public class Course extends Base {
 
 	public static Course[] GetByIds(int[] ids) throws SQLException {
 		ResultSet rs = Utils.getTableRowsByIds(tableName, ids);
+		if (rs == null){
+			return new Course[0];
+		}
 		ArrayList<Course> courses = new ArrayList<Course>();
 		while(rs.next()) {
 			courses.add(new Course(rs));

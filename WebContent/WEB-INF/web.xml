@@ -61,13 +61,13 @@
   </filter-mapping>
   <servlet>
     <description></description>
-    <display-name>ManageCourse</display-name>
-    <servlet-name>ManageCourse</servlet-name>
-    <servlet-class>cs236369.hw5.ManageCourse</servlet-class>
+    <display-name>ManageCourses</display-name>
+    <servlet-name>ManageCourses</servlet-name>
+    <servlet-class>cs236369.hw5.ManageCourses</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ManageCourse</servlet-name>
-    <url-pattern>/administrator/ManageCourse</url-pattern>
+    <servlet-name>ManageCourses</servlet-name>
+    <url-pattern>/administrator/ManageCourses</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>
@@ -87,5 +87,15 @@
   <servlet-mapping>
     <servlet-name>CourseSearch</servlet-name>
     <url-pattern>/student/CourseSearch</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <description></description>
+    <display-name>ManageStudents</display-name>
+    <servlet-name>ManageStudents</servlet-name>
+    <servlet-class>cs236369.hw5.ManageStudents</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ManageStudents</servlet-name>
+    <url-pattern>/administrator/ManageStudents</url-pattern>
   </servlet-mapping>
 </web-app>

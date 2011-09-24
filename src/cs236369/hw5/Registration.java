@@ -8,9 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cs236369.hw5.dal.Administartor;
-import cs236369.hw5.dal.Course;
 import cs236369.hw5.dal.Student;
-import cs236369.hw5.dal.Utils;
 
 /**
  * Servlet implementation class Authentication

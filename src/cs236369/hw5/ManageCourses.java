@@ -15,7 +15,7 @@ import cs236369.hw5.dal.Course;
  * @author Dennis
  *
  */
-public class ManageCourse extends HttpServlet
+public class ManageCourses extends HttpServlet
 {
 	/**
 	 *
@@ -23,25 +23,13 @@ public class ManageCourse extends HttpServlet
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String action = (String)request.getSession().getAttribute("action");
-		if (action.equals("Remove")){
-			Administartor admin = (Administartor)request.getSession().getAttribute("administrator"); 
-			String CourseId = (String) request.getSession().getAttribute("removeCourseId");
-			Course course = new Course(Integer.parseInt(CourseId));
-			if (!course.delete()){
-				System.out.println("can't delete " + admin.getId());
-			}
-			response.sendRedirect("index.html");
-		}
-		else{
-			
-		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Administartor admin = (Administartor)request.getSession().getAttribute("administrator");
-		String action = (String)request.getSession().getAttribute("action");
-		if (action.equals("Add")){
+		String action = request.getParameter("action");
+		System.out.println(action);
+		if (action == null){
 			String group_id = request.getParameter("group_id");
 			String name = request.getParameter("name");
 			String capacity = request.getParameter("capacity");
@@ -58,8 +46,14 @@ public class ManageCourse extends HttpServlet
 				System.out.println("duplicate key " + name);
 			}
 		}
-		else {
+		else if (action.equals("remove")){ 
+			String courseId = request.getParameter("course_id");
+			Course course = new Course(Integer.parseInt(courseId));
+			if (!course.delete()){
+				System.out.println("can't delete " + Integer.parseInt(courseId));
+			}
+			//TODO remove registration for all students	
 		}
-		response.sendRedirect("index.html");
+		response.sendRedirect("coursesManagement.jsp");
 	}
 }

@@ -63,6 +63,9 @@ public class Student extends Base {
 
 	public static Student[] GetByIds(int[] ids) throws SQLException {
 		ResultSet rs = Utils.getTableRowsByIds(tableName, ids);
+		if (rs == null){
+			return new Student[0];
+		}
 		ArrayList<Student> students = new ArrayList<Student>();
 		do {
 			students.add(new Student(rs));
@@ -176,11 +179,23 @@ public class Student extends Base {
 		while(rs.next()) {
 			ids.add(rs.getInt("course_id"));
 		}
+		
 		int[] arrayIds = new int[ids.size()];
 		for (int i=0; i < arrayIds.length; i++){
 			arrayIds[i] = ids.get(i).intValue();
 		}
 		Course[] courses =  Course.GetByIds(arrayIds);
 		return courses;
+	}
+	
+	public static Student[] getAll() throws SQLException{
+		ResultSet rs = Utils.executeQuery("SELECT * FROM students");
+		ArrayList<Student> students = new ArrayList<Student>();
+		while(rs.next()) {
+			students.add(new Student(rs));
+		}
+		Student[] arrayCourses = new Student[students.size()];
+		students.toArray(arrayCourses);
+		return arrayCourses;
 	}
 }
