@@ -84,6 +84,9 @@ public class Utils {
 	}
 
 	static ResultSet getTableRowsByIds(String tableName, int[] ids) {
+		if (ids.length == 0){
+			return null;
+		}
 		connection = getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;

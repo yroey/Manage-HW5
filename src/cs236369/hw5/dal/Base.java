@@ -169,6 +169,7 @@ public abstract class Base {
 		}
 		return false;
 	}
+	/* true if key with value newKey exists in the table*/
 	public boolean duplicate(String key, String newKey){
 		
 		Connection connection = Utils.getConnection();
@@ -218,4 +219,16 @@ public abstract class Base {
 		}
 		return false;
 	}
+	
+/*	public static Course[] getAll() throws SQLException{
+		String stmt = "SELECT * FROM " + getTableName();
+		ResultSet rs = Utils.executeQuery("SELECT * FROM courses");
+		ArrayList<Course> courses = new ArrayList<Course>();
+		while(rs.next()) {
+			courses.add(new Course(rs));
+		}
+		Course[] arrayCourses = new Course[courses.size()];
+		courses.toArray(arrayCourses);
+		return arrayCourses;
+	}*/
 }
