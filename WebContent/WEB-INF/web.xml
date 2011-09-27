@@ -88,4 +88,16 @@
     <servlet-name>CourseSearch</servlet-name>
     <url-pattern>/student/CourseSearch</url-pattern>
   </servlet-mapping>
+  <servlet>
+  <servlet-name>default</servlet-name>
+  <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+   <servlet-name>default</servlet-name>
+   <url-pattern>/static/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+   <servlet-name>default</servlet-name>
+   <url-pattern>/bla/*</url-pattern>
+  </servlet-mapping>
 </web-app>

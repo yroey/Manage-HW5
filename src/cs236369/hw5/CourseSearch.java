@@ -44,9 +44,10 @@ public class CourseSearch extends HttpServlet {
 			}
 		}
 		String name = request.getParameter("name");
-		boolean available = request.getParameter("available") == "1";
-		boolean registered = request.getParameter("registered") == "1";
-		Course[] courses;
+		boolean available = "1".equals(request.getParameter("available"));
+		boolean registered = "1".equals(request.getParameter("registered"));
+		Course[] courses = new Course[0];
+		ArrayList<Integer> available_courses_ids = null;
 		if (registered) {
 			try {
 				courses = student.getCourses();
@@ -56,11 +57,26 @@ public class CourseSearch extends HttpServlet {
 				e.printStackTrace();
 			}
 		} else {
-			courses = Course.search(name, available);
+			available_courses_ids = student.getAvailableCoursesIds();
+			ArrayList<Integer> ids = new ArrayList<Integer>();
+			if (available) {
+				ids.addAll(available_courses_ids);
+			}
+			Integer[] arrayIds = new Integer[ids.size()];
+			ids.toArray(arrayIds);
+			try {
+				if (available && available_courses_ids.size() == 0) {
+					courses = new Course[0];
+				} else {
+					courses = Course.searchCourses(name, arrayIds);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		request.setAttribute("courses", courses);
 
-		ArrayList<Integer> available_courses_ids = student.getAvailableCoursesIds();
 
 		request.setAttribute("abailable_courses_ids", available_courses_ids );
 		request.getRequestDispatcher("/course_search.jsp").forward(request, response);
@@ -72,6 +88,11 @@ public class CourseSearch extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Student student = (Student)request.getSession().getAttribute("student");
 		int course_id = Integer.parseInt(request.getParameter("course_id"));
+		boolean unregister = "1".equals(request.getParameter("unregister"));
+		if (unregister) {
+			student.unregisterFromCourse(course_id);
+			return;
+		}
 		boolean registration_success = false;
 		try {
 			registration_success = student.registerToCourse(course_id);
@@ -80,7 +101,8 @@ public class CourseSearch extends HttpServlet {
 			e.printStackTrace();
 		}
 		if (registration_success) {
-			response.getWriter().print("{\"result\":1}");
+			Course course = new Course(course_id);
+			response.getWriter().print("{\"result\":1, \"name\": \"" + course.getName() + "\", \"id\": " + course_id +"}");
 		} else {
 			response.getWriter().print("{\"result\":0}");
 		}

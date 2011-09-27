@@ -1,8 +1,10 @@
 package cs236369.hw5.dal;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Connection;
 
 
 public class Course extends Base {
@@ -43,7 +45,7 @@ public class Course extends Base {
 		fieldsTypes.put("name", "string");
 		fieldsTypes.put("capacity", "int");
 		fieldsTypes.put("credit_points", "int");
-		fieldsTypes.put("course_description", "string");
+		fieldsTypes.put("description", "string");
 		fieldsTypes.put("creator_id", "int");
 	}
 
@@ -117,4 +119,37 @@ public class Course extends Base {
 		return getIntField("capacity");
 	}
 
+	public static Course[] searchCourses(String name, Integer[] ids) throws SQLException {
+		Connection connection = Utils.getConnection();
+		PreparedStatement prepStmt = null;
+		ResultSet rs = null;
+		String query = "SELECT * FROM courses where name LIKE ?";
+		if (ids.length != 0) {
+			query += " and id in (";
+			for (int i = 0; i < ids.length -1; ++i) {
+				query += ids[i] +", ";
+			}
+			query += ids[ids.length - 1] + ")";
+		}
+		try {
+			prepStmt = connection.prepareStatement(query);
+			prepStmt.setString(1, "%" + name + "%");
+			rs = prepStmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new Course[0];
+		}
+		ArrayList<Course> courses = new ArrayList<Course>();
+		while(rs.next()) {
+			courses.add(new Course(rs));
+		}
+		Course[] arrayCourses = new Course[courses.size()];
+		courses.toArray(arrayCourses);
+		return arrayCourses;
+	}
+
+	public static String[] getGroups() {
+		return null;
+	}
 }

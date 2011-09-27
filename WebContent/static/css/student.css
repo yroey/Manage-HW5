@@ -1,0 +1,10 @@
+body {margin:0; padding:0;}
+
+#main {position:absolute; top:100px; left:150px; right:0; bottom:0; overflow:auto}
+.main_pane {display:none}
+
+#header {height:100px; background-color:#444; color:white}
+#logo {float:left}
+#user {float:right}
+
+#registered_courses {position:absolute; top:100px; width:150px; bottom:0; background-color:#999}

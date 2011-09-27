@@ -14,7 +14,7 @@ public class Utils {
 	//TODO connection pool
 	static private boolean initialized = false;
 	static private Connection connection;
-	
+
 	static  void Init() throws NamingException, SQLException{
 		Context initCtx = new InitialContext();
 		Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -41,6 +41,7 @@ public class Utils {
 	}
 
 	static ResultSet executeQuery(String query) {
+		System.out.println("EXECUTE QUERY: " + query);
 		connection = getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
@@ -71,7 +72,7 @@ public class Utils {
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
 		try {
-			
+
 			prepStmt = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE id = ?");
 			prepStmt.setInt(1, id);
 			rs = prepStmt.executeQuery();
@@ -108,14 +109,14 @@ public class Utils {
 		int r = 0;
 		try
 		{
-			ps = connection.prepareStatement(prepStmt);		
+			ps = connection.prepareStatement(prepStmt);
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {
 		    	//TODO username exists error
 		    }
-			prepStmt = "INSERT INTO students VALUES ( ? , ? , ? , ? , ? );";		
-			ps = connection.prepareStatement(prepStmt);		
+			prepStmt = "INSERT INTO students VALUES ( ? , ? , ? , ? , ? );";
+			ps = connection.prepareStatement(prepStmt);
 			ps.setInt(1, 123);
 			ps.setString(2, username);
 			ps.setString(3, password);
@@ -129,8 +130,8 @@ public class Utils {
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	    
-		return r;	
+		}
+		return r;
 	}		*/
 
 	/*public static int addAdministratorAccount(String username, String password, String name, int phoneNumber)
@@ -141,14 +142,14 @@ public class Utils {
 		int r = 0;
 		try
 		{
-			ps = connection.prepareStatement(prepStmt);		
+			ps = connection.prepareStatement(prepStmt);
 			ps.setString(1, username);
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()) {
 		    	//TODO username exists
 		    }
-			prepStmt = "INSERT INTO administrators VALUES ( ? , ? , ? , ? , ? );";		
-			ps = connection.prepareStatement(prepStmt);		
+			prepStmt = "INSERT INTO administrators VALUES ( ? , ? , ? , ? , ? );";
+			ps = connection.prepareStatement(prepStmt);
 			ps.setInt(1, 123);
 			ps.setString(2, username);
 			ps.setString(3, password);
@@ -162,8 +163,8 @@ public class Utils {
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	    
-		return r;	
-		
+		}
+		return r;
+
 	}	*/
 }
