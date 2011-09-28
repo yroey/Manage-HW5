@@ -162,10 +162,19 @@ public abstract class Base {
 			System.out.println(ps.toString());
 			rs = ps.executeUpdate();
 			System.out.println(rs);
+			ps.close();
+			connection.close();
 			return true;
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally{
+			 try {
+                ps.close();
+            } catch (SQLException sqlex) {
+            }
+            ps = null;
 		}
 		return false;
 	}
@@ -181,12 +190,21 @@ public abstract class Base {
 			ps = connection.prepareStatement(prepStmt);	
 			System.out.println(ps.toString());
 			rs = ps.executeQuery();
+			ps.close();
+			connection.close();
 			if (!rs.next()){
 				return false;
 			}
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally{
+			 try {
+                ps.close();
+            } catch (SQLException sqlex) {
+            }
+            ps = null;
 		}
 		
 		return true;
@@ -212,10 +230,19 @@ public abstract class Base {
 			ps = connection.prepareStatement(prepStmt);	
 			System.out.println(ps.toString());
 			ps.executeUpdate();
+			ps.close();
+			connection.close();
 			return true;
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		finally{
+			 try {
+                 ps.close();
+             } catch (SQLException sqlex) {
+             }
+             ps = null;
 		}
 		return false;
 	}

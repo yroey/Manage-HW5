@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
+    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" import="cs236369.hw5.XmlGenerator" %>
 <%
   Student student = (Student)session.getAttribute("student");
   Course[] courses = Course.getAll();
@@ -28,6 +28,10 @@
     <a href="javascript:void(0)" onclick="register(this)">register</a>
 	 </div>
 	</div>
+</div>
+<div>
+	<h2>XSLT time table</h2>
+	<%XmlGenerator.generate(2, ".//timetable.xml", ".//newResult.html"); %>
 </div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 	<script>
