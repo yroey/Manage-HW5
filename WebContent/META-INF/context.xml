@@ -4,7 +4,7 @@
               auth="Container"
               type="javax.sql.DataSource"
               username="root"
-              password="1234"
+              password=""
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://127.0.0.1:3306/manage"
               maxActive="15"
