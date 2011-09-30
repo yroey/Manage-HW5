@@ -162,19 +162,10 @@ public abstract class Base {
 			System.out.println(ps.toString());
 			rs = ps.executeUpdate();
 			System.out.println(rs);
-			ps.close();
-			connection.close();
 			return true;
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally{
-			 try {
-                ps.close();
-            } catch (SQLException sqlex) {
-            }
-            ps = null;
 		}
 		return false;
 	}
@@ -190,11 +181,13 @@ public abstract class Base {
 			ps = connection.prepareStatement(prepStmt);	
 			System.out.println(ps.toString());
 			rs = ps.executeQuery();
-			ps.close();
-			connection.close();
 			if (!rs.next()){
+				ps.close();
+				connection.close();
 				return false;
 			}
+			//ps.close();
+			//connection.close();
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -230,8 +223,8 @@ public abstract class Base {
 			ps = connection.prepareStatement(prepStmt);	
 			System.out.println(ps.toString());
 			ps.executeUpdate();
-			ps.close();
-			connection.close();
+			//ps.close();
+			//connection.close();
 			return true;
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -246,16 +239,4 @@ public abstract class Base {
 		}
 		return false;
 	}
-	
-/*	public static Course[] getAll() throws SQLException{
-		String stmt = "SELECT * FROM " + getTableName();
-		ResultSet rs = Utils.executeQuery("SELECT * FROM courses");
-		ArrayList<Course> courses = new ArrayList<Course>();
-		while(rs.next()) {
-			courses.add(new Course(rs));
-		}
-		Course[] arrayCourses = new Course[courses.size()];
-		courses.toArray(arrayCourses);
-		return arrayCourses;
-	}*/
 }

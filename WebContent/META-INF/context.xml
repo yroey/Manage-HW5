@@ -4,9 +4,14 @@
               auth="Container"
               type="javax.sql.DataSource"
               username="root"
-              password=""
+              password="1234"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://127.0.0.1:3306/manage"
               maxActive="15"
-              maxIdle="3"/>
+              maxIdle="3">
+ 			  <parameter>
+	              <name>removeAbandoned</name>
+	              <value>true</value>
+            </parameter>
+ </Resource>
 </Context>

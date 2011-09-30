@@ -10,44 +10,46 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-public class Utils {
-	//TODO connection pool
-	static private boolean initialized = false;
-	static private Connection connection;
+import cs236369.hw5.Logger;
 
-	static  void Init() throws NamingException, SQLException{
-		Context initCtx = new InitialContext();
-		Context envCtx = (Context) initCtx.lookup("java:comp/env");
-		DataSource ds = (DataSource)envCtx.lookup("jdbc/manage");
-		connection = ds.getConnection();
-		initialized = true;
+public class Utils {
+	static private boolean initialized = false;
+	private static Context initCtx;
+	private static Context envCtx;
+	private static DataSource ds;
+	private static String dbName = "manage"; //maybe insert into context file?
+
+	public static void Init() throws NamingException, SQLException{
+		initCtx = new InitialContext();
+		envCtx = (Context) initCtx.lookup("java:comp/env");
+		ds = (DataSource)envCtx.lookup("jdbc/manage");
 	}
 
 	public static synchronized Connection getConnection() {
-
-		if (initialized == true) {
-			return connection;
-		}
-
+		Connection conn  = null;
 		try {
-			System.out.println("initializing db");
-			Init();
+			if (initialized == false) {
+				initialized = true;
+				Init();
+				initTables();				
+			}
+			conn = ds.getConnection();	
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException();
 		}
-
-		return connection;
+		return conn;
 	}
 
-	static ResultSet executeQuery(String query) {
+	public static ResultSet executeQuery(String query) {
 		System.out.println("EXECUTE QUERY: " + query);
-		connection = getConnection();
+		Connection connection = getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
 		try {
 			prepStmt = connection.prepareStatement(query);
 			rs = prepStmt.executeQuery();
+			//connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,20 +57,22 @@ public class Utils {
 		return rs;
 	}
 
-	static void executeUpdate(String update) {
-		connection = getConnection();
+	public static void executeUpdate(String update) {
+		System.out.println("ExecuteUpdate: " + update);
+		Connection connection = getConnection();
 		PreparedStatement prepStmt = null;
 		try {
 			prepStmt = connection.prepareStatement(update);
 			prepStmt.executeUpdate();
+			//connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	static ResultSet getTableRowById(String tableName, int id) {
-		connection = getConnection();
+	public static ResultSet getTableRowById(String tableName, int id) {
+		Connection connection = getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
 		try {
@@ -76,6 +80,7 @@ public class Utils {
 			prepStmt = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE id = ?");
 			prepStmt.setInt(1, id);
 			rs = prepStmt.executeQuery();
+			//connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,11 +88,11 @@ public class Utils {
 		return rs;
 	}
 
-	static ResultSet getTableRowsByIds(String tableName, int[] ids) {
+	public static ResultSet getTableRowsByIds(String tableName, int[] ids) {
 		if (ids.length == 0){
 			return null;
 		}
-		connection = getConnection();
+		Connection connection = getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
 		StringBuilder stringIds = new StringBuilder();
@@ -97,77 +102,105 @@ public class Utils {
 		try {
 			prepStmt = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE id in (" + stringIds.toString() + ")");
 			rs = prepStmt.executeQuery();
+			//connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rs;
 	}
-/*
-	public static int addStudentAccount(String username, String password, String name, int phoneNumber)
-	{
-		Connection connection = Utils.getConnection();
-		String prepStmt = "SELECT * FROM students WHERE username=?;";
-		PreparedStatement ps = null;
-		int r = 0;
+	public static void initTables(){
+		String query = null;
+		if (!tableExists("students")){
+			query = "CREATE TABLE `" + dbName + "`.`students` ( "
+			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "  
+			+ "username VARCHAR(255) NOT NULL, " 
+			+ "password VARCHAR(10) NOT NULL, " 
+			+ "name VARCHAR(255) NOT NULL, " 
+			+ "phone_number INT(10) UNSIGNED NOT NULL, " 
+			+ "PRIMARY KEY (id)) engine=innodb";
+			executeUpdate(query);
+		}
+		if (!tableExists("administrators")){
+			query = "CREATE TABLE `" + dbName + "`.`administrators` ( "
+			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "
+			+ "username VARCHAR(255) NOT NULL, "
+			+ "password VARCHAR(10) NOT NULL, "
+			+ "name VARCHAR(255) NOT NULL, " 
+			+ "phone_number INT(10) UNSIGNED NOT NULL, "
+			+ "PRIMARY KEY (id)) engine=innodb;";
+			executeUpdate(query);
+		}
+		if (!tableExists("courses")){
+			query = "CREATE TABLE `" + dbName + "`.`courses` ( "
+			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "
+			+ "group_id INT(10) UNSIGNED NOT NULL, "
+			+ "name VARCHAR(255) NOT NULL, "
+			+ "capacity INT(10) UNSIGNED NOT NULL, "
+			+ "credit_points INT(10) UNSIGNED NOT NULL, "
+			+ "course_description VARCHAR(10200) NOT NULL, "
+			+ "creator_id INT(10) UNSIGNED NOT NULL, "
+			+ "PRIMARY KEY (id)) engine=innodb;";
+			executeUpdate(query);
+		}
+		if (!tableExists("courses_students")){
+			query = "CREATE TABLE `" + dbName + "`.`courses_students` ( "
+			+ "student_id INT(10) UNSIGNED NOT NULL, "
+			+ "course_id INT(10) UNSIGNED NOT NULL) engine=innodb;";
+			executeUpdate(query);
+		}
+		if (!tableExists("sessions")){
+			query = "CREATE TABLE `" + dbName + "`.`sessions` ( "
+			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "
+			+ "day_of_week INT(10) UNSIGNED NOT NULL, "
+			+ "hour_slot INT(10) UNSIGNED NOT NULL, "
+			+ "length INT(10) UNSIGNED NOT NULL, "
+			+ "course_id INT(10) UNSIGNED NOT NULL, "
+			+ "end_hour INT(10) UNSIGNED NOT NULL, "
+			+ "start_hour INT(10) NULL DEFAULT NULL, "
+			+ "group_id INT(10) NULL DEFAULT NULL, "
+			+ "PRIMARY KEY (id)) engine=innodb;";
+			executeUpdate(query);
+		}
+	}
+	private static boolean tableExists(String tableName){
+		boolean ret = false;
 		try
 		{
-			ps = connection.prepareStatement(prepStmt);
-			ps.setString(1, username);
+			Connection conn = Utils.getConnection();
+			String query = "SELECT table_name "
+				+ "FROM information_schema.tables "
+				+ "WHERE table_schema = ? "
+				+ "AND table_name = ?; ";
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1,dbName);
+			ps.setString(2,tableName);
+			Logger.log(ps.toString());
 			ResultSet rs = ps.executeQuery();
-			if (!rs.next()) {
-		    	//TODO username exists error
-		    }
-			prepStmt = "INSERT INTO students VALUES ( ? , ? , ? , ? , ? );";
-			ps = connection.prepareStatement(prepStmt);
-			ps.setInt(1, 123);
-			ps.setString(2, username);
-			ps.setString(3, password);
-			ps.setString(4, name);
-			ps.setInt(5, phoneNumber);
-			System.out.println(ps.toString());
-			r = ps.executeUpdate();
-			System.out.println(r);
+			ret = rs.next();
 		}
 		catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return r;
-	}		*/
+		return ret;
+	}
 
-	/*public static int addAdministratorAccount(String username, String password, String name, int phoneNumber)
+	public static void closeConnection(ResultSet rs, PreparedStatement ps, Connection conn)
 	{
-		Connection connection = Utils.getConnection();
-		String prepStmt = "SELECT * FROM administrators WHERE username=?;";
-		PreparedStatement ps = null;
-		int r = 0;
 		try
 		{
-			ps = connection.prepareStatement(prepStmt);
-			ps.setString(1, username);
-			ResultSet rs = ps.executeQuery();
-			if (!rs.next()) {
-		    	//TODO username exists
-		    }
-			prepStmt = "INSERT INTO administrators VALUES ( ? , ? , ? , ? , ? );";
-			ps = connection.prepareStatement(prepStmt);
-			ps.setInt(1, 123);
-			ps.setString(2, username);
-			ps.setString(3, password);
-			ps.setString(4, name);
-			ps.setInt(5, phoneNumber);
-			System.out.println(ps.toString());
-			r = ps.executeUpdate();
-			System.out.println(r);
+			if (rs != null) {
+				rs.close();
+			}
+			ps.close();
+			conn.close();		
 		}
 		catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return r;
-
-	}	*/
+	}
 }
