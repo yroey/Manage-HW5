@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" import="cs236369.hw5.XmlGenerator" %>
+    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*"%>
 <%
   Student student = (Student)session.getAttribute("student");
 %>
@@ -53,14 +53,6 @@
 			</div>
 		</div>
 	</div>
-<<<<<<< HEAD
-</div>
-<div>
-	<h2>XSLT time table</h2>
-	<%XmlGenerator.generate(2, ".//timetable.xml", ".//newResult.html"); %>
-</div>
-=======
->>>>>>> origin/master
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 	<script src="../static/javascript/student.js"></script>
 </body>
