@@ -8,6 +8,7 @@ a:hover, a:active {text-decoration:underline}
 #logo {float:left; margin:0px 0 0 20px; font-family: 'Sansita One', cursive; font-size:40px}
 #user {float:right; margin:5px 10px 0 0;}
 #header a {color:white}
+#header #user a {color:white; text-decoration:underline}
 
 #main {margin:100px auto; width:500px;}
 #main a:link, #main a:visited {color:black; text-decoration:underline}
@@ -15,3 +16,10 @@ a:hover, a:active {text-decoration:underline}
 .green-box {border:5px solid #BCDD11; background-color:#F1FAC0; padding:20px}
 
 .message {display:none}
+
+#login {width:450px; margin:100px auto}
+form input {border:2px solid #ddd; padding:2px 5px; width:150px; background-color:white; font-size:20px}
+form button {font-size:20px}
+form dt {float:left; padding:5px 20px 2px 0; width:180px; font-size:20px}
+
+.register #errors {font-size:13px; list-style-type:circle; padding:10px 30px; border:2px solid #ccc; background-color:#eee; margin:10px 0 0}

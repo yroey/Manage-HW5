@@ -39,24 +39,25 @@ public class Registration extends HttpServlet {
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		String phoneNumber = request.getParameter("phoneNumber");
-		String action = (String)request.getSession().getAttribute("action");
-		if (action.equals("addStudent")){
-			Student stud = new Student();
-			stud.setField("username",  username);
-			stud.setField("password", password);
-			stud.setField("name", name);
-			stud.setField("phone_number", Integer.parseInt(phoneNumber));
-			stud.save();
+		Student stud = new Student();
+		stud.setField("username",  username);
+		stud.setField("password", password);
+		stud.setField("name", name);
+		stud.setField("phone_number", phoneNumber);
+
+		if (!stud.save()) {
+		  Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");
+		  response.sendRedirect("registration.jsp");
+		  return;
 		}
-		else{
-			//administrator
-			Administartor admin = new Administartor();
-			admin.setField("username", username);
-			admin.setField("password", password);
-			admin.setField("name", name);
-			admin.setField("phone_number", Integer.parseInt(phoneNumber));
-			admin.save();			
+
+		if (stud.hasDuplicate()) {
+		  stud.delete();
+		  Utils.setSessionMessage(request.getSession(true), "Username is already taken");
+      response.sendRedirect("registration.jsp");
+      return;
 		}
-		response.sendRedirect("login.jsp");
+		request.getSession(true).setAttribute("student", stud);
+		response.sendRedirect("student/index.jsp");
 	}
 }

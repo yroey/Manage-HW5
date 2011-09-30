@@ -1,5 +1,7 @@
 package cs236369.hw5.dal;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class Session extends Base {
 		fieldsTypes.put("group_id", "int");
 	}
 
-	public static Session[] getByCoursesIds(int[] courses_ids) {
+	public static Session[] getByCoursesIds(int[] courses_ids) throws SQLException {
 		if (courses_ids.length == 0) {
 			return new Session[0];
 		}
@@ -45,7 +47,12 @@ public class Session extends Base {
 		}
 
 		query += ids + ")";
-		ResultSet rs = Utils.executeQuery(query);
+
+    Connection connection = Utils.getConnection();
+    PreparedStatement prepStmt = null;
+    ResultSet rs = null;
+    prepStmt = connection.prepareStatement(query);
+    rs = prepStmt.executeQuery();
 		ArrayList<Session> sessions = new ArrayList<Session>();
 		try {
 			while (rs.next()) {
@@ -56,6 +63,7 @@ public class Session extends Base {
 			e.printStackTrace();
 		}
 
+		Utils.closeConnection(rs, prepStmt, connection);
 		Session[] arraySessions = new Session[sessions.size()];
 		sessions.toArray(arraySessions);
 		return arraySessions;
@@ -78,6 +86,9 @@ public class Session extends Base {
 	}
 
 	public static boolean doSessionsConflict(Session session1, Session session2) {
+	  if (session1.getDayOfWeek() != session2.getDayOfWeek()) {
+	    return false;
+	  }
 		if ((session1.getStartHour() >= session2.getStartHour() &&
 				session1.getStartHour() <= session2.getEndHour()) ||
 			(session1.getEndHour() <= session2.getEndHour() &&
