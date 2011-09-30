@@ -21,14 +21,17 @@
 
   function registrationResult(result) {
 	  if (result['result'] == '0') {
-		  alert('Could not register to course. ' + (result['msg'] || ''));
-		  return;
+		  $('#course_msg').html('Could not register to course. ' + (result['msg'] || '')).show(300);
+	  } else {
+		  $('#course_msg').html('You were successfully registerd to this course').show(300);
+		  // Add the course to the list of registered courses.
+		  addRegisteredCourse(result, true);
+	      $('#not_registered').hide(0);
+	      $('#registered').show(0);
 	  }
-
-	  // Add the course to the list of registered courses.
-	  addRegisteredCourse(result, true);
-      $('#not_registered').hide(0);
-      $('#registered').show(0);
+	  setTimeout(function(){
+		  $('#course_msg').hide(300);
+	  }, 5000);
   }
 
   function loadRegisteredCourses() {

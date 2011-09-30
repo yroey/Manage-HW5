@@ -1,10 +1,20 @@
-body {margin:0; padding:0;}
 
-#main {position:absolute; top:100px; left:150px; right:0; bottom:0; overflow:auto}
+
+#main {position:absolute; top:55px; left:165px; right:0; bottom:0; overflow:auto; padding:10px; width: auto; margin:0}
+#main a {color:#484452}
 .main_pane {display:none}
 
-#header {height:100px; background-color:#444; color:white}
-#logo {float:left}
-#user {float:right}
 
-#registered_courses {position:absolute; top:100px; width:150px; bottom:0; background-color:#999}
+#course_search {background-color:#F1FAC0 ; border:5px solid #BCDD11; padding:10px}
+
+
+
+/*#registered_courses {position:absolute; top:55px; width:150px; bottom:0; background-color:#D31D8C; padding: 0 0 0 10px; border-right:5px solid #EE88CD}*/
+#registered_courses {position:absolute; top:55px;
+                     width:150px; bottom:0; background-color:#eee; padding: 20px 0 0 10px; border-right:5px solid #ddd; color:#666}
+#registered_courses a {color:#666}
+#registered_courses li {margin:10px 0 0}
+#registered_courses_list li {padding:0 0 0 10px; margin:5px 0 0}
+
+#time_table table{background-color:#BCDD11; width:100%}
+#time_table td, #time_table th {background-color:#F1FAC0; padding:8px}

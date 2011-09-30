@@ -9,7 +9,9 @@ Course[] courses = (Course[])request.getAttribute("courses");
 <% for (int i = 0; i < courses.length; ++i) { %>
   {
     "name": "<%= courses[i].getName().replace("\"", "\\\"") %>",
-    "id": <%= courses[i].getId() %>
+    "id": <%= courses[i].getId() %>,
+    "credit": <%= courses[i].getIntField("credit_points") %>,
+    "group": <%= courses[i].getIntField("group_id") %>
   }
   <% if (i+1 < courses.length) {%>
   ,

@@ -1,21 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
-<%
-  Student student = (Student)session.getAttribute("student");
-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css'>
+<link href="../static/css/main.css" rel="stylesheet" type="text/css" />
 <link href="../static/css/student.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body>
-  <div id="header">
-    <div id="logo">DR - Dynamic registration</div>
-	  <div id="user">Hi <%= student.getName() %> | <a href="../Authentication?logout=1">logout</a></div>
-	</div>
+  <jsp:include page="../header.jsp" />
 	<img src="../static/images/ajax-loader.gif" id="ajax-loader" style="display:none" />
 	<div id="registered_courses">
 	  <ul>
@@ -27,7 +21,7 @@
 		      </li>
 		    </ul>
       </li>
-      <li><a href="javascript:void(0)" onclick="setUrl('time_table')">time table</a></li>
+      <li><a href="javascript:void(0)" onclick="setUrl('time_table')">Time Table</a></li>
       <li><a href="javascript:void(0)" onclick="setUrl('show_course_search')">Course Search</a></li>
 	  </ul>
 	</div>
@@ -46,10 +40,16 @@
 		    <input type="checkbox" name="available" id="available" /> <label for="available">Only Available courses</label>
 		    <input type="button" value="search" onclick="set_course_search_url()" />
 		  </div>
+		  <div id="courses_search_table">
+		    <tr id="course_template">
+		      <td>
+		    </tr>
+		    <div id="course_template" style="display:none" class="course">
+          <a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a>
+        </div>
+		  </div>
 			<div id="courses">
-			 <div id="course_template" style="display:none" class="course">
-		    <a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a>
-			 </div>
+
 			</div>
 		</div>
 	</div>

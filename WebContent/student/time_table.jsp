@@ -9,7 +9,7 @@ String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wednsday", "Thursday","Frid
 Student student = (Student)session.getAttribute("student");
 Course[][] time_table = student.getTimeTable(days_per_week, hours_per_day);
 %>
-<table border="1">
+<table cellspcing="1" id="time_table">
   <tr>
     <th>Hour \ Day</th>
     <% for (int day = 0; day < days_per_week; ++day) { %>
