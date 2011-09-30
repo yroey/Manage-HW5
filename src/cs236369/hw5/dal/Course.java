@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Connection;
 
+import cs236369.hw5.Logger;
+
 
 public class Course extends Base {
 
@@ -29,13 +31,17 @@ public class Course extends Base {
 	}
 
 	public static Course[] getAll() throws SQLException{
-		ResultSet rs = Utils.executeQuery("SELECT * FROM courses");
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM courses");
+		Logger.log(ps.toString());
+		ResultSet rs = ps.executeQuery();
 		ArrayList<Course> courses = new ArrayList<Course>();
 		while(rs.next()) {
 			courses.add(new Course(rs));
 		}
 		Course[] arrayCourses = new Course[courses.size()];
 		courses.toArray(arrayCourses);
+		Utils.closeConnection(rs, ps, conn);
 		return arrayCourses;
 	}
 
@@ -54,21 +60,42 @@ public class Course extends Base {
 	}
 
 	public static Course[] GetByIds(int[] ids) throws SQLException {
-		ResultSet rs = Utils.getTableRowsByIds(tableName, ids);
-		if (rs == null){
+		if (ids == null || ids.length == 0){
 			return new Course[0];
 		}
+		Connection connection = Utils.getConnection();
+		PreparedStatement prepStmt = null;
+		ResultSet rs = null;
+		StringBuilder stringIds = new StringBuilder();
+		stringIds.append(ids[0]);
+		for (int i = 1; i < ids.length; ++i)
+			stringIds.append(", ").append(ids[i]);
+		try {
+			prepStmt = connection.prepareStatement("SELECT * FROM courses WHERE id in (" + stringIds.toString() + ")");
+			rs = prepStmt.executeQuery();
+			//connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		ArrayList<Course> courses = new ArrayList<Course>();
 		while(rs.next()) {
 			courses.add(new Course(rs));
 		}
+		Utils.closeConnection(rs, prepStmt, connection);
 		Course[] arrayCourses = new Course[courses.size()];
 		courses.toArray(arrayCourses);
 		return arrayCourses;
 	}
 
 	public Student[] getStudents() throws SQLException {
-		ResultSet rs = Utils.executeQuery("SELECT * FROM courses_students WHERE course_id = " + getId());
+		Connection conn = Utils.getConnection();
+		String query = "SELECT * FROM courses_students WHERE course_id = ?;";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setInt(1, getId());
+		Logger.log(ps.toString());
+		ResultSet rs = ps.executeQuery();
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		while(rs.next()) {
 			ids.add(rs.getInt("course_id"));
@@ -77,17 +104,23 @@ public class Course extends Base {
 		for (int i=0; i < arrayIds.length; i++){
 			arrayIds[i] = ids.get(i).intValue();
 		}
+		Utils.closeConnection(rs, ps, conn);
 		return Student.GetByIds(arrayIds);
 	}
 
 	public Session[] getSessions() throws SQLException {
-		ResultSet rs = Utils.executeQuery("SELECT * FROM sessions WHERE course_id = " + getId());
+		Connection conn = Utils.getConnection();
+		String query = "SELECT * FROM sessions WHERE course_id = ?";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setInt(1, getId());
+		ResultSet rs = ps.executeQuery();
 		ArrayList<Session> sessions = new ArrayList<Session>();
 		while(rs.next()) {
 			sessions.add(new Session(rs));
 		}
 		Session[] arraySessions = new Session[sessions.size()];
 		sessions.toArray(arraySessions);
+		Utils.closeConnection(rs, ps, conn);
 		return arraySessions;
 	}
 
@@ -113,9 +146,18 @@ public class Course extends Base {
 	}
 
 	public int getNumStudents() throws SQLException {
-		ResultSet rs = Utils.executeQuery("SELECT count(*) FROM courses_students WHERE course_id = " + getId());
-		rs.next();
-		return rs.getInt(1);
+		Connection conn = Utils.getConnection();
+		String query = "SELECT count(*) FROM courses_students WHERE course_id = ?;";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setInt(1, getId());
+		Logger.log(ps.toString());
+		ResultSet rs = ps.executeQuery();
+		if (!rs.next()){
+			//ERROR
+		}
+		int ret = rs.getInt(1);
+		Utils.closeConnection(rs, ps, conn);
+		return ret;
 	}
 
 	public int getCapacity() {
@@ -141,12 +183,15 @@ public class Course extends Base {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Utils.closeConnection(rs, prepStmt, connection);
 			return new Course[0];
 		}
 		ArrayList<Course> courses = new ArrayList<Course>();
 		while(rs.next()) {
 			courses.add(new Course(rs));
 		}
+
+		Utils.closeConnection(rs, prepStmt, connection);
 		Course[] arrayCourses = new Course[courses.size()];
 		courses.toArray(arrayCourses);
 		return arrayCourses;

@@ -3,7 +3,7 @@
 <%
   String[] days = {"Sunday", "Monday", "Tuesday", "Wensday", "Thursday", "Frieday", "Saturday"};
   Student student = (Student)session.getAttribute("student");
-  Course course = (Course)request.getAttribute("course");
+  Course course = new Course(Integer.parseInt(request.getParameter("id")));
   boolean is_registered = student.isRegisteredToCourse(course.getId());
   boolean is_available = student.isCourseAvailable(course);
 %>

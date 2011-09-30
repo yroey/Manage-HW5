@@ -121,7 +121,7 @@
 		  showTimeTable();
 	  }
 	  if (action == 'course') {
-	      $.get('CourseSearch', {'id': params['id']}, function(data){
+	      $.get('course.jsp', {'id': params['id']}, function(data){
 	          $('#course').show(0).html(data);
 	      });
 	  }
@@ -156,8 +156,15 @@
 function course_search(params) {
   $.getJSON('CourseSearch', params, function(data){
 	 var courses = data['courses'];
+	 if (courses.length == 0) {
+		 $('#no_courses_msg').show(0);
+		 $('#courses_search_table').hide(0);
+		 return;
+	 }
+	 $('#no_courses_msg').hide(0);
+	 $('#courses_search_table').show(0);
 	 var template = $('#course_template');
-	 $('#courses').html('').append(template);
+	 $('#courses_search_table tr').not('.sticky').remove();
 	 for (i in courses) {
 	   var course = courses[i];
 	   var new_course = template.clone();
@@ -167,7 +174,9 @@ function course_search(params) {
 	  new_course.find('a').attr('onclick', onclick);
 	   new_course.find('.course_name').html(course['name']).end()
 	   .data('id', course['id'])
-	   .removeAttr('id').appendTo('#courses').show(0);
+	   .removeAttr('id')
+	   .find('.course_credit').html(course['credit']).end()
+	   .find('.course_group').html(course['group']).end().removeClass('sticky').appendTo('#courses_search_table').show(0);
 	 }
   });
 }

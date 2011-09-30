@@ -1,3 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
+<%
+  Student student = (Student)session.getAttribute("student");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,17 +45,21 @@
 		    <input type="checkbox" name="available" id="available" /> <label for="available">Only Available courses</label>
 		    <input type="button" value="search" onclick="set_course_search_url()" />
 		  </div>
-		  <div id="courses_search_table">
-		    <tr id="course_template">
-		      <td>
+		  <table id="courses_search_table" style="display:none" cellspacing="0">
+		    <tr class="sticky">
+		      <th>Course Name</th>
+		      <th>Credit Points</th>
+		      <th>Group</th>
 		    </tr>
-		    <div id="course_template" style="display:none" class="course">
-          <a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a>
-        </div>
+		    <tr id="course_template" style="display:none" class="course sticky">
+		      <td class="course_link"><a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a></td>
+		      <td class="course_credit"></td>
+		      <td class="course_group"></td>
+		    </tr>
+		  </table>
+		  <div id="no_courses_msg" style="display:none">
+		    No course was found that matches your query.
 		  </div>
-			<div id="courses">
-
-			</div>
 		</div>
 	</div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>

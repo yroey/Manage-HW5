@@ -18,7 +18,7 @@ public abstract class Base {
 	protected String key;
 	static Class<?> cName;
 	int id;
-	
+
 	Base() {
 		init();
 	}
@@ -26,26 +26,33 @@ public abstract class Base {
 	Base(int id) {
 		init();
 		this.id = id;
-		ResultSet rs = Utils.getTableRowById(getTableName(), id);
+		Connection connection = Utils.getConnection();
+		PreparedStatement prepStmt = null;
+		ResultSet rs = null;
 		try {
-			if (!rs.next()){
-				System.out.println("base constructor fail");
-			}
+			prepStmt = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE id = ?");
+			prepStmt.setInt(1, id);
+			rs = prepStmt.executeQuery();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+
+			Utils.closeConnection(rs, prepStmt, connection);
+			return;
 		}
 		try {
+			rs.next();
 			setFieldsFromResultSet(rs);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Utils.closeConnection(rs, prepStmt, connection);
 	}
 
 	public abstract String getTableName();
 
-	Base(ResultSet rs) { 
+	Base(ResultSet rs) {
 		init();
 		try {
 			id = rs.getInt("id");
@@ -135,7 +142,7 @@ public abstract class Base {
 		}
 		prepStmt += ")";
 		prepStmt += " VALUES ( ?";
-		
+
 		for (int i = 0 ; i < fieldsTypes.size() - 1 ; i++){
 			prepStmt += ", ?";
 		}
@@ -171,24 +178,35 @@ public abstract class Base {
 	}
 	/* true if key with value newKey exists in the table*/
 	public boolean duplicate(String key, String newKey){
-		
+
 		Connection connection = Utils.getConnection();
 		String prepStmt = "SELECT * FROM " + getTableName() + " WHERE " + key + "='" + newKey + "';";
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try
 		{
-			ps = connection.prepareStatement(prepStmt);	
+			ps = connection.prepareStatement(prepStmt);
 			System.out.println(ps.toString());
 			rs = ps.executeQuery();
 			if (!rs.next()){
+				ps.close();
+				connection.close();
 				return false;
 			}
+			//ps.close();
+			//connection.close();
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		finally{
+			 try {
+                ps.close();
+            } catch (SQLException sqlex) {
+            }
+            ps = null;
+		}
+
 		return true;
 	}
 
@@ -199,7 +217,7 @@ public abstract class Base {
 		Base base = (Base)other;
 		return base.getId() == getId();
 	}
-	
+
 	public boolean delete(){
 		Connection connection = Utils.getConnection();
 		if (!duplicate("id", new Integer(id).toString())){
@@ -209,26 +227,23 @@ public abstract class Base {
 		PreparedStatement ps = null;
 		try
 		{
-			ps = connection.prepareStatement(prepStmt);	
+			ps = connection.prepareStatement(prepStmt);
 			System.out.println(ps.toString());
 			ps.executeUpdate();
+			//ps.close();
+			//connection.close();
 			return true;
 		}catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally{
+			 try {
+                 ps.close();
+             } catch (SQLException sqlex) {
+             }
+             ps = null;
+		}
 		return false;
 	}
-	
-/*	public static Course[] getAll() throws SQLException{
-		String stmt = "SELECT * FROM " + getTableName();
-		ResultSet rs = Utils.executeQuery("SELECT * FROM courses");
-		ArrayList<Course> courses = new ArrayList<Course>();
-		while(rs.next()) {
-			courses.add(new Course(rs));
-		}
-		Course[] arrayCourses = new Course[courses.size()];
-		courses.toArray(arrayCourses);
-		return arrayCourses;
-	}*/
 }
