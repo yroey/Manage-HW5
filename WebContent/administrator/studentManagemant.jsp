@@ -6,6 +6,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 		<title>Students Management</title>
 	</head>
+	<script type="text/javascript">
+		function test(id, action){
+			oformElement = document.forms[0];
+			oformElement.elements["student_id"].value =id;
+			oformElement.elements["action"].value = action;
+			document.forms[0].submit();
+		}
+	</script>
 	<body>
 		<%
 			Student[] students = Student.getAll();
@@ -27,17 +35,10 @@
 			  	<td><%=s.getName() %></td>	
 			  	<td><%=s.getIntField("phone_number") %></td>
 			  	<td><a href="studentPage">link</a></td>
-			  	<td><a href="#" onclick="test(<%=new Integer(s.getId()).toString()%>, 'remove'); return false;">remove student</a> </td>
+			  	<td><a href="javascript:void(0)" onclick="test(<%=new Integer(s.getId()).toString()%>, 'remove'); return false;">remove student</a> </td>
 			  </tr>	 
 			  <%} %> 
 		</table>
-		<script type="text/javascript">
-		function test(id, action){
-			document.getElementById('student_id').value=id;
-			document.getElementById('action').value=action;
-			document.forms[0].submit();
-		}
-	</script>
 		<form action="ManageStudents" method="post">
 			<input type="hidden" name="action" value="null" />
 			<input type="hidden" name="student_id" value="null"/>	

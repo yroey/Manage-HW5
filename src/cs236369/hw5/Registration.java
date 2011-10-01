@@ -69,6 +69,7 @@ public class Registration extends HttpServlet {
 			admin.setField("name", name);
 			admin.setField("phone_number", Integer.parseInt(phoneNumber));
 			admin.update();
+			response.sendRedirect("administrator/index.html");
 		}
 		else if(action.equals("addAdmin")){
 			//administrator
@@ -77,7 +78,8 @@ public class Registration extends HttpServlet {
 			admin.setField("password", password);
 			admin.setField("name", name);
 			admin.setField("phone_number", Integer.parseInt(phoneNumber));
-			admin.save();			
+			admin.save();		
+			response.sendRedirect("administrator/index.html");
 		}
 	}
 }

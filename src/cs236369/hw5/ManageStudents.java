@@ -25,6 +25,7 @@ public class ManageStudents extends HttpServlet
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("aaa");
 		String action = (String)request.getParameter("action");
 		if (action.equals("remove")){ 
 			String studentId = (String) request.getParameter("student_id");
@@ -34,6 +35,5 @@ public class ManageStudents extends HttpServlet
 			}
 			response.sendRedirect("studentManagemant.jsp");
 		}
-		response.sendRedirect("studentManagemant.jsp");
 	}
 }

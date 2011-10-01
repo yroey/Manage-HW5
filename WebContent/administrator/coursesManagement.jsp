@@ -39,21 +39,15 @@
 			  	<td><%=c.getStringField("course_description") %></td>
 			  	<td><a href="./viewCourseInfo.jsp?id=<%=c.getId()%>">view more info</a></td>
 			  	<td> <%if (c.getIntField("creator_id") == ((Administartor)session.getAttribute("administrator")).getId()){%>
-			   			<a href="#" onclick="test(<%=new Integer(c.getId()).toString()%>, 'remove'); return false;">removeCouerse</a> <% }else{%>course not managed by you<%} %> </td>
+			   			<a href="javascript:void(0)" onclick="test(<%=new Integer(c.getId()).toString()%>, 'remove'); return false;">removeCouerse</a> <% }else{%>course not managed by you<%} %> </td>
 			   			<% }%>
 			  </tr>	  
 		</table>
 		<script type="text/javascript">
 		function test(id, action){
-			document.getElementById('course_id').value=id;
-			document.getElementById('action').value=action;
-			document.forms[1].submit();
-		}
-	</script>
-	<script type="text/javascript">
-		function test2(){
-			document.getElementById('course_id').value=id;
-			document.getElementById('action').value=action;
+			oformElement = document.forms[1];
+			oformElement.elements["course_id"].value =id;
+			oformElement.elements["action"].value = action;
 			document.forms[1].submit();
 		}
 	</script>
