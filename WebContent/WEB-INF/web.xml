@@ -132,4 +132,14 @@
     <servlet-name>EditStudent</servlet-name>
     <url-pattern>/student/EditStudent</url-pattern>
   </servlet-mapping>
+   <servlet>
+    <description></description>
+    <display-name>TimeTableByFormat‬</display-name>
+    <servlet-name>TimeTableByFormat‬</servlet-name>
+    <servlet-class>cs236369.hw5.TimeTableByFormat‬</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TimeTableByFormat‬</servlet-name>
+    <url-pattern>/student/TimeTableByFormat‬</url-pattern>
+  </servlet-mapping>
 </web-app>

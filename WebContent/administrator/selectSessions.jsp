@@ -51,11 +51,13 @@ Course flagCourse = null;
             	}
             	else { if (obj.style.backgroundColor == highlightcolor) {
             					table[getIndex(row,col)] = false;
+            					selected = selected - 1;
                 				obj.style.backgroundColor = 'white';
                 	 			obj.style.color = textcolor = 'black';
                 			} else{
                 				//alert("setting true :" + getIndex(row,col));
                 				table[getIndex(row,col)] = true;
+                				selected = selected + 1;
                 				obj.style.color = textcolor;
                 				obj.style.backgroundColor = highlightcolor;
                 			}
@@ -78,7 +80,6 @@ Course flagCourse = null;
 		            				end = 7*j +i;
 		            				if (j == 9){ //first and last
 		            					res = res + start + " " + end + ";";
-		            					selected = selected + 1;
 		            					startFlag = false;
 		            					start = 0;
 			            				end = 0;
@@ -87,7 +88,6 @@ Course flagCourse = null;
 		            			else if (j == 9){//not first but last
 		            				end = 7*j +i;
 		            				res = res + start + " " + end + ";";
-	            					selected = selected + 1;
 	            					startFlag = false;
 	            					start = 0;
 		            				end = 0;		            				
@@ -97,7 +97,6 @@ Course flagCourse = null;
 		            			if (startFlag == true){ //if flag is up then close
 		            				end = 7*(j - 1 ) + i;
 		            				startFlag = false;
-		            				selected = selected + 1;
 		            				if ((Math.floor(end/7) - Math.floor(start/7))>3){
 		            					error = true;
 		            				} 
@@ -108,7 +107,6 @@ Course flagCourse = null;
 		            		}
 	            		}	    					
 	    			}
-	            	alert(selected);
 	            	oformElement = document.forms[0];
 	    			oformElement.elements["sessions"].value = res;
 	    			oformElement.elements["action"].value = "addCourse";
