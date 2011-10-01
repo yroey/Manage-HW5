@@ -23,6 +23,8 @@
 	  if (result['result'] == '0') {
 		  $('#course_msg').html('Could not register to course. ' + (result['msg'] || '')).show(300);
 	  } else {
+	      var left = $('#num_students_left').html() | 0;
+	      $('#num_students_left').html(left - 1);
 		  $('#course_msg').html('Registration Succeeded').show(300);
 		  // Add the course to the list of registered courses.
 		  addRegisteredCourse(result, true);
@@ -77,6 +79,8 @@
 		  return;
 	  }
       $.post('CourseSearch', {'course_id': course_id, 'unregister': '1'}, function(data){
+    	var left = $('#num_students_left').html() | 0;
+    	$('#num_students_left').html(left + 1);
         $('#registered_course_' + course_id).remove();
         $('#registered').hide(0);
         $('#not_registered').show(0);
@@ -196,4 +200,94 @@ function course_search(params) {
 	  var name = $('#course_name').val();
 	  var available = $('#available').prop('checked') ? '1': '0';
 	  setUrl('course_search?name=' + name + '&available=' + available);
+  }
+
+
+  function editStudent(params, errors, error_container) {
+	  if (errors.length == 0) {
+		  $.post('EditStudent', params, function(data){
+			  if (data['result'] == 0) {
+				  errors.push(data['msg']);
+				  showFormErrors(container, errors);
+			  } else {
+				  $(container).find('.saved').show(300);
+				  setTimeout(function() {
+					  $(container).find('.saved').hide(300);
+				  }, 5000);
+			  }
+		  }, 'json');
+	  } else {
+		  showFormErrors(container, errors);
+	  }
+  }
+
+  function validateEditDetails() {
+	  $("#edit_details .errors").hide(0);
+	  var username = $('#username').val();
+	  var name = $('#name').val();
+	  var phone = $('#name').val();
+
+	  var msgs = {'username': 'Username should contain only letter and be 5-12 charachters long',
+	           	  'username_empty': 'Username is a mandatory field',
+	           	  'name_empty': 'Name is a mandtaory field',
+	           	  'name_too_long': 'Name should not be longer than 25 charachters',
+	           	  'phone': 'Phone must be number not be longer than 25 charachters'};
+	  var errors = [];
+      if (!username) {
+        errors.push(msgs['username_empty']);
+      } else if (!username.match(/^[a-zA-Z]{5,12}$/)) {
+        errors.push(msgs['username']);
+      }
+
+      if (!name) {
+        errors.push(msgs['name_empty']);
+      }
+      if (name.length > 25) {
+        errors.push(msgs['name_too_long']);
+      }
+
+      if (!phone.match(/^[0-9]{0,25}$/)) {
+        errors.push(msgs['phone']);
+      }
+      var params = {};
+      params['username'] = username;
+      params['name'] = name;
+      params['phone'] = phone;
+      params['action'] = 'edit_details';
+	  editStudent(param, errors, "#edit_details .errors");
+	  return false;
+  }
+
+  function validatePassword() {
+	  $("#change_password .errors").hide(0);
+	  var password = $('#password').val();
+	  var repassword = $('#repassword').val();
+
+	  var msgs = {'password': 'Password should contain only letter or number and be 5-12 charachters long',
+			      'password_again': 'Passwords did not match',
+			      'password_empty': 'Password is a mandatory field'};
+	  var errors = [];
+	  if (!password) {
+	    errors.push(msgs['password_empty']);
+	  } else if (!password.match(/^[a-zA-Z0-9]{5,12}$/)) {
+	    errors.push(msgs['password']);
+	  } else if (password != repassword) {
+		  errors.push(msgs['password_again']);
+	  }
+
+      var params = {};
+      params['password'] = password;
+      params['action'] = 'change_password';
+	  editStudent(param, errors, "#edit_details .errors");
+
+	  return false;
+  }
+
+  function showFormErrors(container, errors) {
+	  $(container).find('.errors li').remove();
+	  for (i in errors) {
+		  var li = $('<li></li>').html(errors[i]);
+		  $(container + ' .errors').append(li);
+	  }
+	  $(container + " .errors").show(0);
   }

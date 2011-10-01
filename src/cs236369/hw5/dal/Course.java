@@ -35,6 +35,7 @@ public class Course extends Base {
 		PreparedStatement ps = conn.prepareStatement("SELECT * FROM courses");
 		Logger.log(ps.toString());
 		ResultSet rs = ps.executeQuery();
+
 		ArrayList<Course> courses = new ArrayList<Course>();
 		while(rs.next()) {
 			courses.add(new Course(rs));
@@ -57,6 +58,10 @@ public class Course extends Base {
 
 	public String getName() {
 		return getStringField("name");
+	}
+
+	public int getCredit() {
+	  return getIntField("credit_points");
 	}
 
 	public static Course[] GetByIds(int[] ids) throws SQLException {

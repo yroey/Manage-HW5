@@ -40,7 +40,7 @@ public class Registration extends HttpServlet {
 		String name = request.getParameter("name");
 		String phoneNumber = request.getParameter("phoneNumber");
 		String action = (String)request.getSession(true).getAttribute("action");
-		if (action.equals("updateDetails")){
+		if (action.equals("addStudent")){
 			Student stud = new Student();
 			stud.setField("username",  username);
 			stud.setField("password", password);
