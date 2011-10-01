@@ -48,7 +48,16 @@ public class Registration extends HttpServlet {
 			stud.setField("phone_number", Integer.parseInt(phoneNumber));
 			stud.save();
 		}
-		else{
+		else if(action.equals("updateDetails")){
+			String id = request.getParameter("id");
+			Administartor admin = new Administartor(Integer.parseInt(id));
+			admin.setField("username", username);
+			admin.setField("password", password);
+			admin.setField("name", name);
+			admin.setField("phone_number", Integer.parseInt(phoneNumber));
+			admin.update();
+		}
+		else if(action.equals("addAdmin")){
 			//administrator
 			Administartor admin = new Administartor();
 			admin.setField("username", username);

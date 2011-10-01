@@ -31,9 +31,10 @@ public class Utils {
 			if (initialized == false) {
 				initialized = true;
 				Init();
-				initTables();				
+				initTables();
 			}
-			conn = ds.getConnection();	
+			conn = ds.getConnection();
+			Logger.log("**openConnection");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException();
@@ -41,8 +42,7 @@ public class Utils {
 		return conn;
 	}
 
-	public static ResultSet executeQuery(String query) {
-		System.out.println("EXECUTE QUERY: " + query);
+	/*public static ResultSet executeQuery(String query) {
 		Connection connection = getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
@@ -55,32 +55,31 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return rs;
-	}
+	}*/
 
 	public static void executeUpdate(String update) {
-		System.out.println("ExecuteUpdate: " + update);
-		Connection connection = getConnection();
+		Connection conn = getConnection();
 		PreparedStatement prepStmt = null;
 		try {
-			prepStmt = connection.prepareStatement(update);
+			prepStmt = conn.prepareStatement(update);
 			prepStmt.executeUpdate();
-			//connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		closeConnection(null, prepStmt, conn);
 	}
 
 	public static ResultSet getTableRowById(String tableName, int id) {
-		Connection connection = getConnection();
-		PreparedStatement prepStmt = null;
+		Connection conn = getConnection();
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 
-			prepStmt = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE id = ?");
-			prepStmt.setInt(1, id);
-			rs = prepStmt.executeQuery();
-			//connection.close();
+			ps = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE id = ?");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			Utils.closeConnection(rs, ps, conn);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,36 +87,15 @@ public class Utils {
 		return rs;
 	}
 
-	public static ResultSet getTableRowsByIds(String tableName, int[] ids) {
-		if (ids.length == 0){
-			return null;
-		}
-		Connection connection = getConnection();
-		PreparedStatement prepStmt = null;
-		ResultSet rs = null;
-		StringBuilder stringIds = new StringBuilder();
-		stringIds.append(ids[0]);
-		for (int i = 1; i < ids.length; ++i)
-			stringIds.append(", ").append(ids[i]);
-		try {
-			prepStmt = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE id in (" + stringIds.toString() + ")");
-			rs = prepStmt.executeQuery();
-			//connection.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return rs;
-	}
 	public static void initTables(){
 		String query = null;
 		if (!tableExists("students")){
 			query = "CREATE TABLE `" + dbName + "`.`students` ( "
-			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "  
-			+ "username VARCHAR(255) NOT NULL, " 
-			+ "password VARCHAR(10) NOT NULL, " 
-			+ "name VARCHAR(255) NOT NULL, " 
-			+ "phone_number INT(10) UNSIGNED NOT NULL, " 
+			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "
+			+ "username VARCHAR(255) NOT NULL, "
+			+ "password VARCHAR(10) NOT NULL, "
+			+ "name VARCHAR(255) NOT NULL, "
+			+ "phone_number INT(10) UNSIGNED NOT NULL, "
 			+ "PRIMARY KEY (id)) engine=innodb";
 			executeUpdate(query);
 		}
@@ -126,7 +104,7 @@ public class Utils {
 			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "
 			+ "username VARCHAR(255) NOT NULL, "
 			+ "password VARCHAR(10) NOT NULL, "
-			+ "name VARCHAR(255) NOT NULL, " 
+			+ "name VARCHAR(255) NOT NULL, "
 			+ "phone_number INT(10) UNSIGNED NOT NULL, "
 			+ "PRIMARY KEY (id)) engine=innodb;";
 			executeUpdate(query);
@@ -138,7 +116,7 @@ public class Utils {
 			+ "name VARCHAR(255) NOT NULL, "
 			+ "capacity INT(10) UNSIGNED NOT NULL, "
 			+ "credit_points INT(10) UNSIGNED NOT NULL, "
-			+ "course_description VARCHAR(10200) NOT NULL, "
+			+ "description VARCHAR(10200) NOT NULL, "
 			+ "creator_id INT(10) UNSIGNED NOT NULL, "
 			+ "PRIMARY KEY (id)) engine=innodb;";
 			executeUpdate(query);
@@ -165,24 +143,29 @@ public class Utils {
 	}
 	private static boolean tableExists(String tableName){
 		boolean ret = false;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 		try
 		{
-			Connection conn = Utils.getConnection();
+			conn = Utils.getConnection();
 			String query = "SELECT table_name "
 				+ "FROM information_schema.tables "
 				+ "WHERE table_schema = ? "
 				+ "AND table_name = ?; ";
-			PreparedStatement ps = conn.prepareStatement(query);
+			ps = conn.prepareStatement(query);
 			ps.setString(1,dbName);
 			ps.setString(2,tableName);
 			Logger.log(ps.toString());
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
 			ret = rs.next();
 		}
 		catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			closeConnection(rs, ps, conn);
 		}
 		return ret;
 	}
@@ -195,7 +178,8 @@ public class Utils {
 				rs.close();
 			}
 			ps.close();
-			conn.close();		
+			conn.close();
+			Logger.log("**closeConnection");
 		}
 		catch (SQLException e)
 		{

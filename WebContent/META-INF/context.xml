@@ -7,7 +7,7 @@
               password="1234"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://127.0.0.1:3306/manage"
-              maxActive="15"
+              maxActive="1"
               maxIdle="3">
  			  <parameter>
 	              <name>removeAbandoned</name>

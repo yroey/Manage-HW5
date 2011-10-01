@@ -8,13 +8,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import cs236369.hw5.Logger;
+
 /**
  * @author Dennis
  *
  */
 public class Administartor extends Base
 {
-	static String tableName = "administrators";
+	public static String tableName = "administrators";
+	public static int superAdminId = 0;
 	/**
 	 *
 	 */
@@ -64,45 +67,48 @@ public class Administartor extends Base
 	}
 
 	public static int removeCourse(int id){
-		Connection connection = Utils.getConnection();
-		String prepStmt = "DELETE FROM courses WHERE id=?;";
+		Connection conn = Utils.getConnection();
+		String query = "DELETE FROM courses WHERE id=?;";
 		PreparedStatement ps = null;
-		int rs = 0;
 		try
 		{
-			ps = connection.prepareStatement(prepStmt);
+			ps = conn.prepareStatement(query);
 			ps.setInt(1, id);
-			System.out.println(ps.toString());
-			rs = ps.executeUpdate();
-			System.out.println(rs);
+			Logger.log(ps.toString());
+			ps.executeUpdate();
+			Utils.closeConnection(null, ps, conn);
 		}
 		catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return rs;
+		return 1;
 	}
 
 	public static Administartor authenticate(String username, String password)
 	{
-		Connection connection = Utils.getConnection();
-		PreparedStatement prepStmt = null;
-		ResultSet rs = null;
 		try {
-			prepStmt = connection.prepareStatement("SELECT * FROM administrators WHERE username = ? and password = ? LIMIT 1");
-			prepStmt.setString(1, username);
-			prepStmt.setString(2, password);
-			System.out.println(prepStmt.toString());
-			rs = prepStmt.executeQuery();
+			Connection conn = Utils.getConnection();
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM administrators WHERE username = ? and password = ? LIMIT 1");
+			ps.setString(1, username);
+			ps.setString(2, password);
+			Logger.log(ps.toString());
+			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				return new Administartor(rs);
+				Administartor admin = new Administartor(rs);
+				Utils.closeConnection(rs, ps, conn);
+				return admin;
 			}
+			Utils.closeConnection(rs, ps, conn);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+	}
+	public static int getSuperUserId(){
+		return superAdminId;
 	}
 
 }

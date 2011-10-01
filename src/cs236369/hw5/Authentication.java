@@ -29,7 +29,12 @@ public class Authentication extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		boolean logout = "1".equals(request.getParameter("logout"));
+		if (logout) {
+			request.getSession(true).removeAttribute("student");
+			response.sendRedirect("");
+			return;
+		}
 	}
 
 	/**
@@ -40,7 +45,6 @@ public class Authentication extends HttpServlet {
 		  String password = request.getParameter("password");
 		  String type = request.getParameter("type");
 		  System.out.println(type);
-		  boolean isAjax = request.getParameter("ajax") == "1";
 		  try {
 			if (type.equals("student")){
 			    Student student = Student.authenticate(username, password);

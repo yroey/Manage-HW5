@@ -59,20 +59,37 @@ public class Student extends Base {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		throw new Exception();
+		}
+		return null;
 	}
 
 	public static Student[] GetByIds(int[] ids) throws SQLException {
-		ResultSet rs = Utils.getTableRowsByIds(tableName, ids);
-		if (rs == null){
+		if (ids == null || ids.length == 0){
 			return new Student[0];
 		}
+		Connection connection = Utils.getConnection();
+		PreparedStatement prepStmt = null;
+		ResultSet rs = null;
+		StringBuilder stringIds = new StringBuilder();
+		stringIds.append(ids[0]);
+		for (int i = 1; i < ids.length; ++i)
+			stringIds.append(", ").append(ids[i]);
+		try {
+			prepStmt = connection.prepareStatement("SELECT * FROM students WHERE id in (" + stringIds.toString() + ")");
+			rs = prepStmt.executeQuery();
+			//connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		ArrayList<Student> students = new ArrayList<Student>();
-		do {
+		while(rs.next()) {
 			students.add(new Student(rs));
-		} while (!rs.isLast());
+		}
 		Student[] arrayStudents = new Student[students.size()];
+		students.toArray(arrayStudents);
+		Utils.closeConnection(rs, prepStmt, connection);
 		return arrayStudents;
 	}
 
@@ -197,7 +214,7 @@ public class Student extends Base {
 		if (!isCourseAvailableById(course_id)) {
 			return false;
 		}
-
+		Utils.closeConnection(rs, ps, conn);
 		Utils.executeUpdate("INSERT INTO courses_students (course_id, student_id) VALUES (" + course_id + ", " + getId() + ")");
 
 		Course course = new Course(course_id);
@@ -206,7 +223,6 @@ public class Student extends Base {
 		}
 
 		Utils.executeUpdate("DELETE FROM courses_students where course_id = " + course_id + " and student_id = " + getId());
-		Utils.closeConnection(rs, ps, conn);
 		return false;
 	}
 
@@ -223,7 +239,7 @@ public class Student extends Base {
 
 	public Course[] getCourses() throws SQLException {
 		Connection conn = Utils.getConnection();
-		String query = "SELECT * FROM courses_students WHERE student_id = ?;";
+		String query = "SELECT * FROM courses_students WHERE student_id = ?";
 		PreparedStatement ps = conn.prepareStatement(query);
 		ps.setInt(1, getId());
 		Logger.log(ps.toString());
@@ -233,19 +249,27 @@ public class Student extends Base {
 			ids.add(rs.getInt("course_id"));
 		}
 
+		Utils.closeConnection(rs, ps, conn);
 		int[] arrayIds = new int[ids.size()];
 		for (int i=0; i < arrayIds.length; i++){
 			arrayIds[i] = ids.get(i).intValue();
 		}
 		Course[] courses =  Course.GetByIds(arrayIds);
-		Utils.closeConnection(rs, ps, conn);
 		return courses;
 	}
 
 	public boolean isRegisteredToCourse(int course_id) {
-		ResultSet rs = Utils.executeQuery("SELECT * FROM courses_students WHERE student_id = " + getId() + " and course_id = " + course_id);
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 		try {
+			ps = conn.prepareStatement("SELECT * FROM courses_students WHERE student_id = ? and course_id = ?");
+			ps.setInt(1, getId());
+			ps.setInt(2, course_id);
+			Logger.log(ps.toString());
+			rs = ps.executeQuery();
 			rs.last();
+			Utils.closeConnection(rs, ps, conn);
 			return rs.getRow() == 1;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

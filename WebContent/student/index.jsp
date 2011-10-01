@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*"%>
+    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
+
 <%
   Student student = (Student)session.getAttribute("student");
 %>
@@ -8,14 +9,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css'>
+<link href="../static/css/main.css" rel="stylesheet" type="text/css" />
 <link href="../static/css/student.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body>
-  <div id="header">
-    <div id="logo">DR - Dynamic registration</div>
-	  <div id="user">Hi <%= student.getName() %> | <a href="../Authentication?logout=1">logout</a></div>
-	</div>
+  <jsp:include page="../header.jsp" />
 	<img src="../static/images/ajax-loader.gif" id="ajax-loader" style="display:none" />
 	<div id="registered_courses">
 	  <ul>
@@ -27,7 +27,7 @@
 		      </li>
 		    </ul>
       </li>
-      <li><a href="javascript:void(0)" onclick="setUrl('time_table')">time table</a></li>
+      <li><a href="javascript:void(0)" onclick="setUrl('time_table')">Time Table</a></li>
       <li><a href="javascript:void(0)" onclick="setUrl('show_course_search')">Course Search</a></li>
 	  </ul>
 	</div>
@@ -46,11 +46,21 @@
 		    <input type="checkbox" name="available" id="available" /> <label for="available">Only Available courses</label>
 		    <input type="button" value="search" onclick="set_course_search_url()" />
 		  </div>
-			<div id="courses">
-			 <div id="course_template" style="display:none" class="course">
-		    <a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a>
-			 </div>
-			</div>
+		  <table id="courses_search_table" style="display:none" cellspacing="0">
+		    <tr class="sticky">
+		      <th>Course Name</th>
+		      <th>Credit Points</th>
+		      <th>Group</th>
+		    </tr>
+		    <tr id="course_template" style="display:none" class="course sticky">
+		      <td class="course_link"><a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a></td>
+		      <td class="course_credit"></td>
+		      <td class="course_group"></td>
+		    </tr>
+		  </table>
+		  <div id="no_courses_msg" style="display:none">
+		    No course was found that matches your query.
+		  </div>
 		</div>
 	</div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>

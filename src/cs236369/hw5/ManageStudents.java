@@ -34,5 +34,6 @@ public class ManageStudents extends HttpServlet
 			}
 			response.sendRedirect("studentManagemant.jsp");
 		}
+		response.sendRedirect("studentManagemant.jsp");
 	}
 }

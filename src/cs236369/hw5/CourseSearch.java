@@ -32,22 +32,12 @@ public class CourseSearch extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Student student = (Student)request.getSession().getAttribute("student");
-		if (request.getParameter("id") != null) {
-			try {
-				int id = Integer.parseInt(request.getParameter("id"));
-				Course course = new Course(id);
-				request.setAttribute("course", course);
-				request.getRequestDispatcher("/student/course.jsp").forward(request, response);
-				return;
-			}  catch(Exception e) {
-				return;
-			}
-		}
 		String name = request.getParameter("name");
 		boolean available = "1".equals(request.getParameter("available"));
 		boolean registered = "1".equals(request.getParameter("registered"));
 		Course[] courses = new Course[0];
 		ArrayList<Integer> available_courses_ids = null;
+		System.out.println("Course search");
 		if (registered) {
 			try {
 				courses = student.getCourses();
@@ -57,6 +47,7 @@ public class CourseSearch extends HttpServlet {
 				e.printStackTrace();
 			}
 		} else {
+
 			available_courses_ids = student.getAvailableCoursesIds();
 			ArrayList<Integer> ids = new ArrayList<Integer>();
 			if (available) {
@@ -65,13 +56,13 @@ public class CourseSearch extends HttpServlet {
 			Integer[] arrayIds = new Integer[ids.size()];
 			ids.toArray(arrayIds);
 			try {
+				System.out.println("is avail: " + available);
 				if (available && available_courses_ids.size() == 0) {
 					courses = new Course[0];
 				} else {
 					courses = Course.searchCourses(name, arrayIds);
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

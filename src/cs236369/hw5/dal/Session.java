@@ -1,8 +1,11 @@
 package cs236369.hw5.dal;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 
 public class Session extends Base {
 
@@ -38,6 +41,7 @@ public class Session extends Base {
 		if (courses_ids.length == 0) {
 			return new Session[0];
 		}
+		Connection conn = Utils.getConnection();
 		String query = "SELECT * FROM " + table_name + " WHERE course_id in (";
 		String ids = Integer.toString(courses_ids[0]);
 		for (int i = 1; i < courses_ids.length; ++i) {
@@ -45,12 +49,14 @@ public class Session extends Base {
 		}
 
 		query += ids + ")";
-		ResultSet rs = Utils.executeQuery(query);
 		ArrayList<Session> sessions = new ArrayList<Session>();
 		try {
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				sessions.add(new Session(rs));
 			}
+			Utils.closeConnection(rs, ps, conn);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

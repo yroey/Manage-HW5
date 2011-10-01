@@ -60,14 +60,30 @@ public class Course extends Base {
 	}
 
 	public static Course[] GetByIds(int[] ids) throws SQLException {
-		ResultSet rs = Utils.getTableRowsByIds(tableName, ids);
-		if (rs == null){
+		if (ids == null || ids.length == 0){
 			return new Course[0];
 		}
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		StringBuilder stringIds = new StringBuilder();
+		stringIds.append(ids[0]);
+		for (int i = 1; i < ids.length; ++i)
+			stringIds.append(", ").append(ids[i]);
+		try {
+			ps = conn.prepareStatement("SELECT * FROM courses WHERE id in (?)");
+			ps.setString(1, stringIds.toString());
+			rs = ps.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		ArrayList<Course> courses = new ArrayList<Course>();
 		while(rs.next()) {
 			courses.add(new Course(rs));
 		}
+		Utils.closeConnection(rs, ps, conn);
 		Course[] arrayCourses = new Course[courses.size()];
 		courses.toArray(arrayCourses);
 		return arrayCourses;
@@ -93,13 +109,18 @@ public class Course extends Base {
 	}
 
 	public Session[] getSessions() throws SQLException {
-		ResultSet rs = Utils.executeQuery("SELECT * FROM sessions WHERE course_id = " + getId());
+		Connection conn = Utils.getConnection();
+		String query = "SELECT * FROM sessions WHERE course_id = ?";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setInt(1, getId());
+		ResultSet rs = ps.executeQuery();
 		ArrayList<Session> sessions = new ArrayList<Session>();
 		while(rs.next()) {
 			sessions.add(new Session(rs));
 		}
 		Session[] arraySessions = new Session[sessions.size()];
 		sessions.toArray(arraySessions);
+		Utils.closeConnection(rs, ps, conn);
 		return arraySessions;
 	}
 
@@ -132,6 +153,7 @@ public class Course extends Base {
 		Logger.log(ps.toString());
 		ResultSet rs = ps.executeQuery();
 		if (!rs.next()){
+			Utils.closeConnection(rs, ps, conn);
 			//ERROR
 		}
 		int ret = rs.getInt(1);
@@ -144,8 +166,8 @@ public class Course extends Base {
 	}
 
 	public static Course[] searchCourses(String name, Integer[] ids) throws SQLException {
-		Connection connection = Utils.getConnection();
-		PreparedStatement prepStmt = null;
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM courses where name LIKE ?";
 		if (ids.length != 0) {
@@ -156,23 +178,25 @@ public class Course extends Base {
 			query += ids[ids.length - 1] + ")";
 		}
 		try {
-			prepStmt = connection.prepareStatement(query);
-			prepStmt.setString(1, "%" + name + "%");
-			rs = prepStmt.executeQuery();
+			ps = conn.prepareStatement(query);
+			ps.setString(1, "%" + name + "%");
+			rs = ps.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Utils.closeConnection(rs, ps, conn);
 			return new Course[0];
 		}
 		ArrayList<Course> courses = new ArrayList<Course>();
 		while(rs.next()) {
 			courses.add(new Course(rs));
 		}
+
+		Utils.closeConnection(rs, ps, conn);
 		Course[] arrayCourses = new Course[courses.size()];
 		courses.toArray(arrayCourses);
 		return arrayCourses;
 	}
-
 	public static String[] getGroups() {
 		return null;
 	}

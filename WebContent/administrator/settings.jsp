@@ -7,14 +7,24 @@
 		<title>settings</title>
 	</head>
 	<body>
-	<h3>register a new admin</h3>
+	<%Administartor admin = (Administartor)session.getAttribute("administrator");
+		boolean superUser = false;
+		String type = "";
+		if (Administartor.getSuperUserId() != admin.getId()){
+			superUser = true;
+			type = "DISABLED";
+		}
+	%>
+	<h3>Settings</h3>
 	</body>
-	<% request.getSession(true).setAttribute("action", "addAdmin");%>
-		<form action="../Registration" method="post">
-			<label>user name</label>: <input type="text" name="username" /><br />
-			<label>password</label>: <input type="password" name="password" /><br />
-			<label>name</label>: <input type="text" name="name" /><br />
-			<label>phone number</label>: <input type="text" name="phoneNumber" /><br />
-			<input type="submit" value="Submit" />
+	<% request.getSession(true).setAttribute("action", "updateDetails");%>
+	<form action="../Registration" method="post">
+			<label>user name</label>: <input type="text" name="username" Value=<%=admin.getStringField("username") %> /><br />
+			<label>password</label>: <input type="password" name="password" Value=<%=admin.getStringField("password") %> /><br />
+			<label>name</label>: <input type="text" name="name" Value=<%=admin.getStringField("name") %> /><br />
+			<label>phone number</label>: <input type="text" name="phoneNumber" Value=<%=admin.getIntField("phone_number") %> /><br />
+			<input type="hidden" name="id" Value=<%=admin.getId() %> /><br />
+			<input type="submit" value="update my details" /> 
+			<input type="reset" value="Reset" /> 
 		</form>
 </html>
