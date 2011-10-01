@@ -43,6 +43,14 @@ public class Student extends Base {
 		return getStringField("name");
 	}
 
+	public String getUsername() {
+	  return getStringField("username");
+	}
+
+	public int getPhoneNumber() {
+	  return getIntField("phone_number");
+	}
+
 	public static Student authenticate(String username, String password) throws Exception {
 		try {
 			Connection conn = Utils.getConnection();
@@ -323,18 +331,22 @@ public class Student extends Base {
 
   public boolean validate() {
     if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
+      System.out.println("bad user");
       return false;
     }
 
     if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
+      System.out.println("bad password");
       return false;
     }
 
     if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
+      System.out.println("bad name");
       return false;
     }
 
-    if (!Pattern.matches("^[0-9]{0,25}$", getStringField("phone_number"))) {
+    if (!Pattern.matches("^[0-9]{0,25}$", Integer.toString(getIntField("phone_number")))) {
+      System.out.println("bad phone");
       return false;
     }
 

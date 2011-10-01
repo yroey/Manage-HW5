@@ -88,7 +88,7 @@
     <servlet-name>CourseSearch</servlet-name>
     <url-pattern>/student/CourseSearch</url-pattern>
   </servlet-mapping>
-   <servlet>
+  <servlet>
     <description></description>
     <display-name>ManageStudents</display-name>
     <servlet-name>ManageStudents</servlet-name>
@@ -98,7 +98,6 @@
     <servlet-name>ManageStudents</servlet-name>
     <url-pattern>/administrator/ManageStudents</url-pattern>
   </servlet-mapping>
-
   <servlet>
     <servlet-name>student_login</servlet-name>
     <jsp-file>/login.jsp</jsp-file>
@@ -107,12 +106,10 @@
       <param-value>student</param-value>
     </init-param>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>student_login</servlet-name>
     <url-pattern>/login.jsp</url-pattern>
   </servlet-mapping>
-
   <servlet>
     <servlet-name>admin_login</servlet-name>
     <jsp-file>/login.jsp</jsp-file>
@@ -121,9 +118,18 @@
       <param-value>admin</param-value>
     </init-param>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>admin_login</servlet-name>
     <url-pattern>/admin_login.jsp</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>EditStudent</display-name>
+    <servlet-name>EditStudent</servlet-name>
+    <servlet-class>cs236369.hw5.EditStudent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditStudent</servlet-name>
+    <url-pattern>/student/EditStudent</url-pattern>
   </servlet-mapping>
 </web-app>

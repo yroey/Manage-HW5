@@ -59,7 +59,7 @@ String msg = Utils.getSessionMessage(session);
     			          'username_empty': 'Username is a mandatory field',
     			          'password_empty': 'Password is a mandatory field',
     			          'name_empty': 'Name is a mandtaory field',
-    			          'name_to_long': 'Name should not be longer than 25 charachters',
+    			          'name_too_long': 'Name should not be longer than 25 charachters',
     			          'phone': 'Phone must be number not be longer than 25 charachters'}
     	  var errors = [];
           if (!username) {
@@ -79,7 +79,7 @@ String msg = Utils.getSessionMessage(session);
         	  errors.push(msgs['name_empty']);
           }
           if (name.length > 25) {
-        	  errors.push(msgs['name_to_long']);
+        	  errors.push(msgs['name_too_long']);
           }
 
           if (!phone.match(/^[0-9]{0,25}$/)) {

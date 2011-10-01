@@ -7,7 +7,12 @@
   boolean is_registered = student.isRegisteredToCourse(course.getId());
   boolean is_available = student.isCourseAvailable(course);
   boolean can_register = is_available || is_registered;
-  String msg = can_register ? "" : "You cannot register to this course, since it has reached its capacity or its schedule conflicts with other courses you are registered to.";
+  int num_students_left = course.getCapacity() - course.getNumStudents();
+  String msg = can_register ? "" : num_students_left == 0 ? "You cannot register to this course, since "+
+                                                       "it has reached its capacity" :
+                                                       "You cannot register to this course, since "+
+                                                       "its schedule conflicts with other courses "+
+                                                       "you are registered to.";
 %>
 
 <div>
@@ -20,8 +25,11 @@
             <%= can_register ? "" : "disabled='disabled'" %>>Register</button>
 
   </div>
-  <a href="javascript:history.back()">Back</a><br/>
-  <h4>Course Name: <%= course.getName() %></h4>
+  <h1><%= course.getName() %></h1>
+  <h5>Credit Points:</h5>
+  <p><%= course.getCredit() %></p>
+  <h5>Capacity:</h5>
+  <p><%= course.getCapacity() %>; <span id="num_students_left"><%= num_students_left %></span> left</p>
   <h4>Course Description:</h4>
   <p><%= course.getStringField("description") %></p>
 

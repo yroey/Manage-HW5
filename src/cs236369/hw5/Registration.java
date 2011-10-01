@@ -43,7 +43,11 @@ public class Registration extends HttpServlet {
 		stud.setField("username",  username);
 		stud.setField("password", password);
 		stud.setField("name", name);
-		stud.setField("phone_number", phoneNumber);
+		try {
+		  stud.setField("phone_number", Integer.parseInt(phoneNumber));
+		} catch (NumberFormatException e) {
+		  stud.setField("phone_number", 0);
+		}
 
 		if (!stud.save()) {
 		  Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");

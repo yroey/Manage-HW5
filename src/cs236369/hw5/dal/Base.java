@@ -134,9 +134,11 @@ public abstract class Base {
     if (!validate()) {
       return false;
     }
+
     if (duplicate(this.key, (String)fieldsValues.get(this.key))){
       return false;
     }
+
     String query;
     if (getId() == 0) {
       query = "INSERT INTO " + getTableName() + " (" + fields.get(0);
@@ -151,13 +153,14 @@ public abstract class Base {
       }
       query += ");";
     } else {
-      query = "UPDAET " + getTableName() + " SET ";
+      query = "UPDATE " + getTableName() + " SET ";
       for (int i = 0 ; i < fields.size(); i++){
         query += fields.get(i) + " = ?";
         if (i < fields.size() - 1) {
           query += ", ";
         }
       }
+      query += " WHERE id = " + getId();
     }
 
     Connection connection = Utils.getConnection();
