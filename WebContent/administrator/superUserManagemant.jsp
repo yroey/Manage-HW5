@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
@@ -23,13 +23,13 @@
 			type = "DISABLED";
 		}
 		%>
-	 <% request.getSession(true).setAttribute("action", "addAdmin");%>
-	<h3>Register a new administrator</h3>	
+	<h3>Register a new administrator</h3>
 	<%
 		Administartor[] admins = Administartor.getAll();
 	%>
 		<form action="../Registration" method="post">
-			<label>user name</label>: <input  <%=type%> type="text" name="username" /><br />
+		  <input type="hidden" name="action" value="addAdmin" />
+		  <label>user name</label>: <input  <%=type%> type="text" name="username" /><br />
 			<label>password</label>: <input  <%=type%> type="password" name="password" /><br />
 			<label>name</label>: <input <%=type%> type="text" name="name" /><br />
 			<label>phone number</label>: <input  <%=type%> type="text" name="phoneNumber" /><br />
@@ -47,15 +47,15 @@
 			  <%for(Administartor a : admins){  if (a.getId() == Administartor.getSuperUserId()) {continue;}%>
 			  <tr>
 			  	<td><%=a.getStringField("username") %></td>
-			  	<td><%=a.getStringField("password") %></td>	
-			  	<td><%=a.getName() %></td>	
+			  	<td><%=a.getStringField("password") %></td>
+			  	<td><%=a.getName() %></td>
 			  	<td><%=a.getIntField("phone_number") %></td>
 			  	<td><a href="javascript:void(0)" onclick="test(<%=new Integer(a.getId()).toString()%>, 'removeAdmin'); return false;">remove</a> </td>
-			  </tr>	 
-			  <%} %> 
+			  </tr>
+			  <%} %>
 		</table>
 		<form action="ManageUsers" method="post">
 			<input type="hidden" name="action" value="null" />
-			<input type="hidden" name="admin_id" value="null"/>	
-		</form>	
+			<input type="hidden" name="admin_id" value="null"/>
+		</form>
 </html>
