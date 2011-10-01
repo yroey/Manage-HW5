@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>DR - Student Page</title>
 <link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css'>
 <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
 <link href="../static/css/student.css" rel="stylesheet" type="text/css" />
@@ -68,7 +68,8 @@
 		</div>
 	</div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script src="../static/javascript/jquery.cookies.2.2.0.min.js"></script>
 	<script src="../static/javascript/student.js"></script>
 </body>
 </html>

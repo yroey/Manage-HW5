@@ -90,8 +90,17 @@
   function showTimeTable() {
 	  $.get('time_table.jsp', function(data) {
 		  $('#time_table').html(data);
-      $('.main_pane').hide(0);
-      $('#time_table').show(0);
+		  loadTimeTableByFormat();
+		  $('.main_pane').hide(0);
+		  $('#time_table').show(0);
+	  });
+  }
+
+  function loadTimeTableByFormat() {
+	  var id = $('#time_table_format_selector').val();
+	  $.cookies.set("time_table_format_id", id);
+	  $.get('/TimeTableByFormatId', {id: id}, function(data){
+		  $('#time_table_content').html(data);
 	  });
   }
 

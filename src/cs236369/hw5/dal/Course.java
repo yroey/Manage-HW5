@@ -53,7 +53,7 @@ public class Course extends Base {
 		fieldsTypes.put("name", "string");
 		fieldsTypes.put("capacity", "int");
 		fieldsTypes.put("credit_points", "int");
-		fieldsTypes.put("course_description", "string");
+		fieldsTypes.put("description", "string");
 		fieldsTypes.put("creator_id", "int");
 	}
 
@@ -77,8 +77,7 @@ public class Course extends Base {
 		for (int i = 1; i < ids.length; ++i)
 			stringIds.append(", ").append(ids[i]);
 		try {
-			ps = conn.prepareStatement("SELECT * FROM courses WHERE id in (?)");
-			ps.setString(1, stringIds.toString());
+			ps = conn.prepareStatement("SELECT * FROM courses WHERE id in (" + stringIds.toString() + ")");
 			rs = ps.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -218,7 +217,7 @@ public class Course extends Base {
 			query += "(";
 			for(int i = 0; i < values.size(); ++i) {
 				if(tag.equals("full_text")){
-					query +=  " (MATCH(name, description) AGAINST('" + values.get(i).replace("'", "\'") + "')) ";
+					query +=  " (MATCH(name, description) AGAINST('" + values.get(i).replace("'", "\'") + "' IN BOOLEAN MODE)) ";
 					continue;
 				}
 				query += "(";
@@ -226,12 +225,19 @@ public class Course extends Base {
 				for (int j = 0; j < tokens.length; ++ j) {
 					if (int_fields.contains(tag)) {
 						double value;
+						String str_value = tokens[j];
+						String type = str_value.substring(0, 1);
+						if (type.equals("<") || type.equals(">")) {
+							str_value = str_value.substring(1);
+						} else {
+							type = "=";
+						}
 						try {
-							value = Double.parseDouble(tokens[j]);
+							value = Double.parseDouble(str_value);
 						} catch(Exception e) {
 							continue;
 						}
-						query += tag + "=" + value;
+						query += tag + type + value;
 					} else  {
 						query += tag + " LIKE '%" + tokens[j] + "%'";
 					}
@@ -258,7 +264,7 @@ public class Course extends Base {
 		String relevance = "(0 ";
 		if (full_text_values != null) {
 			for(String value: full_text_values) {
-				relevance += "+ (MATCH(name, description) AGAINST('" + value.replace("'", "\'") + "')) ";
+				relevance += "+ (MATCH(name, description) AGAINST('" + value.replace("'", "\'") + "' IN BOOLEAN MODE)) ";
 			}
 		}
 		relevance += " )";

@@ -46,19 +46,14 @@ public class EditStudent extends HttpServlet {
 				response.getWriter().write("{\"result\":0, \"msg\": \"Username already taken\"}");
 			}
 
-
 			student.setField("name", name);
-			try {
-				  student.setField("phone_number", Integer.parseInt(phone));
-				} catch (NumberFormatException e) {
-				  student.setField("phone_number", 0);
-				}
+			student.setField("phone_number", (phone));
 		} else {  // Change Password
 			String password = request.getParameter("password");
 			student.setField("password", password);
 		}
 
-		if (student.save()) {
+		if (student.update()) {
 			result = "1";
 		} else {
 			// Reverting all fields to the ones stored in the DB.
@@ -67,7 +62,6 @@ public class EditStudent extends HttpServlet {
 			result = "0";
 			msg = "The were some errors in the details you've entered.";
 		}
-
 		response.getWriter().write("{\"result\": " + result + ", \"msg\": \"" + msg + "\"}");
 
 	}
