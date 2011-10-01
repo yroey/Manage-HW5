@@ -140,6 +140,7 @@ public class XSLTmanager
 			Logger.log(ps.toString());
 			ResultSet rs = ps.executeQuery();		
 			if (!rs.next()){
+				Utils.closeConnection(rs, ps, conn);
 				//ERROR
 			}
 			InputStream xslContent = rs.getBinaryStream("content");

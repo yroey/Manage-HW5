@@ -34,6 +34,7 @@ public class Utils {
 				initTables();
 			}
 			conn = ds.getConnection();
+			Logger.log("**openConnection");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException();
@@ -41,7 +42,7 @@ public class Utils {
 		return conn;
 	}
 
-	public static ResultSet executeQuery(String query) {
+	/*public static ResultSet executeQuery(String query) {
 		Connection connection = getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
@@ -54,32 +55,31 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return rs;
-	}
+	}*/
 
 	public static void executeUpdate(String update) {
-		Connection connection = getConnection();
+		Connection conn = getConnection();
 		PreparedStatement prepStmt = null;
 		try {
-			prepStmt = connection.prepareStatement(update);
+			prepStmt = conn.prepareStatement(update);
 			prepStmt.executeUpdate();
-			//connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		closeConnection(null, prepStmt, connection);
+		closeConnection(null, prepStmt, conn);
 	}
 
 	public static ResultSet getTableRowById(String tableName, int id) {
-		Connection connection = getConnection();
-		PreparedStatement prepStmt = null;
+		Connection conn = getConnection();
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 
-			prepStmt = connection.prepareStatement("SELECT * FROM " + tableName + " WHERE id = ?");
-			prepStmt.setInt(1, id);
-			rs = prepStmt.executeQuery();
-			//connection.close();
+			ps = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE id = ?");
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+			Utils.closeConnection(rs, ps, conn);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -179,6 +179,7 @@ public class Utils {
 			}
 			ps.close();
 			conn.close();
+			Logger.log("**closeConnection");
 		}
 		catch (SQLException e)
 		{

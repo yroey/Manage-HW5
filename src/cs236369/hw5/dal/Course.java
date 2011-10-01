@@ -53,7 +53,7 @@ public class Course extends Base {
 		fieldsTypes.put("name", "string");
 		fieldsTypes.put("capacity", "int");
 		fieldsTypes.put("credit_points", "int");
-		fieldsTypes.put("description", "string");
+		fieldsTypes.put("course_description", "string");
 		fieldsTypes.put("creator_id", "int");
 	}
 
@@ -69,17 +69,17 @@ public class Course extends Base {
 		if (ids == null || ids.length == 0){
 			return new Course[0];
 		}
-		Connection connection = Utils.getConnection();
-		PreparedStatement prepStmt = null;
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 		StringBuilder stringIds = new StringBuilder();
 		stringIds.append(ids[0]);
 		for (int i = 1; i < ids.length; ++i)
 			stringIds.append(", ").append(ids[i]);
 		try {
-			prepStmt = connection.prepareStatement("SELECT * FROM courses WHERE id in (" + stringIds.toString() + ")");
-			rs = prepStmt.executeQuery();
-			//connection.close();
+			ps = conn.prepareStatement("SELECT * FROM courses WHERE id in (?)");
+			ps.setString(1, stringIds.toString());
+			rs = ps.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,7 +89,7 @@ public class Course extends Base {
 		while(rs.next()) {
 			courses.add(new Course(rs));
 		}
-		Utils.closeConnection(rs, prepStmt, connection);
+		Utils.closeConnection(rs, ps, conn);
 		Course[] arrayCourses = new Course[courses.size()];
 		courses.toArray(arrayCourses);
 		return arrayCourses;
@@ -159,6 +159,7 @@ public class Course extends Base {
 		Logger.log(ps.toString());
 		ResultSet rs = ps.executeQuery();
 		if (!rs.next()){
+			Utils.closeConnection(rs, ps, conn);
 			//ERROR
 		}
 		int ret = rs.getInt(1);
@@ -251,6 +252,7 @@ public class Course extends Base {
 	public static Course[] searchCourses(HashMap<String, ArrayList<String>> tag_values, Integer[] ids) throws SQLException {
 		Connection connection = Utils.getConnection();
 		PreparedStatement prepStmt = null;
+
 		ResultSet rs = null;
 		ArrayList<String> full_text_values = tag_values.get("full_text");
 		String relevance = "(0 ";
@@ -280,6 +282,7 @@ public class Course extends Base {
 		try {
 			prepStmt = connection.prepareStatement(query);
 			rs = prepStmt.executeQuery();
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -296,7 +299,6 @@ public class Course extends Base {
 		courses.toArray(arrayCourses);
 		return arrayCourses;
 	}
-
 	public static String[] getGroups() {
 		return null;
 	}

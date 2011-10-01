@@ -90,13 +90,13 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>ManageStudents</display-name>
-    <servlet-name>ManageStudents</servlet-name>
-    <servlet-class>cs236369.hw5.ManageStudents</servlet-class>
+    <display-name>ManageUsers</display-name>
+    <servlet-name>ManageUsers</servlet-name>
+    <servlet-class>cs236369.hw5.ManageUsers</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ManageStudents</servlet-name>
-    <url-pattern>/administrator/ManageStudents</url-pattern>
+    <servlet-name>ManageUsers</servlet-name>
+    <url-pattern>/administrator/ManageUsers</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>student_login</servlet-name>

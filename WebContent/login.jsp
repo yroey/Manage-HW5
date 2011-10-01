@@ -3,7 +3,7 @@
 
 <%
   String msg = Utils.getSessionMessage(session);
-  String type = pageContext.getServletConfig().getInitParameter("type");
+  String type = "admin";//pageContext.getServletConfig().getInitParameter("type");
 %>
 <!DOCTYPE html>
 <html>

@@ -224,7 +224,7 @@ public class Student extends Base {
 		if (!isCourseAvailableById(course_id)) {
 			return false;
 		}
-
+		Utils.closeConnection(rs, ps, conn);
 		Utils.executeUpdate("INSERT INTO courses_students (course_id, student_id) VALUES (" + course_id + ", " + getId() + ")");
 
 		Course course = new Course(course_id);
@@ -280,13 +280,13 @@ public class Student extends Base {
 			Logger.log(ps.toString());
 			rs = ps.executeQuery();
 			rs.last();
-			return rs.getRow() == 1;
+			boolean ret = rs.getRow() == 1; 
+			Utils.closeConnection(rs, ps, conn);
+			return ret;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
-		} finally {
-			Utils.closeConnection(rs, ps, conn);
 		}
 	}
 

@@ -39,29 +39,47 @@ public class Registration extends HttpServlet {
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		String phoneNumber = request.getParameter("phoneNumber");
-		Student stud = new Student();
-		stud.setField("username",  username);
-		stud.setField("password", password);
-		stud.setField("name", name);
-		try {
-		  stud.setField("phone_number", Integer.parseInt(phoneNumber));
-		} catch (NumberFormatException e) {
-		  stud.setField("phone_number", 0);
-		}
+		String action = (String)request.getSession(true).getAttribute("action");
+		if (action.equals("addStudent")){
+			Student stud = new Student();
+			stud.setField("username",  username);
+			stud.setField("password", password);
+			stud.setField("name", name);
+			stud.setField("phone_number", phoneNumber);
 
-		if (!stud.save()) {
-		  Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");
-		  response.sendRedirect("registration.jsp");
-		  return;
+			if (!stud.save()) {
+			  Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");
+			  response.sendRedirect("registration.jsp");
+			  return;
+			}
+			if (stud.hasDuplicate()) {
+				  stud.delete();
+				  Utils.setSessionMessage(request.getSession(true), "Username is already taken");
+		      response.sendRedirect("registration.jsp");
+		      return;
+			}
+			request.getSession(true).setAttribute("student", stud);
+			response.sendRedirect("student/index.jsp");
 		}
-
-		if (stud.hasDuplicate()) {
-		  stud.delete();
-		  Utils.setSessionMessage(request.getSession(true), "Username is already taken");
-      response.sendRedirect("registration.jsp");
-      return;
+		else if(action.equals("updateDetails")){
+			String id = request.getParameter("id");
+			Administartor admin = new Administartor(Integer.parseInt(id));
+			admin.setField("username", username);
+			admin.setField("password", password);
+			admin.setField("name", name);
+			admin.setField("phone_number", Integer.parseInt(phoneNumber));
+			admin.update();
+			response.sendRedirect("administrator/index.html");
 		}
-		request.getSession(true).setAttribute("student", stud);
-		response.sendRedirect("student/index.jsp");
+		else if(action.equals("addAdmin")){
+			//administrator
+			Administartor admin = new Administartor();
+			admin.setField("username", username);
+			admin.setField("password", password);
+			admin.setField("name", name);
+			admin.setField("phone_number", Integer.parseInt(phoneNumber));
+			admin.save();		
+			response.sendRedirect("administrator/index.html");
+		}
 	}
 }
