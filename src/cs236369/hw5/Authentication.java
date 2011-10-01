@@ -51,6 +51,7 @@ public class Authentication extends HttpServlet {
 			    if (student != null){
 				    request.getSession(true).setAttribute("student", student);
 				    response.sendRedirect("student/index.jsp");
+				    return;
 			    }
 			}
 			else{
@@ -59,11 +60,13 @@ public class Authentication extends HttpServlet {
 				 if (admin != null){
 					 request.getSession(true).setAttribute("administrator", admin);
 					 response.sendRedirect("administrator/index.html");
+					 return;
 				 }
 			}
 		  } catch (Exception e) {
 		    e.printStackTrace();
-		    response.sendRedirect("login.jsp");
 		  }
+      Utils.setSessionMessage(request.getSession(true), "Username or password were wrong");
+      response.sendRedirect(type.equals("student") ? "login.jsp" : "admin_login.jsp");
 	}
 }

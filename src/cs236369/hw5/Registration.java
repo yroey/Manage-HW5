@@ -39,14 +39,27 @@ public class Registration extends HttpServlet {
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		String phoneNumber = request.getParameter("phoneNumber");
-		String action = (String)request.getSession().getAttribute("action");
-		if (action.equals("addStudent")){
+		String action = (String)request.getSession(true).getAttribute("action");
+		if (action.equals("updateDetails")){
 			Student stud = new Student();
 			stud.setField("username",  username);
 			stud.setField("password", password);
 			stud.setField("name", name);
-			stud.setField("phone_number", Integer.parseInt(phoneNumber));
-			stud.save();
+			stud.setField("phone_number", phoneNumber);
+
+			if (!stud.save()) {
+			  Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");
+			  response.sendRedirect("registration.jsp");
+			  return;
+			}
+			if (stud.hasDuplicate()) {
+				  stud.delete();
+				  Utils.setSessionMessage(request.getSession(true), "Username is already taken");
+		      response.sendRedirect("registration.jsp");
+		      return;
+			}
+			request.getSession(true).setAttribute("student", stud);
+			response.sendRedirect("student/index.jsp");
 		}
 		else if(action.equals("updateDetails")){
 			String id = request.getParameter("id");
@@ -66,6 +79,5 @@ public class Registration extends HttpServlet {
 			admin.setField("phone_number", Integer.parseInt(phoneNumber));
 			admin.save();			
 		}
-		response.sendRedirect("login.jsp");
 	}
 }

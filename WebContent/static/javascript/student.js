@@ -23,7 +23,7 @@
 	  if (result['result'] == '0') {
 		  $('#course_msg').html('Could not register to course. ' + (result['msg'] || '')).show(300);
 	  } else {
-		  $('#course_msg').html('You were successfully registerd to this course').show(300);
+		  $('#course_msg').html('Registration Succeeded').show(300);
 		  // Add the course to the list of registered courses.
 		  addRegisteredCourse(result, true);
 	      $('#not_registered').hide(0);
@@ -133,9 +133,20 @@
 		  $('#course_search').show(0);
 		  course_search(params);
 	  }
+
+	  if (action == 'edit_details') {
+		  show_edit_details();
+	  }
   }
 
   var current_hash = window.location.hash;
+
+  function show_edit_details() {
+	  $.get('edit_details.jsp', function(data) {
+		  $('#edit_details').html(data);
+		  $('#edit_details').show(0);
+	  });
+  }
 
   function check_hash() {
       if ( window.location.hash != current_hash ) {

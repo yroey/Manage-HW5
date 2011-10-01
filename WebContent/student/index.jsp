@@ -39,6 +39,8 @@
 	  </div>
 	  <div id="time_table" class="main_pane">
 	  </div>
+	  <div id="edit_details" class="main_pane">
+	  </div>
 		<div id="course_search" class="main_pane">
 		  <h2>Course Search</h2>
 		  <div id="search_form">
@@ -52,18 +54,21 @@
 		      <th>Credit Points</th>
 		      <th>Group</th>
 		    </tr>
-		    <tr id="course_template" style="display:none" class="course sticky">
-		      <td class="course_link"><a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a></td>
-		      <td class="course_credit"></td>
-		      <td class="course_group"></td>
-		    </tr>
 		  </table>
+		  <table style="display:none">
+		    <tr id="course_template" style="display:none" class="course sticky">
+          <td class="course_link"><a  href="#course?id={{ID}}" class="course_name" onclick="return setUrl('course?id={{ID}}')"></a></td>
+          <td class="course_credit"></td>
+          <td class="course_group"></td>
+        </tr>
+      </table>
 		  <div id="no_courses_msg" style="display:none">
 		    No course was found that matches your query.
 		  </div>
 		</div>
 	</div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 	<script src="../static/javascript/student.js"></script>
 </body>
 </html>

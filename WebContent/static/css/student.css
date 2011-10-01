@@ -1,13 +1,18 @@
 
 
-#main {position:absolute; top:55px; left:165px; right:0; bottom:0; overflow:auto; padding:10px; width: auto; margin:0}
+#main {position:absolute; top:55px; left:165px; right:0; bottom:0; overflow:auto; padding:30px 10px; width: auto; margin:0}
 #main a {color:#484452}
 .main_pane {display:none}
 
 
 #course_search {background-color:#F1FAC0 ; border:5px solid #BCDD11; padding:10px}
 
+#courses_search_table {width:500px; margin:20px 0; width:100%}
+#courses_search_table th {text-align:left; padding:5px}
+#courses_search_table td {padding:5px}
+#courses_search_table tr:nth-child(odd) {background-color:#BCDD11;}
 
+#no_courses_msg {padding:20px 5px; background-color:#BCDD11; margin:20px 0; text-align:center;}
 
 /*#registered_courses {position:absolute; top:55px; width:150px; bottom:0; background-color:#D31D8C; padding: 0 0 0 10px; border-right:5px solid #EE88CD}*/
 #registered_courses {position:absolute; top:55px;
@@ -18,3 +23,10 @@
 
 #time_table table{background-color:#BCDD11; width:100%}
 #time_table td, #time_table th {background-color:#F1FAC0; padding:8px}
+
+#course_registration {float:right; text-align:right;}
+#course_registration button {font-size:20px; font-weight:bold}
+#course_registration #registered {display:none}
+#course_registration.registered #not_registered {display:none}
+#course_registration.registered #registered {display:inline}
+#course_msg {padding:5px; float:right}

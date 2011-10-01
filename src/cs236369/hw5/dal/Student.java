@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import cs236369.hw5.Logger;
 
@@ -207,6 +208,7 @@ public class Student extends Base {
 		while(rs.next()) {
 			ids.add(rs.getInt("course_id"));
 		}
+    Utils.closeConnection(rs, ps, conn);
 
 		if (ids.contains(course_id)) {
 			return false;
@@ -229,6 +231,7 @@ public class Student extends Base {
 	private boolean isTimeTableValid() throws SQLException {
 		for (Course course1 : getCourses()) {
 			for (Course course2: getCourses()) {
+			  System.out.println("comaring courses: " + course1.getName() + " : " + course2.getName() );
 				if (!course1.equals(course2) && Course.doCoursesConflict(course1, course2)) {
 					return false;
 				}
@@ -269,8 +272,9 @@ public class Student extends Base {
 			Logger.log(ps.toString());
 			rs = ps.executeQuery();
 			rs.last();
+			boolean ret = rs.getRow() == 1; 
 			Utils.closeConnection(rs, ps, conn);
-			return rs.getRow() == 1;
+			return ret;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -296,4 +300,44 @@ public class Student extends Base {
 		Utils.closeConnection(rs, ps, conn);
 		return arrayCourses;
 	}
+
+  public boolean hasDuplicate() {
+    Connection conn = Utils.getConnection();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try {
+      ps = conn.prepareStatement("SELECT * FROM students WHERE student_id != ? and username = ?");
+      ps.setInt(1, getId());
+      ps.setString(2, getStringField("username"));
+      rs = ps.executeQuery();
+      rs.last();
+      return rs.getRow() == 1;
+    } catch (SQLException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return false;
+    } finally {
+      Utils.closeConnection(rs, ps, conn);
+    }
+  }
+
+  public boolean validate() {
+    if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
+      return false;
+    }
+
+    if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
+      return false;
+    }
+
+    if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
+      return false;
+    }
+
+    if (!Pattern.matches("^[0-9]{0,25}$", getStringField("phone_number"))) {
+      return false;
+    }
+
+    return true;
+  }
 }
