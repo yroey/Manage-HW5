@@ -35,11 +35,11 @@
 			  	<td><%=s.getName() %></td>	
 			  	<td><%=s.getIntField("phone_number") %></td>
 			  	<td><a href="studentPage">link</a></td>
-			  	<td><a href="javascript:void(0)" onclick="test(<%=new Integer(s.getId()).toString()%>, 'remove'); return false;">remove student</a> </td>
+			  	<td><a href="javascript:void(0)" onclick="test(<%=new Integer(s.getId()).toString()%>, 'removeStud'); return false;">remove student</a> </td>
 			  </tr>	 
 			  <%} %> 
 		</table>
-		<form action="ManageStudents" method="post">
+		<form action="ManageUsers" method="post">
 			<input type="hidden" name="action" value="null" />
 			<input type="hidden" name="student_id" value="null"/>	
 		</form>	

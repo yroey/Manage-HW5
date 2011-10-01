@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import cs236369.hw5.Logger;
 
@@ -107,8 +108,27 @@ public class Administartor extends Base
 		}
 		return null;
 	}
+	
 	public static int getSuperUserId(){
 		return superAdminId;
+	}
+	
+	public static Administartor[] getAll() throws SQLException{
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM administrators");
+		Logger.log(ps.toString());
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Administartor> admins = new ArrayList<Administartor>();
+		while(rs.next()) {
+			admins.add(new Administartor(rs));
+		}
+		Administartor[] arrayCourses = new Administartor[admins.size()];
+		admins.toArray(arrayCourses);
+		Utils.closeConnection(rs, ps, conn);
+		return arrayCourses;
+	}
+	public String getName() {
+		return getStringField("name");
 	}
 
 }
