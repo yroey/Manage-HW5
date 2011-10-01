@@ -52,7 +52,7 @@ public class Course extends Base {
 		fieldsTypes.put("name", "string");
 		fieldsTypes.put("capacity", "int");
 		fieldsTypes.put("credit_points", "int");
-		fieldsTypes.put("course_description", "string");
+		fieldsTypes.put("description", "string");
 		fieldsTypes.put("creator_id", "int");
 	}
 

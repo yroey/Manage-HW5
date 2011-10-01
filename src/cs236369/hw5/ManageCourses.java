@@ -36,23 +36,24 @@ public class ManageCourses extends HttpServlet
 		Administartor admin = (Administartor)request.getSession().getAttribute("administrator");
 		String action = request.getParameter("action");
 		Logger.log("action is: " + action);
-		if (action == null){
+		if (action.equals("addCourse")){
+			String sessions = request.getParameter("sessions");
 			String group_id = request.getParameter("group_id");
 			String name = request.getParameter("name");
 			String capacity = request.getParameter("capacity");
-			String creditPoints = request.getParameter("credit points");
-			String description = request.getParameter("course description");
+			String creditPoints = request.getParameter("credit_points");
+			String description = request.getParameter("description");
 			Course course = new Course();
 			course.setField("group_id",  Integer.parseInt(group_id));
 			course.setField("name", name);
 			course.setField("capacity", Integer.parseInt(capacity));
 			course.setField("credit_points", Integer.parseInt(creditPoints));
-			course.setField("course_description", description);
+			course.setField("description", description);
 			course.setField("creator_id", admin.getId());
 			if (!course.save()){
-				Logger.log("duplicate key " + name);
+				Logger.log("duplicate name: " + name);
 			}
-			/*Connection conn = Utils.getConnection();
+			Connection conn = Utils.getConnection();
 			PreparedStatement ps;
 			try
 			{
@@ -69,59 +70,8 @@ public class ManageCourses extends HttpServlet
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			/*String startHour = request.getParameter("start_hour");
-			String endHour = request.getParameter("end_hour");
-			String day = request.getParameter("day_of_week");
-			String length = request.getParameter("length");
-			Session newSession = new Session();
-			newSession.setField("start_hour", Integer.parseInt(startHour));
-			newSession.setField("end_hour", Integer.parseInt(endHour));
-			newSession.setField("day_of_week", Integer.parseInt(day));
-			newSession.setField("length", Integer.parseInt(length));
-			newSession.setField("course_id", course.getId());
-			newSession.setField("group_id", Integer.parseInt(group_id));
-			if (!newSession.save()){
-				System.out.println("duplicate key " + course.getId());
-			}		*/		
+			Session.registerSessions(sessions, course.getId(), Integer.parseInt(group_id));
 		}
-		else if (action.equals("addSession")){
-			String startHour = request.getParameter("start_hour");
-			String endHour = request.getParameter("end_hour");
-			String day = request.getParameter("day_of_week");
-			String length = request.getParameter("length");
-			String courseId = request.getParameter("course_id");
-			String groupId = request.getParameter("group_id");
-			Course c = new Course(Integer.parseInt(courseId));
-			Session[] sessions = null;
-			try
-			{
-				sessions = c.getSessions();
-			}
-			catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Session newSession = new Session();
-			newSession.setField("start_hour", Integer.parseInt(startHour));
-			newSession.setField("end_hour", Integer.parseInt(endHour));
-			newSession.setField("day_of_week", Integer.parseInt(day));
-			newSession.setField("length", Integer.parseInt(length));
-			newSession.setField("course_id", Integer.parseInt(courseId));
-			newSession.setField("group_id", Integer.parseInt(groupId));
-			boolean conflict = false;
-			for (Session s: sessions){
-				conflict = Session.doSessionsConflict(newSession, s);
-			}
-			if (!conflict){
-				if (!newSession.save()){
-					Logger.log("duplicate key " + courseId);
-				}				
-			}
-			else{
-				Logger.log("conflict in sessions");
-			}
-		}		
 		else if (action.equals("remove")){ 
 			String courseId = request.getParameter("course_id");
 			Course course = new Course(Integer.parseInt(courseId));

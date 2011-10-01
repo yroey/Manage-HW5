@@ -96,4 +96,27 @@ public class Session extends Base {
 		}
 		return false;
 	}
+
+	public static void registerSessions(String sessions, int courseId, int groupId)
+	{
+		String delims = ";";
+		String[] s = sessions.split(delims);
+		for (String str : s){
+			delims = " ";
+			int startHour = Integer.parseInt(str.split(delims)[0])/7;
+			int endHour = Integer.parseInt(str.split(delims)[1])/7;
+			int day = Integer.parseInt(str.split(delims)[0])%7; 
+			int length = endHour - startHour + 1;
+			Session newSession = new Session();
+			newSession.setField("start_hour", startHour);
+			newSession.setField("end_hour", endHour);
+			newSession.setField("day_of_week", day);
+			newSession.setField("length", length);
+			newSession.setField("course_id", courseId);
+			newSession.setField("group_id", groupId);
+			if (!newSession.save()){
+				System.out.println("duplicate key " + courseId);
+			}	
+		}		
+	}
 }

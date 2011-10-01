@@ -13,7 +13,7 @@
 						<label>group</label>: <input type="text" name="group_id" /><br />
 						<label>Capacity</label>: <input type="text" name="capacity" /><br />
 						<label>Credit Points</label>: <input type="text" name="credit_points" /><br />
-						<label>Course Description</label>: <TEXTAREA ROWS="3"></TEXTAREA><br/>
+						<label>Course Description</label>: <input type="text" name="description" /><br/>
 						<input type="submit" value="Submit new course" />
 				</form>
 		<%
