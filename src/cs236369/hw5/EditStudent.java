@@ -14,13 +14,13 @@ import cs236369.hw5.dal.Student;
 public class EditStudent extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EditStudent() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public EditStudent() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,38 +33,42 @@ public class EditStudent extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String action = request.getParameter("actcion");
+		String action = request.getParameter("action");
 		Student student = (Student)request.getSession(true).getAttribute("student");
 		String result;
 		String msg = "";
 		if ("edit_details".equals(action)) {
-		  String username = request.getParameter("username");
-		  String name = request.getParameter("name");
-		  String phone = request.getParameter("phone");
-      student.setField("username", username);
-      if (student.hasDuplicate()) {
-        response.getWriter().write("{\"result\":0, \"msg\": \"Username already taken\"}");
-      }
+			String username = request.getParameter("username");
+			String name = request.getParameter("name");
+			String phone = request.getParameter("phone");
+			student.setField("username", username);
+			if (student.hasDuplicate()) {
+				response.getWriter().write("{\"result\":0, \"msg\": \"Username already taken\"}");
+			}
 
 
-      student.setField("name", name);
-      student.setField("phone_number", phone);
+			student.setField("name", name);
+			try {
+				  student.setField("phone_number", Integer.parseInt(phone));
+				} catch (NumberFormatException e) {
+				  student.setField("phone_number", 0);
+				}
 		} else {  // Change Password
-		  String password = request.getParameter("password");
-		  student.setField("password", password);
+			String password = request.getParameter("password");
+			student.setField("password", password);
 		}
 
-    if (student.save()) {
-      result = "1";
-    } else {
-      // Reverting all fields to the ones stored in the DB.
-      student = new Student(student.getId());
-      request.getSession().setAttribute("student", student);
-      result = "0";
-      msg = "The were some errors in the details you've entered.";
-    }
+		if (student.save()) {
+			result = "1";
+		} else {
+			// Reverting all fields to the ones stored in the DB.
+			student = new Student(student.getId());
+			request.getSession().setAttribute("student", student);
+			result = "0";
+			msg = "The were some errors in the details you've entered.";
+		}
 
-    response.getWriter().write("{\"result\": " + result + ", \"msg\": \"" + msg + "\"}");
+		response.getWriter().write("{\"result\": " + result + ", \"msg\": \"" + msg + "\"}");
 
 	}
 

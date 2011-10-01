@@ -335,6 +335,7 @@ public class Student extends Base {
       return false;
     }
 
+    System.out.println(getStringField("password"));
     if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
       System.out.println("bad password");
       return false;

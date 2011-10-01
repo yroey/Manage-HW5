@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.sql.Connection;
 
 import cs236369.hw5.Logger;
@@ -169,21 +170,104 @@ public class Course extends Base {
 		return getIntField("capacity");
 	}
 
-	public static Course[] searchCourses(String name, Integer[] ids) throws SQLException {
+	static protected String[] getTokens(String query) {
+		ArrayList<String> tokens = new ArrayList<String>();
+		query = query.trim();
+		int start_token = 0;
+		int index = 0;
+		boolean in_quote = false;
+		while(index < query.length()) {
+			if (query.substring(index, index + 1).equals("\"")) {
+				if (in_quote) {
+					tokens.add(query.substring(start_token, index));
+					index++;
+					start_token = index;
+					in_quote = false;
+				} else {
+					if (start_token != index-1) {
+						tokens.add(query.substring(start_token, index));
+					}
+					in_quote = true;
+					start_token = ++index;
+				}
+				continue;
+			}
+			if (query.substring(index, index + 1).equals(" ") && !in_quote) {
+				tokens.add(query.substring(start_token, index));
+				start_token = ++index;
+				continue;
+			}
+			++index;
+		}
+		if (start_token < index) {
+			tokens.add(query.substring(start_token, index));
+		}
+
+		String[] arrayTokens = new String[tokens.size()];
+		tokens.toArray(arrayTokens);
+		return arrayTokens;
+	}
+
+
+	protected static String fillQuery(HashMap<String, ArrayList<String>> tag_values, ArrayList<String> int_fields) {
+		String query = "";
+		for (String tag : tag_values.keySet()) {
+			ArrayList<String> values = tag_values.get(tag);
+			System.out.println("tag: " + tag);
+			query += "(";
+			for(int i = 0; i < values.size(); ++i) {
+				query += "(";
+				String[] tokens = getTokens(values.get(i).replace("'", "\'"));
+				for (int j = 0; j < tokens.length; ++ j) {
+					if (int_fields.contains(tag)) {
+						double value;
+						try {
+							value = Double.parseDouble(tokens[j]);
+						} catch(Exception e) {
+							continue;
+						}
+						query += tag + "=" + value;
+					} else if(tag.equals("full_text")){
+						query +=  " (MATCH(name, description) AGAINST('" + values.get(i).replace("'", "\'") + "')) ";
+					} else {
+						query += tag + " LIKE '%" + tokens[j] + "%'";
+					}
+					if (j + 1 != tokens.length) {
+						query += " AND ";
+					}
+				}
+				query += ")";
+				if (i + 1 != values.size()) {
+					query += " OR ";
+				}
+			}
+			query += ") AND";
+		}
+		return query + " 1 = 1 ";
+	}
+
+	public static Course[] searchCourses(HashMap<String, ArrayList<String>> tag_values, Integer[] ids) throws SQLException {
 		Connection connection = Utils.getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
-		String query = "SELECT * FROM courses where name LIKE ?";
+		String query = "SELECT * FROM courses WHERE ";
+		ArrayList<String> int_fields = new ArrayList<String>();
+		int_fields.add("credit_points");
+		int_fields.add("group_id");
+		int_fields.add("capacity");
+		query += fillQuery(tag_values, int_fields);
+
+		System.out.println("SEARCH QUERY IS: " + query);
 		if (ids.length != 0) {
-			query += " and id in (";
+			query += " AND id IN (";
 			for (int i = 0; i < ids.length -1; ++i) {
 				query += ids[i] +", ";
 			}
 			query += ids[ids.length - 1] + ")";
 		}
+		System.out.println("FINAL SEARCH QUERY IS: " + query);
 		try {
 			prepStmt = connection.prepareStatement(query);
-			prepStmt.setString(1, "%" + name + "%");
 			rs = prepStmt.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

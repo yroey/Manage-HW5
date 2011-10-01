@@ -4,7 +4,7 @@
 int days_per_week = 7;
 int hours_per_day = 10;
 
-String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wednsday", "Thursday","Friday","Saturday"};
+String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"};
 
 Student student = (Student)session.getAttribute("student");
 Course[][] time_table = student.getTimeTable(days_per_week, hours_per_day);

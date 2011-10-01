@@ -38,12 +38,12 @@
 	  </div>
 	  <div id="time_table" class="main_pane">
 	  </div>
-	  <div id="edit_details" class="main_pane">
+	  <div id="edit_student" class="main_pane">
 	  </div>
 		<div id="course_search" class="main_pane">
 		  <h2>Course Search</h2>
 		  <div id="search_form">
-		    <label for="course_name">Course Name</label><input type="text" name="course_name" id="course_name" />
+		    <label for="q">Query:</label> <input type="text" name="q" id="q" style="border:1px solid #ccc; font-size:16px; width:200px;" />
 		    <input type="checkbox" name="available" id="available" /> <label for="available">Only Available courses</label>
 		    <input type="button" value="search" onclick="set_course_search_url()" />
 		  </div>
