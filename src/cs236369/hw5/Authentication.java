@@ -30,8 +30,14 @@ public class Authentication extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		boolean logout = "1".equals(request.getParameter("logout"));
+		boolean admin = "1".equals(request.getParameter("admin"));
+
 		if (logout) {
-			request.getSession(true).removeAttribute("student");
+			if (admin) {
+				request.getSession(true).removeAttribute("administrator");
+			} else {
+				request.getSession(true).removeAttribute("student");
+			}
 			response.sendRedirect("");
 			return;
 		}
@@ -59,7 +65,7 @@ public class Authentication extends HttpServlet {
 				 Administartor admin = Administartor.authenticate(username, password);
 				 if (admin != null){
 					 request.getSession(true).setAttribute("administrator", admin);
-					 response.sendRedirect("administrator/index.html");
+					 response.sendRedirect("administrator/index.jsp");
 					 return;
 				 }
 			}

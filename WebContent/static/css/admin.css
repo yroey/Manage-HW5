@@ -1,0 +1,6 @@
+#menu {position:absolute; top:55px;
+                     width:150px; bottom:0; background-color:#eee; padding: 10px 0 0 10px; border-right:5px solid #ddd; color:#666}
+#menu a {color:#666}
+#menu li {margin:10px 0 0}
+
+#main {margin:0 0 0 180px; padding:20px;}

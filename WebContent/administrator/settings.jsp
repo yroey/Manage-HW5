@@ -1,30 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<%
+  Administartor admin = (Administartor)session.getAttribute("administrator");
+  boolean superUser = false;
+  String type = "";
+  if (Administartor.getSuperUserId() != admin.getId()){
+    superUser = true;
+    type = "DISABLED";
+  }
+%>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-		<title>settings</title>
+		<title>DR - Admin - Settings</title>
+    <link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css'>
+    <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/admin.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
-	<%Administartor admin = (Administartor)session.getAttribute("administrator");
-		boolean superUser = false;
-		String type = "";
-		if (Administartor.getSuperUserId() != admin.getId()){
-			superUser = true;
-			type = "DISABLED";
-		}
-	%>
-	<h3>Settings</h3>
-	</body>
-	<% request.getSession(true).setAttribute("action", "updateDetails");%>
-	<form action="../Registration" method="post">
-			<label>user name</label>: <input type="text" name="username" Value=<%=admin.getStringField("username") %> /><br />
-			<label>password</label>: <input type="password" name="password" Value=<%=admin.getStringField("password") %> /><br />
-			<label>name</label>: <input type="text" name="name" Value=<%=admin.getStringField("name") %> /><br />
-			<label>phone number</label>: <input type="text" name="phoneNumber" Value=<%=admin.getIntField("phone_number") %> /><br />
-			<input type="hidden" name="id" Value=<%=admin.getId() %> /><br />
-			<input type="submit" value="update my details" /> 
-			<input type="reset" value="Reset" /> 
-		</form>
+    <jsp:include page="header.jsp" />
+    <jsp:include page="menu.jsp" />
+    <div id="main">
+	  <h3>Settings</h3>
+			<form action="../Registration" method="post">
+			  <input type="hidden" name="action" value="updateDetails" />
+					<label>Username</label>: <input type="text" name="username" value="<%=admin.getStringField("username") %>" /><br />
+					<label>Password</label>: <input type="password" name="password" value="<%=admin.getStringField("password") %>" /><br />
+					<label>Name</label>: <input type="text" name="name" value="<%= admin.getStringField("name") %>" /><br />
+					<label>Phone Number</label>: <input type="text" name="phoneNumber" value="<%= admin.getIntField("phone_number") %>" /><br />
+					<input type="submit" value="Save" />
+			</form>
+		</div>
+  </body>
 </html>

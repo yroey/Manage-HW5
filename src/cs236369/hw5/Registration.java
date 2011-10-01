@@ -39,7 +39,7 @@ public class Registration extends HttpServlet {
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		String phoneNumber = request.getParameter("phoneNumber");
-		String action = (String)request.getSession(true).getAttribute("action");
+		String action = request.getParameter("action");
 		if (action.equals("addStudent")){
 			Student stud = new Student();
 			stud.setField("username",  username);
@@ -62,14 +62,13 @@ public class Registration extends HttpServlet {
 			response.sendRedirect("student/index.jsp");
 		}
 		else if(action.equals("updateDetails")){
-			String id = request.getParameter("id");
-			Administartor admin = new Administartor(Integer.parseInt(id));
+			Administartor admin = (Administartor)request.getSession().getAttribute("administrator");
 			admin.setField("username", username);
 			admin.setField("password", password);
 			admin.setField("name", name);
 			admin.setField("phone_number", Integer.parseInt(phoneNumber));
 			admin.update();
-			response.sendRedirect("administrator/index.html");
+			response.sendRedirect("administrator/settings.jsp");
 		}
 		else if(action.equals("addAdmin")){
 			//administrator
@@ -78,8 +77,8 @@ public class Registration extends HttpServlet {
 			admin.setField("password", password);
 			admin.setField("name", name);
 			admin.setField("phone_number", Integer.parseInt(phoneNumber));
-			admin.save();		
-			response.sendRedirect("administrator/index.html");
+			admin.save();
+			response.sendRedirect("administrator/superUserManagemant.jsp");
 		}
 	}
 }

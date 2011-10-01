@@ -2,10 +2,6 @@
 	pageEncoding="ISO-8859-1" import="cs236369.hw5.Utils" %>
 
 <%
-if (request.getSession(true).getAttribute("action") == null) {
-  request.getSession(true).setAttribute("action", "addStudent");
-}
-
 String msg = Utils.getSessionMessage(session);
 %>
 <!DOCTYPE html>
@@ -27,6 +23,7 @@ String msg = Utils.getSessionMessage(session);
           <li><%= msg %></li>
         </ul>
 		    <form action="Registration" method="post" id="register_form">
+		      <input type="hidden" name="action" value="addStudent" />
 		      <dl>
             <dt><label for="username">user name*</label></dt>
             <dd><input type="text" name="username" id="username"/></dd>
