@@ -216,6 +216,10 @@ public class Course extends Base {
 			System.out.println("tag: " + tag);
 			query += "(";
 			for(int i = 0; i < values.size(); ++i) {
+				if(tag.equals("full_text")){
+					query +=  " (MATCH(name, description) AGAINST('" + values.get(i).replace("'", "\'") + "')) ";
+					continue;
+				}
 				query += "(";
 				String[] tokens = getTokens(values.get(i).replace("'", "\'"));
 				for (int j = 0; j < tokens.length; ++ j) {
@@ -227,9 +231,7 @@ public class Course extends Base {
 							continue;
 						}
 						query += tag + "=" + value;
-					} else if(tag.equals("full_text")){
-						query +=  " (MATCH(name, description) AGAINST('" + values.get(i).replace("'", "\'") + "')) ";
-					} else {
+					} else  {
 						query += tag + " LIKE '%" + tokens[j] + "%'";
 					}
 					if (j + 1 != tokens.length) {
@@ -250,7 +252,15 @@ public class Course extends Base {
 		Connection connection = Utils.getConnection();
 		PreparedStatement prepStmt = null;
 		ResultSet rs = null;
-		String query = "SELECT * FROM courses WHERE ";
+		ArrayList<String> full_text_values = tag_values.get("full_text");
+		String relevance = "(0 ";
+		if (full_text_values != null) {
+			for(String value: full_text_values) {
+				relevance += "+ (MATCH(name, description) AGAINST('" + value.replace("'", "\'") + "')) ";
+			}
+		}
+		relevance += " )";
+		String query = "SELECT *,  " + relevance + " as relevance FROM courses WHERE ";
 		ArrayList<String> int_fields = new ArrayList<String>();
 		int_fields.add("credit_points");
 		int_fields.add("group_id");
@@ -265,6 +275,7 @@ public class Course extends Base {
 			}
 			query += ids[ids.length - 1] + ")";
 		}
+		query += " ORDER BY relevance DESC";
 		System.out.println("FINAL SEARCH QUERY IS: " + query);
 		try {
 			prepStmt = connection.prepareStatement(query);
