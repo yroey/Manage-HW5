@@ -90,8 +90,17 @@
   function showTimeTable() {
 	  $.get('time_table.jsp', function(data) {
 		  $('#time_table').html(data);
-      $('.main_pane').hide(0);
-      $('#time_table').show(0);
+		  loadTimeTableByFormat();
+		  $('.main_pane').hide(0);
+		  $('#time_table').show(0);
+	  });
+  }
+
+  function loadTimeTableByFormat() {
+	  var id = $('#time_table_format_selector').val();
+	  $.cookies.set("time_table_format_id", id);
+	  $.get('/TimeTableByFormatId', {id: id}, function(data){
+		  $('#time_table_content').html(data);
 	  });
   }
 
@@ -147,8 +156,8 @@
 
   function show_edit_details() {
 	  $.get('edit_details.jsp', function(data) {
-		  $('#edit_details').html(data);
-		  $('#edit_details').show(0);
+		  $('#edit_student').html(data);
+		  $('#edit_student').show(0);
 	  });
   }
 
@@ -176,6 +185,7 @@ function course_search(params) {
 		 $('#courses_search_table').hide(0);
 		 return;
 	 }
+
 	 $('#no_courses_msg').hide(0);
 	 $('#courses_search_table').show(0);
 	 var template = $('#course_template');
@@ -197,13 +207,13 @@ function course_search(params) {
 }
 
   function set_course_search_url() {
-	  var name = $('#course_name').val();
+	  var q = $('#q').val();
 	  var available = $('#available').prop('checked') ? '1': '0';
-	  setUrl('course_search?name=' + name + '&available=' + available);
+	  setUrl('course_search?q=' + q + '&available=' + available);
   }
 
 
-  function editStudent(params, errors, error_container) {
+  function editStudent(params, errors, container) {
 	  if (errors.length == 0) {
 		  $.post('EditStudent', params, function(data){
 			  if (data['result'] == 0) {
@@ -225,7 +235,7 @@ function course_search(params) {
 	  $("#edit_details .errors").hide(0);
 	  var username = $('#username').val();
 	  var name = $('#name').val();
-	  var phone = $('#name').val();
+	  var phone = $('#phone').val();
 
 	  var msgs = {'username': 'Username should contain only letter and be 5-12 charachters long',
 	           	  'username_empty': 'Username is a mandatory field',
@@ -254,7 +264,7 @@ function course_search(params) {
       params['name'] = name;
       params['phone'] = phone;
       params['action'] = 'edit_details';
-	  editStudent(param, errors, "#edit_details .errors");
+	  editStudent(params, errors, "#edit_details");
 	  return false;
   }
 
@@ -274,11 +284,10 @@ function course_search(params) {
 	  } else if (password != repassword) {
 		  errors.push(msgs['password_again']);
 	  }
-
       var params = {};
       params['password'] = password;
       params['action'] = 'change_password';
-	  editStudent(param, errors, "#edit_details .errors");
+	  editStudent(params, errors, "#change_password");
 
 	  return false;
   }

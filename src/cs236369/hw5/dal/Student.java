@@ -20,7 +20,7 @@ public class Student extends Base {
 		fieldsTypes.put("username", "string");
 	    fieldsTypes.put("password", "string");
 	    fieldsTypes.put("name", "string");
-	    fieldsTypes.put("phone_number", "int");
+	    fieldsTypes.put("phone_number", "string");
 	}
 
 	public String getTableName() {
@@ -47,8 +47,8 @@ public class Student extends Base {
 	  return getStringField("username");
 	}
 
-	public int getPhoneNumber() {
-	  return getIntField("phone_number");
+	public String getPhoneNumber() {
+	  return getStringField("phone_number");
 	}
 
 	public static Student authenticate(String username, String password) throws Exception {
@@ -208,6 +208,7 @@ public class Student extends Base {
 	public boolean registerToCourse(int course_id) throws SQLException {
 		Connection conn = Utils.getConnection();
 		String query = "SELECT * FROM courses_students WHERE student_id = ?";
+		System.out.println("register query: " + query);
 		PreparedStatement ps = conn.prepareStatement(query);
 		ps.setInt(1,getId());
 		Logger.log(ps.toString());
@@ -216,15 +217,16 @@ public class Student extends Base {
 		while(rs.next()) {
 			ids.add(rs.getInt("course_id"));
 		}
-    Utils.closeConnection(rs, ps, conn);
+		Utils.closeConnection(rs, ps, conn);
 
 		if (ids.contains(course_id)) {
+			System.out.println("already reg!!!!");
 			return false;
 		}
 		if (!isCourseAvailableById(course_id)) {
+			System.out.println("not avail!!!!!!");
 			return false;
 		}
-		Utils.closeConnection(rs, ps, conn);
 		Utils.executeUpdate("INSERT INTO courses_students (course_id, student_id) VALUES (" + course_id + ", " + getId() + ")");
 
 		Course course = new Course(course_id);
@@ -232,7 +234,9 @@ public class Student extends Base {
 			return true;
 		}
 
+		System.out.println("is valid: " + isTimeTableValid());
 		Utils.executeUpdate("DELETE FROM courses_students where course_id = " + course_id + " and student_id = " + getId());
+		System.out.println("baaaa!!!!");
 		return false;
 	}
 
@@ -280,7 +284,7 @@ public class Student extends Base {
 			Logger.log(ps.toString());
 			rs = ps.executeQuery();
 			rs.last();
-			boolean ret = rs.getRow() == 1; 
+			boolean ret = rs.getRow() == 1;
 			Utils.closeConnection(rs, ps, conn);
 			return ret;
 		} catch (SQLException e) {
@@ -331,22 +335,19 @@ public class Student extends Base {
 
   public boolean validate() {
     if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
-      System.out.println("bad user");
       return false;
     }
 
+    System.out.println(getStringField("password"));
     if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
-      System.out.println("bad password");
       return false;
     }
 
     if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
-      System.out.println("bad name");
       return false;
     }
 
-    if (!Pattern.matches("^[0-9]{0,25}$", Integer.toString(getIntField("phone_number")))) {
-      System.out.println("bad phone");
+    if (!Pattern.matches("^[0-9\\-]{0,25}$", getStringField("phone_number"))) {
       return false;
     }
 

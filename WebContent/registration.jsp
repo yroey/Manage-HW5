@@ -82,7 +82,7 @@ String msg = Utils.getSessionMessage(session);
         	  errors.push(msgs['name_too_long']);
           }
 
-          if (!phone.match(/^[0-9]{0,25}$/)) {
+          if (!phone.match(/^[0-9\-]{0,25}$/)) {
         	  errors.push(msgs['phone']);
           }
 

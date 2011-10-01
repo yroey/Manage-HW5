@@ -19,8 +19,8 @@
         <dd><input type="text" name="name" id="name" value="<%= student.getName() %>" /></dd>
         <dt><label>phone number</label></dt>
         <dd><input type="text" name="phoneNumber" id="phone" value="<%= student.getPhoneNumber() %>"/></dd>
-        <dt></dt>
-        <dd><button onclick="return validateEdit()">Save</button></dd>
+        <dt><span class="saved">Saved!</span></dt>
+        <dd><button onclick="return validateEditDetails()">Save</button></dd>
       </dl>
     </form>
   </div>

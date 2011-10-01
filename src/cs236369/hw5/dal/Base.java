@@ -127,8 +127,14 @@ public abstract class Base {
 		return (String)fieldsValues.get(name);
 	}
 
+	public boolean validate() {
+		return true;
+	}
+
 	public boolean save() {
-		
+		if (!validate()) {
+			return false;
+		}
 		if (duplicate(this.key, (String)fieldsValues.get(this.key))){
 			//TODO ERROR
 			return false;
@@ -198,14 +204,6 @@ public abstract class Base {
 		return true;
 	}
 
-	public boolean equal(Object other) {
-		if (!(other instanceof Base)) {
-			return false;
-		}
-		Base base = (Base)other;
-		return base.getId() == getId();
-	}
-
 	public boolean delete(){
 		if (!duplicate("id", new Integer(id).toString())){
 			return false;
@@ -229,6 +227,9 @@ public abstract class Base {
 		return false;
 	}
 	public boolean update(){
+		if (!validate()) {
+			return false;
+		}
 		Connection conn = Utils.getConnection();
 		String query = "UPDATE " + getTableName() + " SET ";
 		try
@@ -237,7 +238,7 @@ public abstract class Base {
 			for (int i = 1 ; i < fields.size(); i++ ){
 				query += ", ";
 				query += fields.get(i) + "= ? ";
-			}		
+			}
 			query += "WHERE id=?;";
 			PreparedStatement ps;
 			ps = conn.prepareStatement(query);
@@ -257,7 +258,7 @@ public abstract class Base {
 			}
 			ps.setInt(i, getId());
 			Logger.log(ps.toString());
-			ps.executeUpdate();			
+			ps.executeUpdate();
 			Utils.closeConnection(null, ps, conn);
 			return true;
 		}
@@ -267,5 +268,17 @@ public abstract class Base {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public boolean equals(Object other) {
+		if (!(other instanceof Base)) {
+			return false;
+		}
+		Base base = (Base)other;
+
+		if (!getTableName().equals(base.getTableName())) {
+			return false;
+		}
+		return base.getId() == getId();
 	}
 }

@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>DR - Student Page</title>
 <link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css'>
 <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
 <link href="../static/css/student.css" rel="stylesheet" type="text/css" />
@@ -39,12 +39,12 @@
 	  </div>
 	  <div id="time_table" class="main_pane">
 	  </div>
-	  <div id="edit_details" class="main_pane">
+	  <div id="edit_student" class="main_pane">
 	  </div>
 		<div id="course_search" class="main_pane">
 		  <h2>Course Search</h2>
 		  <div id="search_form">
-		    <label for="course_name">Course Name</label><input type="text" name="course_name" id="course_name" />
+		    <label for="q">Query:</label> <input type="text" name="q" id="q" style="border:1px solid #ccc; font-size:16px; width:200px;" />
 		    <input type="checkbox" name="available" id="available" /> <label for="available">Only Available courses</label>
 		    <input type="button" value="search" onclick="set_course_search_url()" />
 		  </div>
@@ -68,7 +68,8 @@
 		</div>
 	</div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script src="../static/javascript/jquery.cookies.2.2.0.min.js"></script>
 	<script src="../static/javascript/student.js"></script>
 </body>
 </html>

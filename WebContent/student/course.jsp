@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
 <%
-  String[] days = {"Sunday", "Monday", "Tuesday", "Wensday", "Thursday", "Frieday", "Saturday"};
+  String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday","Saturday"};
   Student student = (Student)session.getAttribute("student");
   Course course = new Course(Integer.parseInt(request.getParameter("id")));
   boolean is_registered = student.isRegisteredToCourse(course.getId());
