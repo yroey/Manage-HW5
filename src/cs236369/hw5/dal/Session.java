@@ -83,15 +83,15 @@ public class Session extends Base {
 	}
 
 	public static boolean doSessionsConflict(Session session1, Session session2) {
-	  if (session1.getDayOfWeek() != session2.getDayOfWeek()) {
-	    return false;
-	  }
+		if (session1.getDayOfWeek() != session2.getDayOfWeek()) {
+			return false;
+		}
 		if ((session1.getStartHour() >= session2.getStartHour() &&
 				session1.getStartHour() <= session2.getEndHour()) ||
-			(session1.getEndHour() <= session2.getEndHour() &&
-				session1.getEndHour() >= session2.getStartHour()) ||
-			(session1.getStartHour() <= session2.getStartHour() &&
-				session1.getEndHour() >= session2.getEndHour())) {
+				(session1.getEndHour() <= session2.getEndHour() &&
+						session1.getEndHour() >= session2.getStartHour()) ||
+						(session1.getStartHour() <= session2.getStartHour() &&
+								session1.getEndHour() >= session2.getEndHour())) {
 			return true;
 		}
 		return false;

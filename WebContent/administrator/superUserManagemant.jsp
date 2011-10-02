@@ -49,7 +49,7 @@
 			  	<td><%=a.getStringField("username") %></td>
 			  	<td><%=a.getStringField("password") %></td>
 			  	<td><%=a.getName() %></td>
-			  	<td><%=a.getIntField("phone_number") %></td>
+			  	<td><%=a.getStringField("phone_number") %></td>
 			  	<td><a href="javascript:void(0)" onclick="test(<%=new Integer(a.getId()).toString()%>, 'removeAdmin'); return false;">remove</a> </td>
 			  </tr>
 			  <%} %>

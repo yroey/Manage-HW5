@@ -78,8 +78,8 @@ public class ManageCourses extends HttpServlet
 			if (!course.delete()){
 				System.out.println("can't delete " + Integer.parseInt(courseId));
 			}
-			//TODO remove registration for all students	
+			//remove all student registration
+			response.sendRedirect("coursesManagement.jsp");
 		}
-		response.sendRedirect("coursesManagement.jsp");
 	}
 }

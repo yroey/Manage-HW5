@@ -25,7 +25,7 @@ public class Administartor extends Base
 	public Administartor()
 	{
 		super();
-	    key = "username";
+		key = "username";
 	}
 
 	/**
@@ -61,10 +61,10 @@ public class Administartor extends Base
 	@Override
 	void setFieldTypes()
 	{
-	    fieldsTypes.put("username", "string");
-	    fieldsTypes.put("password", "string");
-	    fieldsTypes.put("name", "string");
-	    fieldsTypes.put("phone_number", "int");
+		fieldsTypes.put("username", "string");
+		fieldsTypes.put("password", "string");
+		fieldsTypes.put("name", "string");
+		fieldsTypes.put("phone_number", "string");
 	}
 
 	public static int removeCourse(int id){
@@ -108,11 +108,11 @@ public class Administartor extends Base
 		}
 		return null;
 	}
-	
+
 	public static int getSuperUserId(){
 		return superAdminId;
 	}
-	
+
 	public static Administartor[] getAll() throws SQLException{
 		Connection conn = Utils.getConnection();
 		PreparedStatement ps = conn.prepareStatement("SELECT * FROM administrators");
@@ -130,5 +130,4 @@ public class Administartor extends Base
 	public String getName() {
 		return getStringField("name");
 	}
-
 }

@@ -18,9 +18,9 @@ public class Student extends Base {
 	@Override
 	void setFieldTypes() {
 		fieldsTypes.put("username", "string");
-	    fieldsTypes.put("password", "string");
-	    fieldsTypes.put("name", "string");
-	    fieldsTypes.put("phone_number", "string");
+		fieldsTypes.put("password", "string");
+		fieldsTypes.put("name", "string");
+		fieldsTypes.put("phone_number", "string");
 	}
 
 	public String getTableName() {
@@ -44,11 +44,11 @@ public class Student extends Base {
 	}
 
 	public String getUsername() {
-	  return getStringField("username");
+		return getStringField("username");
 	}
 
 	public String getPhoneNumber() {
-	  return getStringField("phone_number");
+		return getStringField("phone_number");
 	}
 
 	public static Student authenticate(String username, String password) throws Exception {
@@ -203,7 +203,7 @@ public class Student extends Base {
 			}
 		}
 
-	    return true;
+		return true;
 	}
 	public boolean registerToCourse(int course_id) throws SQLException {
 		Connection conn = Utils.getConnection();
@@ -243,7 +243,7 @@ public class Student extends Base {
 	private boolean isTimeTableValid() throws SQLException {
 		for (Course course1 : getCourses()) {
 			for (Course course2: getCourses()) {
-			  System.out.println("comaring courses: " + course1.getName() + " : " + course2.getName() );
+				System.out.println("comaring courses: " + course1.getName() + " : " + course2.getName() );
 				if (!course1.equals(course2) && Course.doCoursesConflict(course1, course2)) {
 					return false;
 				}
@@ -313,44 +313,45 @@ public class Student extends Base {
 		return arrayCourses;
 	}
 
-  public boolean hasDuplicate() {
-    Connection conn = Utils.getConnection();
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    try {
-      ps = conn.prepareStatement("SELECT * FROM students WHERE student_id != ? and username = ?");
-      ps.setInt(1, getId());
-      ps.setString(2, getStringField("username"));
-      rs = ps.executeQuery();
-      rs.last();
-      return rs.getRow() == 1;
-    } catch (SQLException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return false;
-    } finally {
-      Utils.closeConnection(rs, ps, conn);
-    }
-  }
+	public boolean hasDuplicate() {
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = conn.prepareStatement("SELECT * FROM students WHERE student_id != ? and username = ?");
+			ps.setInt(1, getId());
+			ps.setString(2, getStringField("username"));
+			rs = ps.executeQuery();
+			rs.last();
+			return rs.getRow() == 1;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} finally {
+			Utils.closeConnection(rs, ps, conn);
+		}
+	}
 
-  public boolean validate() {
-    if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
-      return false;
-    }
+	public boolean validate() {
+		if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
+			return false;
+		}
 
-    System.out.println(getStringField("password"));
-    if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
-      return false;
-    }
+		System.out.println(getStringField("password"));
+		if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
+			return false;
+		}
 
-    if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
-      return false;
-    }
+		if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
+			return false;
+		}
 
-    if (!Pattern.matches("^[0-9\\-]{0,25}$", getStringField("phone_number"))) {
-      return false;
-    }
+		if (!Pattern.matches("^[0-9\\-]{0,25}$", getStringField("phone_number"))) {
+			return false;
+		}
 
-    return true;
-  }
+		return true;
+	}
+
 }

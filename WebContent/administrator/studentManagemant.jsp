@@ -33,7 +33,7 @@
 			  	<td><%=s.getStringField("username") %></td>
 			  	<td><%=s.getStringField("password") %></td>	
 			  	<td><%=s.getName() %></td>	
-			  	<td><%=s.getIntField("phone_number") %></td>
+			  	<td><%=s.getStringField("phone_number") %></td>
 			  	<td><a href="studentPage">link</a></td>
 			  	<td><a href="javascript:void(0)" onclick="test(<%=new Integer(s.getId()).toString()%>, 'removeStud'); return false;">remove student</a> </td>
 			  </tr>	 

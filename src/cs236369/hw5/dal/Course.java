@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.sql.Connection;
 
 import cs236369.hw5.Logger;
@@ -307,5 +309,86 @@ public class Course extends Base {
 	}
 	public static String[] getGroups() {
 		return null;
+	}
+	public boolean delete(){
+		Connection conn = Utils.getConnection();
+		try
+		{
+			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			conn.setAutoCommit(false);
+			String prepStmt = "DELETE FROM " + getTableName() + " WHERE id = ?;";
+			PreparedStatement ps = null;
+			ps = conn.prepareStatement(prepStmt);
+			ps.setInt(1, id);
+			Logger.log(ps.toString());
+			ps.executeUpdate();
+			ps = conn.prepareStatement("DELETE FROM courses_students WHERE course_id  = ?");
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			conn.commit();
+			Utils.closeConnection(null, ps, conn);
+			return true;
+		}catch (SQLException e) {
+			try
+			{
+				conn.rollback();
+			}
+			catch (SQLException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;		
+	}
+	public boolean save() {
+		if (!validate()) {
+			return false;
+		}
+		if (duplicate(this.key, (String)fieldsValues.get(this.key))){
+			//TODO ERROR
+			return false;
+		}
+		Connection conn = Utils.getConnection();
+		String prepStmt = "INSERT INTO " + getTableName() + " (" + fields.get(0);
+		for (int i = 1 ; i < fields.size(); i++ ){
+			prepStmt += " ," + fields.get(i);
+		}
+		prepStmt += ")";
+		prepStmt += " VALUES ( ?";
+
+		for (int i = 0 ; i < fieldsTypes.size() - 1 ; i++){
+			prepStmt += ", ?";
+		}
+		prepStmt += ");";
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(prepStmt);
+			Collection<String> ct = fieldsTypes.values();
+			Iterator<String> itrT = ct.iterator();
+			Collection<Object> cv = fieldsValues.values();
+			Iterator<Object> itrV = cv.iterator();
+			int i = 1;
+			while(itrT.hasNext()){
+				if(itrT.next().equals("string")){
+					ps.setString(i,(String)itrV.next());
+				}
+				else{ //int
+					ps.setInt(i, (Integer)itrV.next());
+				}
+				i++;
+			}
+			ps.executeUpdate();
+			Utils.closeConnection(null, ps, conn);
+			return true;
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Utils.closeConnection(null, ps, conn);
+		return false;
 	}
 }

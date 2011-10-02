@@ -8,6 +8,7 @@
     superUser = true;
     type = "DISABLED";
   }
+  Xslt[] xsltFiles = Xslt.getAll();
 %>
 <!DOCTYPE html>
 <html>
@@ -28,9 +29,42 @@
 					<label>Username</label>: <input type="text" name="username" value="<%=admin.getStringField("username") %>" /><br />
 					<label>Password</label>: <input type="password" name="password" value="<%=admin.getStringField("password") %>" /><br />
 					<label>Name</label>: <input type="text" name="name" value="<%= admin.getStringField("name") %>" /><br />
-					<label>Phone Number</label>: <input type="text" name="phoneNumber" value="<%= admin.getIntField("phone_number") %>" /><br />
+					<label>Phone Number</label>: <input type="text" name="phoneNumber" value="<%= admin.getStringField("phone_number") %>" /><br />
 					<input type="submit" value="Save" />
 			</form>
+		  <h3>manage Xsl database</h3>
+		  <table border="1">
+			  <tr>
+			   	<td>name</td>
+			   	<td>remove Xslt</td>
+			  </tr>
+			  <%for(Xslt xslt : xsltFiles){ %>
+			  <tr>
+			  	<td><%=xslt.getName() %></td>	
+			  	<td> <%if (xslt.getUpId() == ((Administartor)session.getAttribute("administrator")).getId()){%>
+			   			<a href="javascript:void(0)" onclick="test(<%=new Integer(xslt.getId()).toString()%>, 'removeXSLT'); return false;">removeXslt</a> <% }else{%>xslt file not manged by you<%} %> </td>
+			   			<% }%>
+			  </tr>	  
+		</table>
+		  <h3>upload Xsl content for the timetable design</h3>
+			<form action="TimeTableByFormat" method="post">
+					<label>name</label>: <input type="text" name="name"  /><br />
+					<textarea name="content" rows="15" cols="50" ></textarea><br/>
+					<input type="submit" value="upload" />
+			</form>
+			<script type="text/javascript">
+			
+		function test(id, action){
+			oformElement = document.forms[2];
+			oformElement.elements["xslt_id"].value =id;
+			oformElement.elements["action"].value = action;
+			document.forms[2].submit();
+		}
+	</script>
+	<form action="TimeTableByFormat" method="post">
+		<input type="hidden" name="action" value="null" />
+		<input type="hidden" name="xslt_id" value="null"/>	
+	</form>	
 		</div>
   </body>
 </html>

@@ -1,13 +1,12 @@
 package cs236369.hw5;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -31,10 +30,9 @@ public class XSLTmanager
 	public static int days_per_week = 7;
 	public static int hours_per_day = 10;
 
-	public static void insertDefaults(){
+	/*public static void insertDefaults(){
 		//TODO check if exists
 		File file = new File("C:\\Users\\Dennis\\git\\manageHW5\\xslt\\default_1.xsl");
-
 		try
 		{
 			FileInputStream fis = new FileInputStream(file);
@@ -44,7 +42,6 @@ public class XSLTmanager
 			ps.setString(1, "Default1");
 			ps.setBinaryStream(2, fis, (int) file.length());
 			ps.executeUpdate();
-
 			file = new File("C:\\Users\\Dennis\\git\\manageHW5\\xslt\\default_2.xsl");
 			fis = new FileInputStream(file);
 			conn = Utils.getConnection();
@@ -61,8 +58,9 @@ public class XSLTmanager
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 	private static ByteArrayInputStream timeTableToXml(int studID){
+		
 		Course[][] timetable = new Course[days_per_week][hours_per_day];
 		for (int day = 0; day < days_per_week; ++day) {
 			for (int hour = 0; hour < hours_per_day; ++ hour) {
@@ -97,7 +95,7 @@ public class XSLTmanager
 
 
 	}
-	public static void generate(int studId, InputStream xslContent, String resultPath){
+	public static void generate(int studId, InputStream xslContent, ByteArrayOutputStream baos){
 
 		ByteArrayInputStream xmlContent = timeTableToXml(studId);
 		// Instantiate a DocumentBuilderFactory. 
@@ -115,11 +113,10 @@ public class XSLTmanager
 			// Create an empty DOMResult object for the output. 
 			//DOMResult domResult = new javax.xml.transform.dom.DOMResult(); 
 			// Perform the transformation. 
-			File resultFile = new File("C:\\temp\\bla.html");
-			resultFile.delete();
-			resultFile.createNewFile();
+			//File resultFile = new File("C:\\temp\\bla.html");
+			//ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			transformer.transform(new DOMSource(inDoc),
-					new StreamResult(new FileOutputStream("C:\\temp\\bla.html"/*resultPath*/)));
+					new StreamResult(baos));
 			// Now you can get the output Node from the DOMResult. 
 			//Node node = domResult.getNode();
 		}
@@ -130,13 +127,13 @@ public class XSLTmanager
 		} 
 	}
 
-	public static void applyStyleSheet(int studId, int id){
+	public static void applyStyleSheet(int studId, int xsltId, ByteArrayOutputStream baos){
 		try
 		{
 			Connection conn = Utils.getConnection();
 			String query = "SELECT * FROM xslt WHERE id=?;";
 			PreparedStatement ps = conn.prepareStatement(query);
-			ps.setInt(1, id);
+			ps.setInt(1, xsltId);
 			Logger.log(ps.toString());
 			ResultSet rs = ps.executeQuery();		
 			if (!rs.next()){
@@ -144,8 +141,9 @@ public class XSLTmanager
 				//ERROR
 			}
 			InputStream xslContent = rs.getBinaryStream("content");
-			generate(studId, xslContent, null);	
 			Utils.closeConnection(rs, ps, conn);
+			generate(studId, xslContent, baos);	
+			
 		}
 		catch (SQLException e)
 		{
@@ -154,17 +152,19 @@ public class XSLTmanager
 		}
 	}
 
-	public static int upload(String name, String content){
+	public static int upload(String name, String content,int ulid){
 		ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes());
 		Connection conn = Utils.getConnection();
-		String str = "INSERT INTO xslt (name, content) VALUES (? ,?);";
+		String str = "INSERT INTO xslt (name, content,uid) VALUES (? ,?, ?);";
 		PreparedStatement ps;
 		try
 		{
 			ps = conn.prepareStatement(str);
 			ps.setString(1, name);
 			ps.setBinaryStream(2, bais, bais.available());
+			ps.setInt(3, ulid);
 			ps.executeUpdate();
+			Utils.closeConnection(null, ps, conn);
 		}
 		catch (SQLException e)
 		{
