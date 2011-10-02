@@ -2,16 +2,7 @@
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
 <%
   Administartor admin = (Administartor)session.getAttribute("administrator");
-<<<<<<< HEAD
-  boolean superUser = false;
-  String type = "";
-  if (Administartor.getSuperUserId() != admin.getId()){
-    superUser = true;
-    type = "DISABLED";
-  }
   Xslt[] xsltFiles = Xslt.getAll();
-=======
->>>>>>> origin/master
 %>
 <!DOCTYPE html>
 <html>

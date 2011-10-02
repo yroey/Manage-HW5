@@ -32,12 +32,7 @@
 			  <% for(Student s : students) { %>
 			  <tr>
 			  	<td><%=s.getStringField("username") %></td>
-<<<<<<< HEAD
-			  	<td><%=s.getStringField("password") %></td>	
-			  	<td><%=s.getName() %></td>	
-=======
 			  	<td><%=s.getName() %></td>
->>>>>>> origin/master
 			  	<td><%=s.getStringField("phone_number") %></td>
 			  	<td><a href="studentPage">link</a></td>
 			  	<td><a href="javascript:void(0)" onclick="test(<%= s.getId() %>, 'removeStud'); return false;">remove student</a></td>
