@@ -1,47 +1,56 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<%
+  Student[] students = Student.getAll();
+%>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 		<title>Students Management</title>
+		<link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css' />
+    <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/admin.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      #student_table {width:100%; background-color:#BCDD11;}
+      #student_table td, #courses_table th {background-color:#F1FAC0; padding:8px}
+    </style>
 	</head>
-	<script type="text/javascript">
-		function test(id, action){
-			oformElement = document.forms[0];
-			oformElement.elements["student_id"].value =id;
-			oformElement.elements["action"].value = action;
-			document.forms[0].submit();
-		}
-	</script>
 	<body>
-		<%
-			Student[] students = Student.getAll();
-		%>
-		<h3>all Students</h3>
-		<table border="1">
+    <jsp:include page="header.jsp" />
+    <jsp:include page="menu.jsp" />
+	  <div id="main">
+			<h3>All Students</h3>
+			<table id="student_table">
 			  <tr>
-			   	<td>username</td>
-			   	<td>password</td>
-			   	<td>name</td>
-			   	<td>phone number</td>
-			   	<td>registered courses and time table</td>
-			   	<td>delete</td>
+			   	<td>Username</td>
+			   	<td>Name</td>
+			   	<td>Phone Number</td>
+			   	<td>Registered Courses</td>
+			   	<td>Delete</td>
 			  </tr>
-			  <%for(Student s : students){ %>
+			  <% for(Student s : students) { %>
 			  <tr>
 			  	<td><%=s.getStringField("username") %></td>
-			  	<td><%=s.getStringField("password") %></td>	
-			  	<td><%=s.getName() %></td>	
-			  	<td><%=s.getIntField("phone_number") %></td>
+			  	<td><%=s.getName() %></td>
+			  	<td><%=s.getStringField("phone_number") %></td>
 			  	<td><a href="studentPage">link</a></td>
-			  	<td><a href="javascript:void(0)" onclick="test(<%=new Integer(s.getId()).toString()%>, 'removeStud'); return false;">remove student</a> </td>
-			  </tr>	 
-			  <%} %> 
-		</table>
+			  	<td><a href="javascript:void(0)" onclick="test(<%= s.getId() %>, 'removeStud'); return false;">remove student</a></td>
+			  </tr>
+			  <% } %>
+			</table>
+		</div>
 		<form action="ManageUsers" method="post">
 			<input type="hidden" name="action" value="null" />
-			<input type="hidden" name="student_id" value="null"/>	
-		</form>	
+			<input type="hidden" name="student_id" value="null"/>
+		</form>
+	  <script type="text/javascript">
+	    function test(id, action){
+	      oformElement = document.forms[0];
+	      oformElement.elements["student_id"].value =id;
+	      oformElement.elements["action"].value = action;
+	      document.forms[0].submit();
+	    }
+	  </script>
 	</body>
 </html>

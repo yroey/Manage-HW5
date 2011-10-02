@@ -4,7 +4,9 @@
 <html>
 	<head>
 		<title>DR - Admin</title>
-
+    <link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css'>
+    <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/admin.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
     <jsp:include page="header.jsp" />

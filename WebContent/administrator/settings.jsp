@@ -2,12 +2,6 @@
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
 <%
   Administartor admin = (Administartor)session.getAttribute("administrator");
-  boolean superUser = false;
-  String type = "";
-  if (Administartor.getSuperUserId() != admin.getId()){
-    superUser = true;
-    type = "DISABLED";
-  }
 %>
 <!DOCTYPE html>
 <html>
