@@ -52,6 +52,7 @@ public class TimeTableByFormat extends HttpServlet {
 			String xsltName = request.getParameter("name");
 			int uploaderId = ((Administartor)request.getSession().getAttribute("administrator")).getId();
 			XSLTmanager.upload(xsltName, xsltContent, uploaderId);
+			response.sendRedirect("settings.jsp");
 		}
 		else if (action.equals("removeXSLT")){
 			String xsltId = request.getParameter("xslt_id");

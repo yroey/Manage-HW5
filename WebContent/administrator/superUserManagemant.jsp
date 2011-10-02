@@ -50,13 +50,12 @@
 				  	<td><%= a.getStringField("username") %></td>
 				  	<td><%= a.getStringField("password") %></td>
 				  	<td><%= a.getName() %></td>
-				  	<td><%= a.getIntField("phone_number") %></td>
+				  	<td><%= a.getStringField("phone_number") %></td>
 				  	<td><a href="javascript:void(0)" onclick="test(<%= a.getId() %>, 'removeAdmin'); return false;">remove</a> </td>
 				  </tr>
 				  <% } %>
 			</table>
 		</div>
->>>>>>> origin/master
 		<form action="ManageUsers" method="post">
 			<input type="hidden" name="action" value="null" />
 			<input type="hidden" name="admin_id" value="null"/>

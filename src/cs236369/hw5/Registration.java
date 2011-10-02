@@ -66,7 +66,7 @@ public class Registration extends HttpServlet {
 			admin.setField("username", username);
 			admin.setField("password", password);
 			admin.setField("name", name);
-			admin.setField("phone_number", Integer.parseInt(phoneNumber));
+			admin.setField("phone_number", phoneNumber);
 			admin.update();
 			response.sendRedirect("administrator/settings.jsp");
 		}
