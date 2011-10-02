@@ -1,13 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<%
+  Course[] courses = Course.getAll();
+  Administartor admin = (Administartor)session.getAttribute("administrator");
+%>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-		<title>Course Management</title>
+		<title>DR - Admin - Courses</title>
+    <link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css' />
+    <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/admin.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      #courses_table {width:100%; background-color:#BCDD11;}
+      #courses_table td, #courses_table th {background-color:#F1FAC0; padding:8px}
+    </style>
 	</head>
 	<body>
-		<h2>add a new Course</h2>
+    <jsp:include page="header.jsp" />
+    <jsp:include page="menu.jsp" />
+	 <div id="main">
+		<h2>Add a new Course</h2>
 				<form action="./selectSessions.jsp" method="post" >
 						<label>Name</label>: <input type="text" name="name" /><br />
 						<label>group</label>: <input type="text" name="group_id" /><br />
@@ -16,33 +30,37 @@
 						<label>Course Description</label>: <textarea name="description" rows="8" cols="20" ></textarea><br/>
 						<input type="submit" value="Submit new course" />
 				</form>
-		<%
-			Course[] courses = Course.getAll();
-		%>
-		<h3>all Courses</h3>
-		<table border="1">
+
+		<h3>All Courses</h3>
+		<table id="courses_table">
 			  <tr>
-			   	<td>Name</td>
-			   	<td>Group</td>
-			   	<td>Capacity</td>
-			   	<td>Credit Points</td>
-			   	<td>Description</td>
-			   	<td>Manage</td>
-			   	<td>remove course</td>
+			   	<th>Name</th>
+			   	<th>Group</th>
+			   	<th>Capacity</th>
+			   	<th>Credit Points</th>
+			   	<th>Description</th>
+			   	<th>Manage</th>
+			   	<th>remove course</th>
 			  </tr>
-			  <%for(Course c : courses){ %>
+			  <% for(Course c : courses) { %>
 			  <tr>
-			  	<td><%=c.getName() %></td>
-			  	<td><%=c.getIntField("group_id") %></td>	
-			  	<td><%=c.getIntField("capacity") %></td>	
-			  	<td><%=c.getIntField("credit_points") %></td>
-			  	<td><%=c.getStringField("course_description") %></td>
-			  	<td><a href="./viewCourseInfo.jsp?id=<%=c.getId()%>">view more info</a></td>
-			  	<td> <%if (c.getIntField("creator_id") == ((Administartor)session.getAttribute("administrator")).getId()){%>
-			   			<a href="javascript:void(0)" onclick="test(<%=new Integer(c.getId()).toString()%>, 'remove'); return false;">removeCouerse</a> <% }else{%>course not managed by you<%} %> </td>
-			   			<% }%>
-			  </tr>	  
+			  	<td><%= c.getName() %></td>
+			  	<td><%= c.getIntField("group_id") %></td>
+			  	<td><%= c.getIntField("capacity") %></td>
+			  	<td><%= c.getIntField("credit_points") %></td>
+			  	<td><%= c.getStringField("description") %></td>
+			  	<td><a href="viewCourseInfo.jsp?id=<%= c.getId() %>">view more info</a></td>
+			  	<td>
+			  	  <% if (c.getId() == admin.getId()){ %>
+			   			<a href="javascript:void(0)" onclick="test(<%= c.getId() %>, 'remove'); return false;">Remove Couerse</a>
+			   	  <% }else{ %>
+			   	    course not managed by you
+			   	  <% } %>
+			   	</td>
+			  </tr>
+			  <% }%>
 		</table>
+   </div>
 		<script type="text/javascript">
 		function test(id, action){
 			oformElement = document.forms[1];
@@ -53,7 +71,7 @@
 	</script>
 	<form action="ManageCourses" method="post">
 		<input type="hidden" name="action" value="null" />
-		<input type="hidden" name="course_id" value="null"/>	
-	</form>	
+		<input type="hidden" name="course_id" value="null"/>
+	</form>
 	</body>
 </html>
