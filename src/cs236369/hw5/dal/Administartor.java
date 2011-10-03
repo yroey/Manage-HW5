@@ -19,7 +19,7 @@ import cs236369.hw5.Logger;
 public class Administartor extends Base
 {
 	public static String tableName = "administrators";
-	public static int superAdminId = 0;
+	public static int superAdminId = 1;
 	/**
 	 *
 	 */
@@ -68,6 +68,9 @@ public class Administartor extends Base
 		fieldsTypes.put("phone_number", "string");
 	}
 
+	public boolean isSuperAdmin() {
+		return getId() == superAdminId;
+	}
 	public static int removeCourse(int id){
 		Connection conn = Utils.getConnection();
 		String query = "DELETE FROM courses WHERE id=?;";
@@ -128,11 +131,11 @@ public class Administartor extends Base
 		Utils.closeConnection(rs, ps, conn);
 		return arrayCourses;
 	}
-	
+
 	public String getName() {
 		return getStringField("name");
 	}
-	
+
 	public boolean validate() {
 	if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
 			return false;
@@ -153,7 +156,7 @@ public class Administartor extends Base
 
 		return true;
 	}
-	
+
 	public boolean hasDuplicate() {
 		Connection conn = Utils.getConnection();
 		PreparedStatement ps = null;
