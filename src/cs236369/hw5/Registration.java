@@ -90,7 +90,7 @@ public class Registration extends HttpServlet {
 		}
 		else if(action.equals("addAdmin")){
 			Administartor administrator = (Administartor)request.getSession().getAttribute("administrator");
-			if (administrator != null && administrator.getId() == 0){
+			if (administrator != null && administrator.getId() == Administartor.getSuperUserId()){
 				Administartor admin = new Administartor();
 				admin.setField("username", username);
 				admin.setField("password", password);
@@ -107,8 +107,10 @@ public class Registration extends HttpServlet {
 					response.sendRedirect("administrator/superUserManagemant.jsp");
 					return;
 				}
-				response.sendRedirect("administrator/superUserManagemant.jsp");
+				response.sendRedirect("administrator/index.jsp");
+				return;
 			}
+			response.sendRedirect("administrator/index.jsp");
 		}
 	}
 }
