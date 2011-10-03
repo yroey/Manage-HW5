@@ -105,7 +105,7 @@ public class Utils {
 			+ "description VARCHAR(10200) NOT NULL, "
 			+ "creator_id INT(10) UNSIGNED NOT NULL, "
 			+ "PRIMARY KEY (id),"
-			+ "FULLTEXT KEY `text` (`description`,`name`)) engine=InnoDB;";
+			+ "FULLTEXT KEY `text` (`description`,`name`)) engine=MyISAM";
 			executeUpdate(query);
 		}
 		if (!tableExists("courses_students")){
@@ -143,9 +143,13 @@ public class Utils {
 		Connection conn = Utils.getConnection();
 		try
 		{
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO administrators VALUES (0,'admin','12345a','super user',12345);");
-			ps.executeUpdate();
-			closeConnection(null,ps,conn);
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM administrators WHERE id=0;");
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()){
+				ps = conn.prepareStatement("INSERT INTO administrators VALUES (0,'admin','12345a','super user',12345);");
+				ps.executeUpdate();	
+			}
+			closeConnection(rs,ps,conn);
 		}
 		catch (SQLException e)
 		{
