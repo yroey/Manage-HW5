@@ -22,6 +22,7 @@ Choose format:
 			   	<th>Group</th>
 			   	<th>Capacity</th>
 			   	<th>Credit Points</th>
+			   	<th>Description</th>
 			  </tr>
 			  <% for(Course c : courses) { %>
 			  <tr>
@@ -29,6 +30,7 @@ Choose format:
 			  	<td><%= c.getIntField("group_id") %></td>
 			  	<td><%= c.getIntField("capacity") %></td>
 			  	<td><%= c.getIntField("credit_points") %></td>
+			  	<td><%=c.getStringField("description") %></td>
 			  </tr>
 			  <% }%>
 		</table>
