@@ -9,28 +9,41 @@ Student stud = new Student(id);
 String select_table = Utils.getCookie(request, "time_table_format_id");
 Course[] courses = stud.getCourses();
 %>
-Choose format:
-<select id="time_table_format_selector" onchange="loadTimeTableByFormat()">
-  <option value="1">Name 1</option>
-  <option value="2">Name 2</option>
-</select>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+    <title>DR - Admin - Student's Courses</title>
+    <link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css' />
+    <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../static/css/admin.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      #courses_table {width:100%; background-color:#BCDD11; margin-top:20px;}
+      #courses_table td, #courses_table th {background-color:#F1FAC0; padding:8px}
+    </style>
+  </head>
 
-<div id="time_table_content"></div>
-<table id="courses_table">
-			  <tr>
-			   	<th>Name</th>
-			   	<th>Group</th>
-			   	<th>Capacity</th>
-			   	<th>Credit Points</th>
-			   	<th>Description</th>
-			  </tr>
-			  <% for(Course c : courses) { %>
-			  <tr>
-			  	<td><%= c.getName() %></td>
-			  	<td><%= c.getIntField("group_id") %></td>
-			  	<td><%= c.getIntField("capacity") %></td>
-			  	<td><%= c.getIntField("credit_points") %></td>
-			  	<td><%=c.getStringField("description") %></td>
-			  </tr>
-			  <% }%>
-		</table>
+  <body>
+    <jsp:include page="header.jsp" />
+    <jsp:include page="menu.jsp" />
+    <div id="main">
+      <h2><%= stud.getName() %>'s courses:</h2>
+      <table id="courses_table">
+        <tr>
+          <th>Name</th>
+          <th>Group</th>
+          <th>Capacity</th>
+          <th>Credit Points</th>
+        </tr>
+        <% for(Course c : courses) { %>
+        <tr>
+          <td><%= c.getName() %></td>
+          <td><%= c.getIntField("group_id") %></td>
+          <td><%= c.getIntField("capacity") %></td>
+          <td><%= c.getIntField("credit_points") %></td>
+        </tr>
+        <% }%>
+    </table>
+    </div>
+  </body>
+</html>
