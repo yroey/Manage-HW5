@@ -7,8 +7,8 @@
               password="roey"
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://127.0.0.1:3306/roeyDB"
-              maxActive="1"
-              maxIdle="3">
+              maxActive="32"
+              maxIdle="10">
  			  <parameter>
 	              <name>removeAbandoned</name>
 	              <value>true</value>

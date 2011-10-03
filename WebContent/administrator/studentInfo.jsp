@@ -47,5 +47,3 @@ Course[] courses = stud.getCourses();
     </div>
   </body>
 </html>
-
-

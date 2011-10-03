@@ -211,14 +211,15 @@ public abstract class Base {
 		}
 		return base.getId() == getId();
 	}
-	
+
 	public boolean save() {
-		
+
 		if (!validate()) {
 			return false;
 		}
 		if (duplicate(this.key, (String)fieldsValues.get(this.key))){
 			//TODO ERROR
+			System.out.println("FAILED HEERR");
 			return false;
 		}
 		Connection conn = Utils.getConnection();
@@ -261,7 +262,7 @@ public abstract class Base {
 		Utils.closeConnection(null, ps, conn);
 		return false;
 	}
-	
+
 	public boolean delete(){
 		if (!duplicate("id", new Integer(id).toString())){
 			return false;
