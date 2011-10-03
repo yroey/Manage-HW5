@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-		<title>Students Management</title>
+		<title>DR - Admin - Students</title>
 		<link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css' />
     <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
     <link href="../static/css/admin.css" rel="stylesheet" type="text/css" />
