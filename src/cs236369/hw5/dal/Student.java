@@ -318,14 +318,15 @@ public class Student extends Base {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
+			System.out.println("GSDG");
 			ps = conn.prepareStatement("SELECT * FROM students WHERE id != ? and username = ?");
 			ps.setInt(1, getId());
 			ps.setString(2, getStringField("username"));
+			System.out.println(getStringField("username"));
 			rs = ps.executeQuery();
 			rs.last();
 			return rs.getRow() == 1;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -337,7 +338,7 @@ public class Student extends Base {
 		if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
 			return false;
 		}
-		
+
 		if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
 			return false;
 		}
@@ -352,7 +353,7 @@ public class Student extends Base {
 
 		return true;
 	}
-	
+
 	public boolean delete(){
 		if (!duplicate("id", new Integer(id).toString())){
 			return false;
@@ -360,6 +361,7 @@ public class Student extends Base {
 		Connection conn = Utils.getConnection();
 		String prepStmt = "DELETE FROM " + getTableName() + " WHERE id = ?;";
 		PreparedStatement ps = null;
+
 		try
 		{
 			ps = conn.prepareStatement(prepStmt);
@@ -377,6 +379,28 @@ public class Student extends Base {
 		}
 		Utils.closeConnection(null, ps, conn);
 		return false;
+	}
+
+	public static Student getByUsername(String username) {
+		Connection conn = Utils.getConnection();
+		String query = "SELECT * FROM students WHERE username = ?";
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try
+		{
+			ps = conn.prepareStatement(query);
+			ps.setString(1, username);
+			Logger.log(ps.toString());
+			rs = ps.executeQuery();
+			Student student =  new Student(rs);
+			return student;
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} finally {
+			Utils.closeConnection(rs, ps, conn);
+		}
 	}
 
 }
