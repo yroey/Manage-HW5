@@ -6,8 +6,8 @@ xmlns="http://www.w3.org/1999/xhtml">
 <xsl:output
 method="html"
 doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
-doctype-system= 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>  
+doctype-system=
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
 <xsl:template match="/">
   <html>
   <body>
@@ -15,7 +15,7 @@ doctype-system=
  <xsl:for-each select="timeTable/day">
  <h2>day <xsl:value-of select="@value"/> courses:</h2>
   			<xsl:for-each select="child::*">
-			 <h4>hour <xsl:value-of select="@value"/>  <xsl:value-of select="."/> </h4>
+			 <h4>hour <xsl:value-of select="@value"/>: <xsl:value-of select="."/> </h4>
 		    </xsl:for-each>
 </xsl:for-each>
 </body>
