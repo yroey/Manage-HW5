@@ -52,6 +52,12 @@ public class Registration extends HttpServlet {
 				response.sendRedirect("registration.jsp");
 				return;
 			}
+			stud = Student.getByUsername(stud.getStringField("username"));
+			if (stud == null) {
+				Utils.setSessionMessage(request.getSession(true), "Some error accrued, please try again");
+				response.sendRedirect("registration.jsp");
+				return;
+			}
 			if (stud.hasDuplicate()) {
 				stud.delete();
 				Utils.setSessionMessage(request.getSession(true), "Username is already taken");

@@ -9,7 +9,7 @@ try{
 	groupId = Integer.parseInt(request.getParameter("group_id"));
 }
 catch( NumberFormatException e){
-	
+
 }
 Course[] courses = Course.getAll();
 ArrayList<Course> temp = new ArrayList<Course>();
@@ -152,7 +152,7 @@ Course flagCourse = null;
 				<% } %>
 			</tr>
 			<% for (int hour = 0; hour < hours_per_day; ++hour) { %>
-			<tr >
+			<tr>
 				<td><%= hour %></td>
 				<% for (int day = 0; day < days_per_week; ++day) { %>
 				<% for(Course c : courses){
@@ -178,11 +178,11 @@ Course flagCourse = null;
 		<form action="ManageCourses" method="post">
 				<input type="hidden" name="action" value="addCourse" />
 				<input type="hidden" name="sessions" value="null" />
-				<input type="hidden" name=name value=<%=request.getParameter("name") %> />
+				<input type="hidden" name="name" value="<%=request.getParameter("name") %>" />
 				<input type="hidden" name="group_id" value=<%=request.getParameter("group_id") %> />
 				<input type="hidden" name="capacity" value=<%=request.getParameter("capacity")  %> />
 				<input type="hidden" name="credit_points" value=<%=request.getParameter("credit_points") %> />
-				<input type="hidden" name="description" value=<%=request.getParameter("description") %> />
+				<input type="hidden" name="description" value="<%=request.getParameter("description") %>" />
 		</form>
 	</body>
 </body>

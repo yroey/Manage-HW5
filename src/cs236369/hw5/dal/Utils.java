@@ -105,7 +105,7 @@ public class Utils {
 			+ "description VARCHAR(10200) NOT NULL, "
 			+ "creator_id INT(10) UNSIGNED NOT NULL, "
 			+ "PRIMARY KEY (id),"
-			+ "FULLTEXT KEY `text` (`description`,`name`)) engine=MyISAM";
+			+ "FULLTEXT KEY `text` (`description`,`name`)) engine=MyISAM;";
 			executeUpdate(query);
 		}
 		if (!tableExists("courses_students")){
@@ -156,7 +156,7 @@ public class Utils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 	private static boolean tableExists(String tableName){
 		boolean ret = false;

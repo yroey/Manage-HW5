@@ -346,17 +346,17 @@ public class Course extends Base {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;		
+		return false;
 	}
 	public boolean save(String sessions) {
-		
+
 		if (!validate()) {
 			return false;
 		}
 		if (duplicate(this.key, (String)fieldsValues.get(this.key))){
 			return false;
 		}
-		
+
 		Connection conn = Utils.getConnection();
 		try
 		{
@@ -368,7 +368,7 @@ public class Course extends Base {
 			}
 			prepStmt += ")";
 			prepStmt += " VALUES ( ?";
-	
+
 			for (int i = 0 ; i < fieldsTypes.size() - 1 ; i++){
 				prepStmt += ", ?";
 			}
@@ -389,7 +389,7 @@ public class Course extends Base {
 				}
 				i++;
 			}
-			ps.executeUpdate();	
+			ps.executeUpdate();
 			prepStmt = "SELECT * FROM courses WHERE name=?;";
 			ps = conn.prepareStatement(prepStmt);
 			ps.setString(1, getStringField("name"));
@@ -405,7 +405,7 @@ public class Course extends Base {
 				this.delete();
 				return false;
 			}
-			
+
 			if (this.doSessionsConflict(allSessions)) {
 				this.delete();
 				return false;
@@ -437,7 +437,7 @@ public class Course extends Base {
 					for (Session s: sessions){
 						allSessionsByGroup.add(s);
 					}
-					
+
 				}
 			}
 			for (Session s1 : newCourseSessions){
@@ -477,7 +477,7 @@ public class Course extends Base {
 	}
 
 	public boolean validate() {
-		if (!Pattern.matches("^[a-zA-Z0-9]{1,12}$", getStringField("name"))) {
+		if (!Pattern.matches("^[a-zA-Z0-9 ]{1,32}$", getStringField("name"))) {
 			return false;
 		}
 		if (!Pattern.matches("^[0-9]{1,12}$", new Integer(getIntField("group_id")).toString())) {
@@ -491,7 +491,7 @@ public class Course extends Base {
 		if (!Pattern.matches("^[0-9]{1,12}$", new Integer(getIntField("credit_points")).toString())) {
 			return false;
 		}
-		
+
 		if (!Pattern.matches("^.{1,250}$", getStringField("description"))) {
 			return false;
 		}

@@ -89,8 +89,8 @@
     	  var credit_points = $('#credit_points').val();
     	  var description = $('#description').val();
 
-    	  var msgs = {'name': 'Username should contain letters or numbers and be 1-12 charachters long',
-    			          'group_id': 'Group id should  only be numbers and be 1-12 charachters long',    			    
+    	  var msgs = {'name': 'Course name should contain letters or numbers and be 1-32 charachters long',
+    			          'group_id': 'Group id should  only be numbers and be 1-12 charachters long',
     			          'group_id_empty': 'Group id is a mandatory field',
     			          'capacity': 'Capacity should  only be numbers and be 1-12 charachters long',
     			          'capacity_empty': 'Capacity is a mandtaory field',
@@ -102,28 +102,29 @@
     	  var errors = [];
           if (!name) {
             errors.push(msgs['name_empty']);
-          } else if (!name.match(/^[a-zA-Z0-9]{1,12}$/)) {
+          } else if (!name.match(/^[a-zA-Z0-9 ]{1,32}$/)) {
+         	  alert(name);
             errors.push(msgs['name']);
           }
           if (!group_id) {
             errors.push(msgs['group_id_empty']);
           } else if (!group_id.match(/^[0-9]{1,12}$/)) {
             errors.push(msgs['group_id']);
-          } 
+          }
           if (!capacity) {
               errors.push(msgs['capacity_empty']);
             } else if (!capacity.match(/^[0-9]{1,12}$/)) {
               errors.push(msgs['capacity']);
-            } 
+            }
           if (!credit_points) {
               errors.push(msgs['credit_points_empty']);
             } else if (!credit_points.match(/^[0-9]{1,12}$/)) {
               errors.push(msgs['credit_points']);
-            } 
+            }
           if (name.length > 25) {
         	  errors.push(msgs['name_too_long']);
           }
-		
+
           if (errors.length == 0) {
         	  return true;
           }
