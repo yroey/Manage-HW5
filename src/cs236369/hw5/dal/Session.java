@@ -101,10 +101,11 @@ public class Session extends Base {
 		return false;
 	}
 
-	public static void registerSessions(String sessions, Course course, Connection conn)
+	public static ArrayList<Session> registerSessions(String sessions, Course course, Connection conn)
 	{
 		String delims = ";";
 		String[] s = sessions.split(delims);
+		ArrayList<Session>  allSessions = new ArrayList<Session>();
 		for (String str : s){
 			delims = " ";
 			int startHour = Integer.parseInt(str.split(delims)[0])/7;
@@ -121,7 +122,9 @@ public class Session extends Base {
 			if (!newSession.save(conn)){
 				System.out.println("duplicate key " + course.getId());
 			}	
+			allSessions.add(newSession);
 		}		
+		return allSessions;
 	}
 	public boolean save(Connection conn) {
 		

@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*" %>
+    pageEncoding="ISO-8859-1" import="cs236369.hw5.dal.*"  import="cs236369.hw5.Utils"  %>
 <%
   Administartor admin = (Administartor)session.getAttribute("administrator");
   Xslt[] xsltFiles = Xslt.getAll();
+  String msg = Utils.getSessionMessage(session);
 %>
 <!DOCTYPE html>
 <html>
@@ -24,6 +25,9 @@
 	  <h3>Settings</h3>
 			<form action="../Registration" method="post">
 			  <input type="hidden" name="action" value="updateDetails" />
+			   <ul id="errors" <%= msg.equals("") ? "style='display:none'" : "" %>>
+         		 <li><%= msg %></li>
+       		 </ul>
 			  <dl>
 					<dt><label>Username</label>:</dt><dd><input type="text" name="username" value="<%=admin.getStringField("username") %>" /></dd>
 					<dt><label>Password</label>:</dt><dd><input type="password" name="password" value="<%=admin.getStringField("password") %>" /></dd>
@@ -49,18 +53,25 @@
         <% } %>
 		</table>
 		  <h3 style="margin-top:20px">Upload a new XSLT</h3>
+		  <ul id="errors" <%= msg.equals("") ? "style='display:none'" : "" %>>
+         		 <li><%= msg %></li>
+       		 </ul>
+       		 
 			<form action="TimeTableByFormat" method="post">
-					<label>name</label>: <input type="text" name="name"  /><br />
+					<label>name</label>: <input type="text" name="name" id="name"  /><br />
 					<textarea name="content" rows="15" cols="50" ></textarea><br/>
-					<input type="submit" value="upload" />
+					<dt></dt><dd><button onclick="return validateReg()">Upload</button></dd>
 			</form>
 			<script type="text/javascript">
 
 		function test(id, action){
-			oformElement = document.forms[2];
-			oformElement.elements["xslt_id"].value =id;
-			oformElement.elements["action"].value = action;
-			document.forms[2].submit();
+			var ans=confirm("are you sure?");
+			if (ans == true){
+				oformElement = document.forms[2];
+				oformElement.elements["xslt_id"].value =id;
+				oformElement.elements["action"].value = action;
+				document.forms[2].submit();
+			}
 		}
 	</script>
 	<form action="TimeTableByFormat" method="post">
@@ -68,5 +79,31 @@
 		<input type="hidden" name="xslt_id" value="null"/>
 	</form>
 		</div>
+			<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	 <script>
+   	   function validateReg() {
+    	  var name = $('#name').val();
+    	
+    	  var msgs = {'name': 'Name should contain letters and be 1-12 charachters long'}
+    	  var errors = [];
+          if (!name) {
+            errors.push(msgs['name']);
+          } else if (!name.match(/^[a-zA-Z]{1,12}$/)) {
+            errors.push(msgs['name']);
+          }
+      
+          if (errors.length == 0) {
+        	  return true;
+          }
+
+          $('#errors li').remove();
+          for (i in errors) {
+        	  var li = $('<li></li>').html(errors[i])
+        	  $('#errors').append(li);
+          }
+          $('#errors').show(0);
+          return false;
+      }
+       </script>
   </body>
 </html>

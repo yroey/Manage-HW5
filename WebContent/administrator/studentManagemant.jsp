@@ -34,7 +34,7 @@
 			  	<td><%=s.getStringField("username") %></td>
 			  	<td><%=s.getName() %></td>
 			  	<td><%=s.getStringField("phone_number") %></td>
-			  	<td><a href="studentPage">link</a></td>
+			  	<td><a href="studentInfo.jsp?id=<%= s.getId() %>">info</a></td>
 			  	<td><a href="javascript:void(0)" onclick="test(<%= s.getId() %>, 'removeStud'); return false;">remove student</a></td>
 			  </tr>
 			  <% } %>
@@ -46,10 +46,13 @@
 		</form>
 	  <script type="text/javascript">
 	    function test(id, action){
-	      oformElement = document.forms[0];
-	      oformElement.elements["student_id"].value =id;
-	      oformElement.elements["action"].value = action;
-	      document.forms[0].submit();
+	    	var ans=confirm("are you sure?");
+			if (ans == true){
+		      oformElement = document.forms[0];
+		      oformElement.elements["student_id"].value =id;
+		      oformElement.elements["action"].value = action;
+		      document.forms[0].submit();
+			}
 	    }
 	  </script>
 	</body>

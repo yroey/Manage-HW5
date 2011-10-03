@@ -1,5 +1,6 @@
 package cs236369.hw5.dal;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,9 +9,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Pattern;
-import java.sql.Connection;
 
 import cs236369.hw5.Logger;
+import cs236369.hw5.dal.Utils;
 
 
 public class Course extends Base {
@@ -326,6 +327,9 @@ public class Course extends Base {
 			ps = conn.prepareStatement("DELETE FROM courses_students WHERE course_id  = ?");
 			ps.setInt(1, id);
 			ps.executeUpdate();
+			ps = conn.prepareStatement("DELETE FROM sessions WHERE course_id  = ?");
+			ps.setInt(1, id);
+			ps.executeUpdate();
 			conn.commit();
 			Utils.closeConnection(null, ps, conn);
 			return true;
@@ -345,9 +349,10 @@ public class Course extends Base {
 		return false;		
 	}
 	public boolean save(String sessions) {
-		/*if (!validate()) {
+		
+		if (!validate()) {
 			return false;
-		}*/
+		}
 		if (duplicate(this.key, (String)fieldsValues.get(this.key))){
 			return false;
 		}
@@ -393,9 +398,18 @@ public class Course extends Base {
 				//error
 			}
 			this.id = new Course(rs).getId();
-			Session.registerSessions(sessions, this, conn);
+			ArrayList<Session> allSessions = Session.registerSessions(sessions, this, conn);
 			conn.commit();
 			Utils.closeConnection(null, ps, conn);
+			if (this.hasDuplicate()) {
+				this.delete();
+				return false;
+			}
+			
+			if (this.doSessionsConflict(allSessions)) {
+				this.delete();
+				return false;
+			}
 			return true;
 		}catch (SQLException e) {
 			try
@@ -410,40 +424,78 @@ public class Course extends Base {
 		}
 		return false;
 	}
+	private boolean doSessionsConflict(ArrayList<Session> newCourseSessions)
+	{
+		Course[] allcourses = null;
+		try
+		{
+			allcourses = Course.getAll();
+			ArrayList<Session> allSessionsByGroup = new ArrayList<Session>();
+			for (Course c : allcourses){
+				if (c.getIntField("group_id") == this.getIntField("group_id") && c.getId() != this.id){
+					 Session[] sessions = c.getSessions();
+					for (Session s: sessions){
+						allSessionsByGroup.add(s);
+					}
+					
+				}
+			}
+			for (Session s1 : newCourseSessions){
+				for(Session s2: allSessionsByGroup){
+					if (Session.doSessionsConflict(s1, s2)){
+						return true;
+					}
+				}
+			}
+		}
+		catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean hasDuplicate() {
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = conn.prepareStatement("SELECT * FROM courses WHERE id != ? and name = ?");
+			ps.setInt(1, getId());
+			ps.setString(2, getStringField("name"));
+			rs = ps.executeQuery();
+			rs.last();
+			return rs.getRow() == 1;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} finally {
+			Utils.closeConnection(rs, ps, conn);
+		}
+	}
+
 	public boolean validate() {
-		if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
+		if (!Pattern.matches("^[a-zA-Z0-9]{1,12}$", getStringField("name"))) {
+			return false;
+		}
+		if (!Pattern.matches("^[0-9]{1,12}$", new Integer(getIntField("group_id")).toString())) {
 			return false;
 		}
 
-		System.out.println(getStringField("password"));
-		if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
+		if (!Pattern.matches("^[0-9]{1,12}$", new Integer(getIntField("capacity")).toString())) {
 			return false;
 		}
 
-		if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
+		if (!Pattern.matches("^[0-9]{1,12}$", new Integer(getIntField("credit_points")).toString())) {
+			return false;
+		}
+		
+		if (!Pattern.matches("^.{1,250}$", getStringField("description"))) {
 			return false;
 		}
 
-		if (!Pattern.matches("^[0-9\\-]{0,25}$", getStringField("phone_number"))) {
-			return false;
-		}
-		
-		if (!Pattern.matches("^[0-9]{0,5}$", getStringField("group_id"))) {
-			return false;
-		}
-		
-		if (!Pattern.matches("^[0-9]{0,5}$", getStringField("capacity"))) {
-			return false;
-		}
-		
-		if (!Pattern.matches("^[0-9]{0,5}$", getStringField("credit_points"))) {
-			return false;
-		}
-		
-		if (!Pattern.matches("^.{1,25}$", getStringField("description"))) {
-			return false;
-		}
-		
 		return true;
 	}
 }

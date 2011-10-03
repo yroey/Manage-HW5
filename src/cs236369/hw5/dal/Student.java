@@ -318,7 +318,7 @@ public class Student extends Base {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			ps = conn.prepareStatement("SELECT * FROM students WHERE student_id != ? and username = ?");
+			ps = conn.prepareStatement("SELECT * FROM students WHERE id != ? and username = ?");
 			ps.setInt(1, getId());
 			ps.setString(2, getStringField("username"));
 			rs = ps.executeQuery();
@@ -337,8 +337,7 @@ public class Student extends Base {
 		if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
 			return false;
 		}
-
-		System.out.println(getStringField("password"));
+		
 		if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
 			return false;
 		}
@@ -352,6 +351,32 @@ public class Student extends Base {
 		}
 
 		return true;
+	}
+	
+	public boolean delete(){
+		if (!duplicate("id", new Integer(id).toString())){
+			return false;
+		}
+		Connection conn = Utils.getConnection();
+		String prepStmt = "DELETE FROM " + getTableName() + " WHERE id = ?;";
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(prepStmt);
+			ps.setInt(1, id);
+			Logger.log(ps.toString());
+			ps.executeUpdate();
+			ps = conn.prepareStatement("DELETE FROM courses_students WHERE student_id  = ?");
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			Utils.closeConnection(null, ps, conn);
+			return true;
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Utils.closeConnection(null, ps, conn);
+		return false;
 	}
 
 }

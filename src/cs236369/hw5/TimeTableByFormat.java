@@ -45,24 +45,28 @@ public class TimeTableByFormat extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
-		if (action == null){
-			String xsltContent = request.getParameter("content");
-			String xsltName = request.getParameter("name");
-			int uploaderId = ((Administartor)request.getSession().getAttribute("administrator")).getId();
-			XSLTmanager.upload(xsltName, xsltContent, uploaderId);
-			//ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			//XSLTmanager.applyStyleSheet(5, 44, baos);
-			//String str = new String(baos.toByteArray());
-			
-			response.sendRedirect("settings.jsp");
-		}
-		else if (action.equals("removeXSLT")){
-			String xsltId = request.getParameter("xslt_id");
-			Xslt xslt = new Xslt(Integer.parseInt(xsltId));
-			if (!xslt.delete()){
-				System.out.println("can't delete " + Integer.parseInt(xsltId));
+		Administartor admin = (Administartor)request.getSession().getAttribute("administrator");
+		if (admin != null){
+			if (action == null){
+				String xsltContent = request.getParameter("content");
+				String xsltName = request.getParameter("name");
+				int uploaderId = ((Administartor)request.getSession().getAttribute("administrator")).getId();
+				if (!Xslt.validate(xsltName)){
+					Utils.setSessionMessage(request.getSession(true), "There was an error in the xslt upload form");
+					response.sendRedirect("settings.jsp");
+					return;
+				}
+				XSLTmanager.upload(xsltName, xsltContent, uploaderId);
+				response.sendRedirect("settings.jsp");
 			}
-			response.sendRedirect("settings.jsp");
+			else if (action.equals("removeXSLT")){
+				String xsltId = request.getParameter("xslt_id");
+				Xslt xslt = new Xslt(Integer.parseInt(xsltId));
+				if (!xslt.delete()){
+					System.out.println("can't delete " + Integer.parseInt(xsltId));
+				}
+				response.sendRedirect("settings.jsp");
+			}
 		}
 	}
 

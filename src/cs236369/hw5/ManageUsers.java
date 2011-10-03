@@ -28,21 +28,24 @@ public class ManageUsers extends HttpServlet
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = (String)request.getParameter("action");
-		if (action.equals("removeStud")){ 
-			String studentId = (String) request.getParameter("student_id");
-			Student s = new Student(Integer.parseInt(studentId));
-			if (!s.delete()){
-				System.out.println("can't delete " + Integer.parseInt(studentId));
+		Administartor admin = (Administartor)request.getSession().getAttribute("administrator");
+		if (admin != null){
+			if (action.equals("removeStud")){ 
+				String studentId = (String) request.getParameter("student_id");
+				Student s = new Student(Integer.parseInt(studentId));
+				if (!s.delete()){
+					System.out.println("can't delete " + Integer.parseInt(studentId));
+				}
+				response.sendRedirect("studentManagemant.jsp");
 			}
-			response.sendRedirect("studentManagemant.jsp");
-		}
-		else if (action.equals("removeAdmin")){ 
-			String adminId = (String) request.getParameter("admin_id");
-			Administartor s = new Administartor(Integer.parseInt(adminId));
-			if (!s.delete()){
-				System.out.println("can't delete " + Integer.parseInt(adminId));
+			else if (action.equals("removeAdmin") && admin.getId() == 0){ 
+				String adminId = (String) request.getParameter("admin_id");
+				Administartor s = new Administartor(Integer.parseInt(adminId));
+				if (!s.delete()){
+					System.out.println("can't delete " + Integer.parseInt(adminId));
+				}
+				response.sendRedirect("superUserManagemant.jsp");
 			}
-			response.sendRedirect("superUserManagemant.jsp");
 		}
 	}
 }
