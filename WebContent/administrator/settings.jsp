@@ -25,15 +25,15 @@
 	  <h3>Settings</h3>
 			<form action="../Registration" method="post">
 			  <input type="hidden" name="action" value="updateDetails" />
-			   <ul id="errors" <%= msg.equals("") ? "style='display:none'" : "" %>>
+			   <ul id="errors2" <%= msg.equals("") ? "style='display:none'" : "" %>>
          		 <li><%= msg %></li>
        		 </ul>
 			  <dl>
-					<dt><label>Username</label>:</dt><dd><input type="text" name="username" value="<%=admin.getStringField("username") %>" /></dd>
-					<dt><label>Password</label>:</dt><dd><input type="password" name="password" value="<%=admin.getStringField("password") %>" /></dd>
-					<dt><label>Name</label>:</dt><dd><input type="text" name="name" value="<%= admin.getStringField("name") %>" /></dd>
-					<dt><label>Phone Number</label>:</dt><dd><input type="text" name="phoneNumber" value="<%= admin.getStringField("phone_number") %>" /></dd>
-					<dt></dt><dd><input type="submit" value="Save" /></dd>
+					<dt><label>Username</label>:</dt><dd><input type="text" name="username" id="username" value="<%=admin.getStringField("username") %>" /></dd>
+					<dt><label>Password</label>:</dt><dd><input type="password" name="password" id="password" value="<%=admin.getStringField("password") %>" /></dd>
+					<dt><label>Name</label>:</dt><dd><input type="text" name="updated_name" id="updated_name" value="<%= admin.getStringField("name") %>" /></dd>
+					<dt><label>Phone Number</label>:</dt><dd><input type="text" name="phoneNumber" id="phoneNumber" value="<%= admin.getStringField("phone_number") %>" /></dd>
+					<dt></dt><dd><button onclick="return validateReg2()">Submit</button></dd>
 			  </dl>
 			</form>
 		  <h3 style="margin-top:20px">Manage Time Table XSLTs</h3>
@@ -86,6 +86,7 @@
     	
     	  var msgs = {'name': 'Name should contain letters and be 1-12 charachters long'}
     	  var errors = [];
+    	  
           if (!name) {
             errors.push(msgs['name']);
           } else if (!name.match(/^[a-zA-Z]{1,12}$/)) {
@@ -105,5 +106,56 @@
           return false;
       }
        </script>
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script>
+      function validateReg2() {
+    	  var username = $('#username').val();
+    	  var password = $('#password').val();
+    	  var name = $('#updated_name').val();
+    	  var phone = $('#phoneNumber').val();
+
+    	  var msgs = {'username': 'Username should contain only letter and be 5-12 charachters long',
+    			          'password': 'Password should contain only letter or number and be 5-12 charachters long',
+    			          'username_empty': 'Username is a mandatory field',
+    			          'password_empty': 'Password is a mandatory field',
+    			          'name_empty': 'Name is a mandtaory field',
+    			          'name_too_long': 'Name should not be longer than 25 charachters',
+    			          'phone': 'Phone must be number not be longer than 25 charachters'}
+    	  var errors = [];
+          if (!username) {
+            errors.push(msgs['username_empty']);
+          } else if (!username.match(/^[a-zA-Z]{5,12}$/)) {
+            errors.push(msgs['username']);
+          }
+          if (!password) {
+            errors.push(msgs['password_empty']);
+          } else if (!password.match(/^[a-zA-Z0-9]{5,12}$/)) {
+            errors.push(msgs['password']);
+          } 
+          
+          if (!name) {
+        	  errors.push(msgs['name_empty']);
+          }
+          if (name.length > 25) {
+        	  errors.push(msgs['name_too_long']);
+          }
+
+          if (!phone.match(/^[0-9\-]{0,25}$/)) {
+        	  errors.push(msgs['phone']);
+          }
+          
+          if (errors.length == 0) {
+        	  return true;
+          }
+
+          $('#errors2 li').remove();
+          for (i in errors) {
+        	  var li = $('<li></li>').html(errors[i])
+        	  $('#errors2').append(li);
+          }
+          $('#errors2').show(0);
+          return false;
+      }
+    </script>
   </body>
 </html>

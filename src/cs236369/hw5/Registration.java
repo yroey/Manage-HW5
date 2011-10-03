@@ -72,17 +72,17 @@ public class Registration extends HttpServlet {
 			if (admin != null){
 				admin.setField("username", username);
 				admin.setField("password", password);
-				admin.setField("name", name);
+				admin.setField("name", request.getParameter("updated_name"));
 				admin.setField("phone_number", phoneNumber);
 				if (!admin.update()){
 					Utils.setSessionMessage(request.getSession(true), "problem with the update form");
-					response.sendRedirect("administrator/superUserManagemant.jsp");
+					response.sendRedirect("administrator/settings.jsp");
 					return;
 				}
 				if (admin.hasDuplicate()) {
 					admin.delete();
 					Utils.setSessionMessage(request.getSession(true), "Username is already taken");
-					response.sendRedirect("administrator/superUserManagemant.jsp");
+					response.sendRedirect("administrator/settings.jsp");
 					return;
 				}
 				response.sendRedirect("administrator/settings.jsp");

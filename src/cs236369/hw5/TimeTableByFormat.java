@@ -58,6 +58,7 @@ public class TimeTableByFormat extends HttpServlet {
 				}
 				XSLTmanager.upload(xsltName, xsltContent, uploaderId);
 				response.sendRedirect("settings.jsp");
+				return;
 			}
 			else if (action.equals("removeXSLT")){
 				String xsltId = request.getParameter("xslt_id");
@@ -66,8 +67,10 @@ public class TimeTableByFormat extends HttpServlet {
 					System.out.println("can't delete " + Integer.parseInt(xsltId));
 				}
 				response.sendRedirect("settings.jsp");
+				return;
 			}
 		}
+		response.sendRedirect("index.jsp");
 	}
 
 }
