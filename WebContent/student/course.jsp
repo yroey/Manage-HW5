@@ -31,7 +31,7 @@
   <h5>Capacity:</h5>
   <p><%= course.getCapacity() %>; <span id="num_students_left"><%= num_students_left %></span> left</p>
   <h4>Course Description:</h4>
-  <p><%= course.getStringField("description") %></p>
+  <p><%= course.getStringField("description").replace("\n", "<br/>") %></p>
 
   <div id="course_sessions">
     <h4>Course Sessions</h4>

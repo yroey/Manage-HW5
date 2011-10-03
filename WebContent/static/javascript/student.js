@@ -99,9 +99,7 @@
   function loadTimeTableByFormat() {
 	  var id = $('#time_table_format_selector').val();
 	  $.cookies.set("time_table_format_id", id);
-	  $.get('/TimeTableByFormatId', {id: id}, function(data){
-		  $('#time_table_content').html(data);
-	  });
+	  $('#time_table_iframe').attr('src', 'TimeTableByFormat?id=' + id);
   }
 
   function processUrl() {
