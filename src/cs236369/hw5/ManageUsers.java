@@ -37,15 +37,18 @@ public class ManageUsers extends HttpServlet
 					System.out.println("can't delete " + Integer.parseInt(studentId));
 				}
 				response.sendRedirect("studentManagemant.jsp");
+				return;
 			}
-			else if (action.equals("removeAdmin") && admin.getId() == 0){ 
+			else if (action.equals("removeAdmin") && admin.getId() == Administartor.getSuperUserId()){ 
 				String adminId = (String) request.getParameter("admin_id");
 				Administartor s = new Administartor(Integer.parseInt(adminId));
 				if (!s.delete()){
 					System.out.println("can't delete " + Integer.parseInt(adminId));
 				}
 				response.sendRedirect("superUserManagemant.jsp");
+				return;
 			}
 		}
+		response.sendRedirect("studentManagemant.jsp");
 	}
 }

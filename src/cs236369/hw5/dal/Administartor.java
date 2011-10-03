@@ -19,7 +19,7 @@ import cs236369.hw5.Logger;
 public class Administartor extends Base
 {
 	public static String tableName = "administrators";
-	public static int superAdminId = 0;
+	public static int superAdminId = 1;
 	/**
 	 *
 	 */

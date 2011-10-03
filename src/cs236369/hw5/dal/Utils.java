@@ -143,10 +143,10 @@ public class Utils {
 		Connection conn = Utils.getConnection();
 		try
 		{
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM administrators WHERE id=0;");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM administrators WHERE id=" + Administartor.getSuperUserId() + ";");
 			ResultSet rs = ps.executeQuery();
 			if (!rs.next()){
-				ps = conn.prepareStatement("INSERT INTO administrators VALUES (0,'admin','12345a','super user',12345);");
+				ps = conn.prepareStatement("INSERT INTO administrators VALUES (1,'admin','12345a','super user',12345);");
 				ps.executeUpdate();	
 			}
 			closeConnection(rs,ps,conn);
