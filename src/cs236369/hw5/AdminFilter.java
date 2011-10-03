@@ -11,13 +11,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cs236369.hw5.dal.Administartor;
+
 /**
  * Servlet Filter implementation class adminFilter
  */
 public class AdminFilter implements Filter {
 
     /**
-     * Default constructor. 
+     * Default constructor.
      */
     public AdminFilter() {
         // TODO Auto-generated constructor stub
@@ -35,10 +37,14 @@ public class AdminFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		  if (((HttpServletRequest) request).getSession().getAttribute("administrator") != null) {
-			    chain.doFilter(request, response); // Logged in, so just continue.
-		  	} else {
-		  	  ((HttpServletResponse)response).sendRedirect("../admin_login.jsp");
-		  	}
+			  Administartor session_admin = (Administartor)((HttpServletRequest) request).getSession().getAttribute("administrator");
+			  Administartor admin = new Administartor(session_admin.getId());
+			  if (admin != null) {
+				  chain.doFilter(request, response); // Logged in, so just continue.
+				  return;
+			  }
+	  		}
+	  	   ((HttpServletResponse)response).sendRedirect("../admin_login.jsp");
 	}
 
 	/**

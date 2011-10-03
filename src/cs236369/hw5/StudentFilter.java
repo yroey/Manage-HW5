@@ -10,6 +10,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cs236369.hw5.dal.Student;
+
 /**
  * Servlet Filter implementation class StudentFilter
  */
@@ -34,10 +36,14 @@ public class StudentFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 	  if (((HttpServletRequest) request).getSession().getAttribute("student") != null) {
-	    chain.doFilter(request, response); // Logged in, so just continue.
-  	} else {
-  	  ((HttpServletResponse)response).sendRedirect("../login.jsp");
-  	}
+		  Student session_student = (Student)((HttpServletRequest) request).getSession().getAttribute("student");
+		  Student student = new Student(session_student.getId());
+		  if (student != null) {
+			  chain.doFilter(request, response); // Logged in, so just continue.
+			  return;
+		  }
+  		}
+  	   ((HttpServletResponse)response).sendRedirect("../login.jsp");
 	}
 
 	/**
