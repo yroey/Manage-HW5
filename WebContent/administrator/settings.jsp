@@ -12,6 +12,10 @@
     <link href='http://fonts.googleapis.com/css?family=Sansita+One|Chivo' rel='stylesheet' type='text/css'>
     <link href="../static/css/main.css" rel="stylesheet" type="text/css" />
     <link href="../static/css/admin.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      #xslt_table {width:100%; background-color:#BCDD11;}
+      #xslt_table td {background-color:#F1FAC0; padding:8px}
+    </style>
 	</head>
 	<body>
     <jsp:include page="header.jsp" />
@@ -20,34 +24,38 @@
 	  <h3>Settings</h3>
 			<form action="../Registration" method="post">
 			  <input type="hidden" name="action" value="updateDetails" />
-					<label>Username</label>: <input type="text" name="username" value="<%=admin.getStringField("username") %>" /><br />
-					<label>Password</label>: <input type="password" name="password" value="<%=admin.getStringField("password") %>" /><br />
-					<label>Name</label>: <input type="text" name="name" value="<%= admin.getStringField("name") %>" /><br />
-					<label>Phone Number</label>: <input type="text" name="phoneNumber" value="<%= admin.getStringField("phone_number") %>" /><br />
-					<input type="submit" value="Save" />
+			  <dl>
+					<dt><label>Username</label>:</dt><dd><input type="text" name="username" value="<%=admin.getStringField("username") %>" /></dd>
+					<dt><label>Password</label>:</dt><dd><input type="password" name="password" value="<%=admin.getStringField("password") %>" /></dd>
+					<dt><label>Name</label>:</dt><dd><input type="text" name="name" value="<%= admin.getStringField("name") %>" /></dd>
+					<dt><label>Phone Number</label>:</dt><dd><input type="text" name="phoneNumber" value="<%= admin.getStringField("phone_number") %>" /></dd>
+					<dt></dt><dd><input type="submit" value="Save" /></dd>
+			  </dl>
 			</form>
-		  <h3>manage Xsl database</h3>
-		  <table border="1">
+		  <h3 style="margin-top:20px">Manage Time Table XSLTs</h3>
+		  <table id="xslt_table">
 			  <tr>
-			   	<td>name</td>
-			   	<td>remove Xslt</td>
+			   	<td>Name</td>
+			   	<td>Remove Xslt</td>
 			  </tr>
 			  <%for(Xslt xslt : xsltFiles){ %>
 			  <tr>
-			  	<td><%=xslt.getName() %></td>	
-			  	<td> <%if (xslt.getUpId() == ((Administartor)session.getAttribute("administrator")).getId()){%>
-			   			<a href="javascript:void(0)" onclick="test(<%=new Integer(xslt.getId()).toString()%>, 'removeXSLT'); return false;">removeXslt</a> <% }else{%>xslt file not manged by you<%} %> </td>
-			   			<% }%>
-			  </tr>	  
+			  	<td><%=xslt.getName() %></td>
+			  	<td>
+			  	  <%if (xslt.getUpId() == admin.getId()){%>
+			   		  <a href="javascript:void(0)" onclick="test(<%= xslt.getId() %>, 'removeXSLT'); return false;">removeXslt</a> <% }else{ %>xslt file not manged by you<% } %>
+			   	</td>
+			  </tr>
+        <% } %>
 		</table>
-		  <h3>upload Xsl content for the timetable design</h3>
+		  <h3 style="margin-top:20px">Upload a new XSLT</h3>
 			<form action="TimeTableByFormat" method="post">
 					<label>name</label>: <input type="text" name="name"  /><br />
 					<textarea name="content" rows="15" cols="50" ></textarea><br/>
 					<input type="submit" value="upload" />
 			</form>
 			<script type="text/javascript">
-			
+
 		function test(id, action){
 			oformElement = document.forms[2];
 			oformElement.elements["xslt_id"].value =id;
@@ -57,8 +65,8 @@
 	</script>
 	<form action="TimeTableByFormat" method="post">
 		<input type="hidden" name="action" value="null" />
-		<input type="hidden" name="xslt_id" value="null"/>	
-	</form>	
+		<input type="hidden" name="xslt_id" value="null"/>
+	</form>
 		</div>
   </body>
 </html>

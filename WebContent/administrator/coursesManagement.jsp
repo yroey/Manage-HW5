@@ -23,12 +23,14 @@
 	 <div id="main">
 		<h2>Add a new Course</h2>
 				<form action="./selectSessions.jsp" method="post" >
-						<label>Name</label>: <input type="text" name="name" /><br />
-						<label>group</label>: <input type="text" name="group_id" /><br />
-						<label>Capacity</label>: <input type="text" name="capacity" /><br />
-						<label>Credit Points</label>: <input type="text" name="credit_points" /><br />
-						<label>Course Description</label>: <textarea name="description" rows="8" cols="20" ></textarea><br/>
-						<input type="submit" value="Submit new course" />
+				<dl>
+						<dt><label>Name</label>:</dt><dd><input type="text" name="name" /></dd>
+						<dt><label>group</label>:</dt><dd><input type="text" name="group_id" /></dd>
+						<dt><label>Capacity</label>:</dt><dd><input type="text" name="capacity" /></dd>
+						<dt><label>Credit Points</label>:</dt><dd><input type="text" name="credit_points" /></dd>
+						<dt><label>Course Description</label>:</dt><dd><textarea name="description" rows="8" cols="20" style="width:400px;" ></textarea></dd>
+						<dt></dt><dd><input type="submit" value="Save" /></dd>
+				</dl>
 				</form>
 
 		<h3>All Courses</h3>
@@ -38,7 +40,6 @@
 			   	<th>Group</th>
 			   	<th>Capacity</th>
 			   	<th>Credit Points</th>
-			   	<th>Description</th>
 			   	<th>Manage</th>
 			   	<th>remove course</th>
 			  </tr>
@@ -48,7 +49,6 @@
 			  	<td><%= c.getIntField("group_id") %></td>
 			  	<td><%= c.getIntField("capacity") %></td>
 			  	<td><%= c.getIntField("credit_points") %></td>
-			  	<td><%= c.getStringField("description") %></td>
 			  	<td><a href="viewCourseInfo.jsp?id=<%= c.getId() %>">view more info</a></td>
 			  	<td>
 			  	  <% if (c.getIntField("creator_id") == admin.getId()){  %>

@@ -26,12 +26,14 @@
 		  <h3>Register a new Administrator</h3>
 
 			<form action="../Registration" method="post">
-			  <input type="hidden" name="action" value="addAdmin" />
-			  <label>user name</label>: <input type="text" name="username" /><br />
-				<label>password</label>: <input type="password" name="password" /><br />
-				<label>name</label>: <input type="text" name="name" /><br />
-				<label>phone number</label>: <input type="text" name="phoneNumber" /><br />
-				<input type="submit" value="Register" />
+        <input type="hidden" name="action" value="addAdmin" />
+			  <dl>
+				  <dt><label>user name</label>:</dt><dd><input type="text" name="username" /></dd>
+					<dt><label>password</label>:</dt><dd><input type="password" name="password" /></dd>
+					<dt><label>name</label>:</dt><dd><input type="text" name="name" /></dd>
+					<dt><label>phone number</label>:</dt><dd><input type="text" name="phoneNumber" /></dd>
+					<dt></dt><dd><input type="submit" value="Register" /></dd>
+			  </dl>
 			</form>
 			<h3>Administrators</h3>
 			<table id="admin_table">
