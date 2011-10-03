@@ -105,7 +105,7 @@ public class Utils {
 			+ "description VARCHAR(10200) NOT NULL, "
 			+ "creator_id INT(10) UNSIGNED NOT NULL, "
 			+ "PRIMARY KEY (id),"
-			+ "FULLTEXT KEY `text` (`description`,`name`)) engine=MyISAM;";
+			+ "FULLTEXT KEY `text` (`description`,`name`)) engine=InnoDB;";
 			executeUpdate(query);
 		}
 		if (!tableExists("courses_students")){
@@ -121,7 +121,6 @@ public class Utils {
 			query = "CREATE TABLE `" + dbName + "`.`sessions` ( "
 			+ "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "
 			+ "day_of_week INT(10) UNSIGNED NOT NULL, "
-			+ "hour_slot INT(10) UNSIGNED NOT NULL, "
 			+ "length INT(10) UNSIGNED NOT NULL, "
 			+ "course_id INT(10) UNSIGNED NOT NULL, "
 			+ "end_hour INT(10) UNSIGNED NOT NULL, "
@@ -130,6 +129,15 @@ public class Utils {
 			+ "PRIMARY KEY (id),"
 			+ "KEY `course` (`course_id`),"
 			+ "KEY `group` (`group_id`)) engine=InnoDB;";
+			executeUpdate(query);
+		}
+		if (!tableExists("xslt")){
+			query = "CREATE TABLE `" + dbName + "`.`xslt` ( "
+				  + "id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, "
+				  +	"name VARCHAR(255) NOT NULL, "
+				  +	"content BLOB NOT NULL, "
+				  +	"uid INT(10) UNSIGNED NOT NULL, "
+				  +	"PRIMARY KEY (id)) engine=InnoDB;";
 			executeUpdate(query);
 		}
 	}

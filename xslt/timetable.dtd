@@ -1,0 +1,6 @@
+<!ELEMENT timeTable (day+)>
+<!ELEMENT day (hour+)>
+<!ELEMENT hour (#PCDATA)>
+
+<!ATTLIST day value CDATA #REQUIRED>
+<!ATTLIST hour value CDATA #REQUIRED>

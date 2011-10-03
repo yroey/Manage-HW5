@@ -5,6 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
+import cs236369.hw5.Logger;
 
 
 public class Session extends Base {
@@ -97,7 +101,7 @@ public class Session extends Base {
 		return false;
 	}
 
-	public static void registerSessions(String sessions, int courseId, int groupId)
+	public static void registerSessions(String sessions, Course course, Connection conn)
 	{
 		String delims = ";";
 		String[] s = sessions.split(delims);
@@ -112,11 +116,87 @@ public class Session extends Base {
 			newSession.setField("end_hour", endHour);
 			newSession.setField("day_of_week", day);
 			newSession.setField("length", length);
-			newSession.setField("course_id", courseId);
-			newSession.setField("group_id", groupId);
-			if (!newSession.save()){
-				System.out.println("duplicate key " + courseId);
+			newSession.setField("course_id", course.getId());
+			newSession.setField("group_id", course.getIntField("group_id"));
+			if (!newSession.save(conn)){
+				System.out.println("duplicate key " + course.getId());
 			}	
 		}		
 	}
+	public boolean save(Connection conn) {
+		
+		if (!validate()) {
+			return false;
+		}
+		if (duplicate(this.key, (String)fieldsValues.get(this.key), conn)){
+			//TODO ERROR
+			return false;
+		}
+		//Connection conn = Utils.getConnection();
+		String prepStmt = "INSERT INTO " + getTableName() + " (" + fields.get(0);
+		for (int i = 1 ; i < fields.size(); i++ ){
+			prepStmt += " ," + fields.get(i);
+		}
+		prepStmt += ")";
+		prepStmt += " VALUES ( ?";
+
+		for (int i = 0 ; i < fieldsTypes.size() - 1 ; i++){
+			prepStmt += ", ?";
+		}
+		prepStmt += ");";
+		PreparedStatement ps = null;
+		try
+		{
+			ps = conn.prepareStatement(prepStmt);
+			Collection<String> ct = fieldsTypes.values();
+			Iterator<String> itrT = ct.iterator();
+			Collection<Object> cv = fieldsValues.values();
+			Iterator<Object> itrV = cv.iterator();
+			int i = 1;
+			while(itrT.hasNext()){
+				if(itrT.next().equals("string")){
+					ps.setString(i,(String)itrV.next());
+				}
+				else{ //int
+					ps.setInt(i, (Integer)itrV.next());
+				}
+				i++;
+			}
+			ps.executeUpdate();
+			ps.close();
+			//Utils.closeConnection(null, ps, conn);
+			return true;
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Utils.closeConnection(null, ps, conn);
+		return false;
+	}
+	public boolean duplicate(String key, String newKey, Connection conn){
+		//Connection conn = Utils.getConnection();
+		String query = "SELECT * FROM " + getTableName() + " WHERE " +  key + " = ?;" ;
+		ResultSet rs = null;
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, newKey);
+			Logger.log(ps.toString());
+			rs = ps.executeQuery();
+			if (!rs.next()){
+				ps.close();
+				rs.close();
+				return false;
+			}
+			ps.close();
+			rs.close();
+			return true;
+			//Utils.closeConnection(rs, ps, conn);
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+
 }

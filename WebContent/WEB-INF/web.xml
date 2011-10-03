@@ -132,7 +132,7 @@
     <servlet-name>EditStudent</servlet-name>
     <url-pattern>/student/EditStudent</url-pattern>
   </servlet-mapping>
-   <servlet>
+  <servlet>
     <description></description>
     <display-name>TimeTableByFormat</display-name>
     <servlet-name>TimeTableByFormat</servlet-name>
@@ -142,4 +142,13 @@
     <servlet-name>TimeTableByFormat</servlet-name>
     <url-pattern>/administrator/TimeTableByFormat</url-pattern>
   </servlet-mapping>
+  <filter>
+  	<display-name>AdminFilter</display-name>
+  	<filter-name>AdminFilter</filter-name>
+  	<filter-class>cs236369.hw5.AdminFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>AdminFilter</filter-name>
+  	<url-pattern>/administrator/*</url-pattern>
+  </filter-mapping>
 </web-app>

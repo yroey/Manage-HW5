@@ -51,9 +51,9 @@
 			  	<td><%= c.getStringField("description") %></td>
 			  	<td><a href="viewCourseInfo.jsp?id=<%= c.getId() %>">view more info</a></td>
 			  	<td>
-			  	  <% if (c.getId() == admin.getId()){ %>
-			   			<a href="javascript:void(0)" onclick="test(<%= c.getId() %>, 'remove'); return false;">Remove Couerse</a>
-			   	  <% }else{ %>
+			  	  <% if (c.getIntField("creator_id") == admin.getId()){  %>
+			   			<a href="javascript:void(0)" onclick="test(<%= c.getId() %>, 'remove'); return false;">Remove Course</a>
+			   	  <% }else{ System.out.println(c.getId() + " " +admin.getId());%>
 			   	    course not managed by you
 			   	  <% } %>
 			   	</td>
@@ -73,5 +73,8 @@
 		<input type="hidden" name="action" value="null" />
 		<input type="hidden" name="course_id" value="null"/>
 	</form>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script>
+    </script>
 	</body>
 </html>

@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cs236369.hw5.dal.Administartor;
-import cs236369.hw5.dal.Course;
 import cs236369.hw5.dal.Student;
 import cs236369.hw5.dal.Xslt;
 
@@ -38,8 +37,7 @@ public class TimeTableByFormat extends HttpServlet {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		XSLTmanager.applyStyleSheet(stud.getId(), Integer.parseInt(xsltId), baos);
 		String str = new String(baos.toByteArray());
-		System.out.println(str);
-		//Add to reponse
+		response.getWriter().write(str);
 	}
 
 	/**
@@ -52,6 +50,10 @@ public class TimeTableByFormat extends HttpServlet {
 			String xsltName = request.getParameter("name");
 			int uploaderId = ((Administartor)request.getSession().getAttribute("administrator")).getId();
 			XSLTmanager.upload(xsltName, xsltContent, uploaderId);
+			//ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			//XSLTmanager.applyStyleSheet(5, 44, baos);
+			//String str = new String(baos.toByteArray());
+			
 			response.sendRedirect("settings.jsp");
 		}
 		else if (action.equals("removeXSLT")){

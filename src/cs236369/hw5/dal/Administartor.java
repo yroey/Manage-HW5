@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import cs236369.hw5.Logger;
 
@@ -127,7 +128,30 @@ public class Administartor extends Base
 		Utils.closeConnection(rs, ps, conn);
 		return arrayCourses;
 	}
+	
 	public String getName() {
 		return getStringField("name");
+	}
+	
+	public boolean validate() {
+		return true;
+	/*	if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
+			return false;
+		}
+
+		System.out.println(getStringField("password"));
+		if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
+			return false;
+		}
+
+		if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
+			return false;
+		}
+
+		if (!Pattern.matches("^[0-9\\-]{0,25}$", getStringField("phone_number"))) {
+			return false;
+		}
+
+		return true;*/
 	}
 }

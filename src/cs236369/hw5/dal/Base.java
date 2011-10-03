@@ -211,7 +211,9 @@ public abstract class Base {
 		}
 		return base.getId() == getId();
 	}
+	
 	public boolean save() {
+		
 		if (!validate()) {
 			return false;
 		}
@@ -259,6 +261,7 @@ public abstract class Base {
 		Utils.closeConnection(null, ps, conn);
 		return false;
 	}
+	
 	public boolean delete(){
 		if (!duplicate("id", new Integer(id).toString())){
 			return false;

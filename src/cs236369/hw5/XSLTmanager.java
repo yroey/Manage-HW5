@@ -30,35 +30,6 @@ public class XSLTmanager
 	public static int days_per_week = 7;
 	public static int hours_per_day = 10;
 
-	/*public static void insertDefaults(){
-		//TODO check if exists
-		File file = new File("C:\\Users\\Dennis\\git\\manageHW5\\xslt\\default_1.xsl");
-		try
-		{
-			FileInputStream fis = new FileInputStream(file);
-			Connection conn = Utils.getConnection();
-			String str = "INSERT INTO xslt (name, content) VALUES (? ,?);";
-			PreparedStatement ps = conn.prepareStatement(str);
-			ps.setString(1, "Default1");
-			ps.setBinaryStream(2, fis, (int) file.length());
-			ps.executeUpdate();
-			file = new File("C:\\Users\\Dennis\\git\\manageHW5\\xslt\\default_2.xsl");
-			fis = new FileInputStream(file);
-			conn = Utils.getConnection();
-			str = "INSERT INTO xslt (name, content) VALUES (? ,?);";
-			ps = conn.prepareStatement(str);
-			ps.setString(1, "Default2");
-			ps.setBinaryStream(2, fis, (int) file.length());
-			ps.executeUpdate();
-
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}*/
 	private static ByteArrayInputStream timeTableToXml(int studID){
 		
 		Course[][] timetable = new Course[days_per_week][hours_per_day];
@@ -73,12 +44,18 @@ public class XSLTmanager
 			timetable = s.getTimeTable(7, 10);
 			String contents = new String();
 			contents += "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+			contents += "<!DOCTYPE timeTable [" + 
+						"<!ELEMENT timeTable (day+)> " +
+						"<!ELEMENT day (hour+)> " + 
+						"<!ELEMENT hour (#PCDATA)> " +  
+						"<!ATTLIST day value CDATA #REQUIRED> " + 
+						"<!ATTLIST hour value CDATA #REQUIRED> ]>\n";
 			contents += "<timeTable>\n";
 			for (int day = 0; day < days_per_week; ++day){
-				contents += "<day>\n";
+				contents += "<day value='" + day + "'>\n";
 				for (int hour = 0; hour < hours_per_day; ++hour){
-					contents += "<hour" + hour + ">" + 
-					(timetable[day][hour].getName().equals("") ? "none" : timetable[day][hour].getName()) + "</hour" + hour + ">\n";
+					contents += "<hour value='" + hour + "'>" + 
+					(timetable[day][hour].getName().equals("") ? "none" : timetable[day][hour].getName()) + "</hour>\n";
 				}
 				contents += "</day>\n";
 			}
@@ -109,12 +86,9 @@ public class XSLTmanager
 			Document inDoc = dBuilder.parse(xmlContent);
 			// Generate a Transformer. 			
 			Transformer transformer = TransformerFactory.newInstance().
-			newTransformer(new javax.xml.transform.stream.StreamSource(xslContent/*C:\\temp\\test.xsl"*/)); 
-			// Create an empty DOMResult object for the output. 
-			//DOMResult domResult = new javax.xml.transform.dom.DOMResult(); 
+			newTransformer(new javax.xml.transform.stream.StreamSource(xslContent)); 
+			// Create an empty DOMResult object for the output.
 			// Perform the transformation. 
-			//File resultFile = new File("C:\\temp\\bla.html");
-			//ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			transformer.transform(new DOMSource(inDoc),
 					new StreamResult(baos));
 			// Now you can get the output Node from the DOMResult. 
@@ -152,7 +126,7 @@ public class XSLTmanager
 		}
 	}
 
-	public static int upload(String name, String content,int ulid){
+	public static void upload(String name, String content,int ulid){
 		ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes());
 		Connection conn = Utils.getConnection();
 		String str = "INSERT INTO xslt (name, content,uid) VALUES (? ,?, ?);";
@@ -171,7 +145,5 @@ public class XSLTmanager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//TODO return id;
-		return 0;
 	}
 }

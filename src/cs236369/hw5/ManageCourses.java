@@ -4,19 +4,14 @@
 package cs236369.hw5;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import cs236369.hw5.dal.Administartor;
 import cs236369.hw5.dal.Course;
-import cs236369.hw5.dal.Session;
-import cs236369.hw5.dal.Utils;
 
 /**
  * @author Dennis
@@ -44,16 +39,23 @@ public class ManageCourses extends HttpServlet
 			String creditPoints = request.getParameter("credit_points");
 			String description = request.getParameter("description");
 			Course course = new Course();
-			course.setField("group_id",  Integer.parseInt(group_id));
-			course.setField("name", name);
-			course.setField("capacity", Integer.parseInt(capacity));
-			course.setField("credit_points", Integer.parseInt(creditPoints));
-			course.setField("description", description);
-			course.setField("creator_id", admin.getId());
-			if (!course.save()){
+			try{
+				course.setField("group_id",  Integer.parseInt(group_id));
+				course.setField("name", name);
+				course.setField("capacity", Integer.parseInt(capacity));
+				course.setField("credit_points", Integer.parseInt(creditPoints));
+				course.setField("description", description);
+				course.setField("creator_id", admin.getId());	
+			}
+			catch(NumberFormatException e){
+				Utils.setSessionMessage(request.getSession(true), "There was an error in the course registration form");
+			}
+			if (!course.save(sessions)){
+				Utils.setSessionMessage(request.getSession(true), "There was an error in the course registration form");
 				Logger.log("duplicate name: " + name);
 			}
-			Connection conn = Utils.getConnection();
+			response.sendRedirect("coursesManagement.jsp");
+		/*	Connection conn = Utils.getConnection();
 			PreparedStatement ps;
 			try
 			{
@@ -62,15 +64,14 @@ public class ManageCourses extends HttpServlet
 				ResultSet rs = ps.executeQuery();
 				rs.next();
 				int id = rs.getInt("id");
-				Utils.closeConnection(rs, ps, conn);
-				course = new Course(id);				
+				Utils.closeConnection(rs, ps, conn);				
 			}
 			catch (SQLException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Session.registerSessions(sessions, course.getId(), Integer.parseInt(group_id));
+			*///Session.registerSessions(sessions, course.getId(), Integer.parseInt(group_id));
 		}
 		else if (action.equals("remove")){ 
 			String courseId = request.getParameter("course_id");

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 import java.sql.Connection;
 
 import cs236369.hw5.Logger;
@@ -343,29 +344,31 @@ public class Course extends Base {
 		}
 		return false;		
 	}
-	public boolean save() {
-		if (!validate()) {
+	public boolean save(String sessions) {
+		/*if (!validate()) {
 			return false;
-		}
+		}*/
 		if (duplicate(this.key, (String)fieldsValues.get(this.key))){
-			//TODO ERROR
 			return false;
 		}
+		
 		Connection conn = Utils.getConnection();
-		String prepStmt = "INSERT INTO " + getTableName() + " (" + fields.get(0);
-		for (int i = 1 ; i < fields.size(); i++ ){
-			prepStmt += " ," + fields.get(i);
-		}
-		prepStmt += ")";
-		prepStmt += " VALUES ( ?";
-
-		for (int i = 0 ; i < fieldsTypes.size() - 1 ; i++){
-			prepStmt += ", ?";
-		}
-		prepStmt += ");";
-		PreparedStatement ps = null;
 		try
 		{
+			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			conn.setAutoCommit(false);
+			String prepStmt = "INSERT INTO " + getTableName() + " (" + fields.get(0);
+			for (int i = 1 ; i < fields.size(); i++ ){
+				prepStmt += " ," + fields.get(i);
+			}
+			prepStmt += ")";
+			prepStmt += " VALUES ( ?";
+	
+			for (int i = 0 ; i < fieldsTypes.size() - 1 ; i++){
+				prepStmt += ", ?";
+			}
+			prepStmt += ");";
+			PreparedStatement ps = null;
 			ps = conn.prepareStatement(prepStmt);
 			Collection<String> ct = fieldsTypes.values();
 			Iterator<String> itrT = ct.iterator();
@@ -381,14 +384,66 @@ public class Course extends Base {
 				}
 				i++;
 			}
-			ps.executeUpdate();
+			ps.executeUpdate();	
+			prepStmt = "SELECT * FROM courses WHERE name=?;";
+			ps = conn.prepareStatement(prepStmt);
+			ps.setString(1, getStringField("name"));
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()){
+				//error
+			}
+			this.id = new Course(rs).getId();
+			Session.registerSessions(sessions, this, conn);
+			conn.commit();
 			Utils.closeConnection(null, ps, conn);
 			return true;
 		}catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try
+			{
+				conn.rollback();
+			}
+			catch (SQLException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
-		Utils.closeConnection(null, ps, conn);
 		return false;
+	}
+	public boolean validate() {
+		if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
+			return false;
+		}
+
+		System.out.println(getStringField("password"));
+		if (!Pattern.matches("^[a-zA-Z0-9]{5,12}$", getStringField("password"))) {
+			return false;
+		}
+
+		if (!Pattern.matches("^.{1,25}$", getStringField("name"))) {
+			return false;
+		}
+
+		if (!Pattern.matches("^[0-9\\-]{0,25}$", getStringField("phone_number"))) {
+			return false;
+		}
+		
+		if (!Pattern.matches("^[0-9]{0,5}$", getStringField("group_id"))) {
+			return false;
+		}
+		
+		if (!Pattern.matches("^[0-9]{0,5}$", getStringField("capacity"))) {
+			return false;
+		}
+		
+		if (!Pattern.matches("^[0-9]{0,5}$", getStringField("credit_points"))) {
+			return false;
+		}
+		
+		if (!Pattern.matches("^.{1,25}$", getStringField("description"))) {
+			return false;
+		}
+		
+		return true;
 	}
 }

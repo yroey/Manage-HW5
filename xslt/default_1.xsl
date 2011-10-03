@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- Edited by XMLSpy® -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
+<xsl:stylesheet version="1.0"
+ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns="http://www.w3.org/1999/xhtml">
+<xsl:output
+method="html"
+doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+doctype-system= 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>  
 <xsl:template match="/">
   <html>
   <body>
@@ -18,47 +24,47 @@
 	  </tr>
       <tr>
       <xsl:for-each select="timeTable/day">
-          <td><xsl:value-of select="hour1"/></td>
+		  <td><xsl:value-of select="hour[position() = 1]"/></td>
       </xsl:for-each>
       </tr>
       <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour2"/></td>
+           <td><xsl:value-of select="hour[position() = 2]"/></td>
       </xsl:for-each>
       </tr>
       <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour3"/></td>
+           <td><xsl:value-of select="hour[position() = 3]"/></td>
       </xsl:for-each>
       </tr>
       <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour4"/></td>
+           <td><xsl:value-of select="hour[position() = 4]"/></td>
       </xsl:for-each>
       </tr>
       <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour5"/></td>
+           <td><xsl:value-of select="hour[position() = 5]"/></td>
       </xsl:for-each>
       </tr>
 	  <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour6"/></td>
+          <td><xsl:value-of select="hour[position() = 6]"/></td>
       </xsl:for-each>
       </tr>
 	  <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour7"/></td>
+           <td><xsl:value-of select="hour[position() = 7]"/></td>
       </xsl:for-each>
       </tr>
 	  <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour8"/></td>
+           <td><xsl:value-of select="hour[position() = 8]"/></td>
       </xsl:for-each>
       </tr>
 	  <tr>
       <xsl:for-each select="timeTable/day">
-           <td><xsl:value-of select="hour9"/></td>
+           <td><xsl:value-of select="hour[position() = 9]"/></td>
       </xsl:for-each>
       </tr>
     </table>
