@@ -48,37 +48,61 @@ public class Registration extends HttpServlet {
 			stud.setField("phone_number", phoneNumber);
 
 			if (!stud.save()) {
-			  Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");
-			  response.sendRedirect("registration.jsp");
-			  return;
+				Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");
+				response.sendRedirect("registration.jsp");
+				return;
 			}
 			if (stud.hasDuplicate()) {
-				  stud.delete();
-				  Utils.setSessionMessage(request.getSession(true), "Username is already taken");
-		      response.sendRedirect("registration.jsp");
-		      return;
+				stud.delete();
+				Utils.setSessionMessage(request.getSession(true), "Username is already taken");
+				response.sendRedirect("registration.jsp");
+				return;
 			}
 			request.getSession(true).setAttribute("student", stud);
 			response.sendRedirect("student/index.jsp");
 		}
 		else if(action.equals("updateDetails")){
 			Administartor admin = (Administartor)request.getSession().getAttribute("administrator");
-			admin.setField("username", username);
-			admin.setField("password", password);
-			admin.setField("name", name);
-			admin.setField("phone_number", phoneNumber);
-			admin.update();
-			response.sendRedirect("administrator/settings.jsp");
+			if (admin != null){
+				admin.setField("username", username);
+				admin.setField("password", password);
+				admin.setField("name", name);
+				admin.setField("phone_number", phoneNumber);
+				if (!admin.update()){
+					Utils.setSessionMessage(request.getSession(true), "problem with the update form");
+					response.sendRedirect("administrator/superUserManagemant.jsp");
+					return;
+				}
+				if (admin.hasDuplicate()) {
+					admin.delete();
+					Utils.setSessionMessage(request.getSession(true), "Username is already taken");
+					response.sendRedirect("administrator/superUserManagemant.jsp");
+					return;
+				}
+				response.sendRedirect("administrator/settings.jsp");
+			}
 		}
 		else if(action.equals("addAdmin")){
-			//administrator
-			Administartor admin = new Administartor();
-			admin.setField("username", username);
-			admin.setField("password", password);
-			admin.setField("name", name);
-			admin.setField("phone_number", phoneNumber);
-			admin.save();
-			response.sendRedirect("administrator/superUserManagemant.jsp");
+			Administartor administrator = (Administartor)request.getSession().getAttribute("administrator");
+			if (administrator != null && administrator.getId() == 0){
+				Administartor admin = new Administartor();
+				admin.setField("username", username);
+				admin.setField("password", password);
+				admin.setField("name", name);
+				admin.setField("phone_number", phoneNumber);
+				if (!admin.save()) {
+					Utils.setSessionMessage(request.getSession(true), "There was an error in the registration form");
+					response.sendRedirect("administrator/superUserManagemant.jsp");
+					return;
+				}
+				if (admin.hasDuplicate()) {
+					admin.delete();
+					Utils.setSessionMessage(request.getSession(true), "Username is already taken");
+					response.sendRedirect("administrator/superUserManagemant.jsp");
+					return;
+				}
+				response.sendRedirect("administrator/superUserManagemant.jsp");
+			}
 		}
 	}
 }

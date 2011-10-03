@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import cs236369.hw5.Logger;
 
@@ -66,5 +67,12 @@ public class Xslt extends Base
 		xslts.toArray(arrayCourses);
 		Utils.closeConnection(rs, ps, conn);
 		return arrayCourses;
+	}
+	public static boolean validate(String name) {
+		
+		if (!Pattern.matches("^[a-zA-Z]{1,12}$", name)) {
+			return false;
+		}
+		return true;
 	}
 }

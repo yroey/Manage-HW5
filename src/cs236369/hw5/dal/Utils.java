@@ -140,6 +140,19 @@ public class Utils {
 				  +	"PRIMARY KEY (id)) engine=InnoDB;";
 			executeUpdate(query);
 		}
+		Connection conn = Utils.getConnection();
+		try
+		{
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO administrators VALUES (0,'admin','12345a','super user',12345);");
+			ps.executeUpdate();
+			closeConnection(null,ps,conn);
+		}
+		catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	private static boolean tableExists(String tableName){
 		boolean ret = false;

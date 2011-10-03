@@ -3,8 +3,14 @@
 <%
 int days_per_week = 7;
 int hours_per_day = 10;
-String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wednsday", "Thursday","Friday","Saturday"};
-int groupId = Integer.parseInt(request.getParameter("group_id"));
+String[] dayNames = {"Sunday", "Monday", "Tuesday", "Wednsday", "Thursday", "Friday", "Saturday"};
+int groupId = -1;
+try{
+	groupId = Integer.parseInt(request.getParameter("group_id"));
+}
+catch( NumberFormatException e){
+	
+}
 Course[] courses = Course.getAll();
 ArrayList<Course> temp = new ArrayList<Course>();
 for (Course c : courses){
@@ -58,13 +64,13 @@ Course flagCourse = null;
 					return (row*7 +col);
 				}
 
-	            function click1(obj, highlightcolor, textcolor, col, row, flag){
+	            function click1(obj, highlightcolor, textcolor, col, row, flag, originalColor){
 	            	if (flag == true){
 	            	}
 	            	else { if (obj.style.backgroundColor == highlightcolor) {
 	            					table[getIndex(row,col)] = false;
 	            					selected = selected - 1;
-	                				obj.style.backgroundColor = 'white';
+	                				obj.style.backgroundColor = originalColor;
 	                	 			obj.style.color = textcolor = 'black';
 	                			} else{
 	                				//alert("setting true :" + getIndex(row,col));
@@ -101,6 +107,9 @@ Course flagCourse = null;
 			            				end = 7*j +i;
 			            				res = res + start + " " + end + ";";
 		            					startFlag = false;
+		            					if ((Math.floor(end/7) - Math.floor(start/7))>3){
+			            					error = true;
+			            				}
 		            					start = 0;
 			            				end = 0;
 			            			}
@@ -155,7 +164,7 @@ Course flagCourse = null;
 	    	 							}
 	    						 }
 	     				}%>
-				<td onclick="click1(this, 'blue', 'white', <%=day%>,<%=hour %>,<%=flag %> );" >
+				<td onclick="click1(this, 'blue', 'white', <%=day%>,<%=hour %>,<%=flag %>, '#F1FAC0');" >
 					<% if (flag){ %>
 					  <%= flagCourse.getName()%>
 					  <% flag = false;

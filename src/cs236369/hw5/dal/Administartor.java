@@ -134,8 +134,7 @@ public class Administartor extends Base
 	}
 	
 	public boolean validate() {
-		return true;
-	/*	if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
+	if (!Pattern.matches("^[a-zA-Z]{5,12}$", getStringField("username"))) {
 			return false;
 		}
 
@@ -152,6 +151,26 @@ public class Administartor extends Base
 			return false;
 		}
 
-		return true;*/
+		return true;
+	}
+	
+	public boolean hasDuplicate() {
+		Connection conn = Utils.getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = conn.prepareStatement("SELECT * FROM students WHERE id != ? and username = ?");
+			ps.setInt(1, getId());
+			ps.setString(2, getStringField("username"));
+			rs = ps.executeQuery();
+			rs.last();
+			return rs.getRow() == 1;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} finally {
+			Utils.closeConnection(rs, ps, conn);
+		}
 	}
 }
