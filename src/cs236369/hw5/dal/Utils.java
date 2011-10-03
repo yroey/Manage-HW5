@@ -91,7 +91,7 @@ public class Utils {
 			+ "username VARCHAR(255) NOT NULL, "
 			+ "password VARCHAR(10) NOT NULL, "
 			+ "name VARCHAR(255) NOT NULL, "
-			+ "phone_number INT(10) UNSIGNED NOT NULL, "
+			+ "phone_number varchar(255) DEFAULT '', "
 			+ "PRIMARY KEY (id),KEY `login` (`username`,`password`)) engine=InnoDB;";
 			executeUpdate(query);
 		}
