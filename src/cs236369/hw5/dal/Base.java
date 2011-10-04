@@ -53,6 +53,7 @@ public abstract class Base {
 		init();
 		try {
 			id = rs.getInt("id");
+			System.out.println("got id " + id);
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

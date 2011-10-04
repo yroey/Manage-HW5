@@ -492,10 +492,6 @@ public class Course extends Base {
 			return false;
 		}
 
-		if (!Pattern.matches("^.{1,250}$", getStringField("description"))) {
-			return false;
-		}
-
 		return true;
 	}
 }

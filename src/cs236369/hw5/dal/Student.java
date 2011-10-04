@@ -392,6 +392,7 @@ public class Student extends Base {
 			ps.setString(1, username);
 			Logger.log(ps.toString());
 			rs = ps.executeQuery();
+			rs.next();
 			Student student =  new Student(rs);
 			return student;
 		}catch (SQLException e) {
